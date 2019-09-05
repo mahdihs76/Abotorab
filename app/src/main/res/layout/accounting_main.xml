@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/background"
+                tools:context=".AccountingActivity">
+
+   <!-- <EditText
+            android:id="@+id/firstName"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/lastName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edit_text_bg"
+            android:gravity="center"
+            android:hint="@string/first_name"
+            android:inputType="text"
+            android:textColor="#000000"
+            android:maxLength="11"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />-->
+
+   <!-- <EditText
+            android:id="@+id/lastName"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/email"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edit_text_bg"
+            android:gravity="center"
+            android:hint="@string/last_name"
+            android:inputType="text"
+            android:textColor="#000000"
+            android:maxLength="11"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />-->
+
+    <EditText
+            android:id="@+id/username"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edit_text_bg"
+            android:gravity="center"
+            android:hint="@string/usernameHint"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000"
+            android:maxLength="11"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    <EditText
+            android:id="@+id/password"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/submit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/edit_text_bg"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    <ir.nilva.abotorab.view.button.UnoSubmitButton
+            android:id="@+id/submit"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp" />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spinKit"
+            style="@style/SpinKitView.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/username"
+            android:layout_marginBottom="60dp"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            app:SpinKit_Color="@color/gray" />
+
+</RelativeLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="icons">
+        <item>@drawable/cabinet_plus</item>
+        <item>@drawable/statistics</item>
+        <item>@drawable/cabinet_minus</item>
+        <item>@drawable/cabinets</item>
+    </array>
+    <array name="colors">
+        <item>@color/menuColor</item>
+        <item>@color/menuColor</item>
+        <item>@color/menuColor</item>
+        <item>@color/menuColor</item>
+        <item>@color/menuColor</item>
+    </array>
+</resources>
