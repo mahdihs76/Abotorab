@@ -1,10 +1,14 @@
 package ir.nilva.abotorab.helper
 
 import android.app.Activity
-import ir.nilva.abotorab.*
-import ir.nilva.abotorab.cabinet.CabinetActivity
-import ir.nilva.abotorab.cabinet.CabinetListActivity
-import ir.nilva.abotorab.webservices.cabinet.CabinetResponse
+import ir.nilva.abotorab.model.CabinetResponse
+import ir.nilva.abotorab.view.page.cabinet.CabinetActivity
+import ir.nilva.abotorab.view.page.cabinet.CabinetListActivity
+import ir.nilva.abotorab.view.page.main.MainActivity
+import ir.nilva.abotorab.view.page.operation.BarcodeActivity
+import ir.nilva.abotorab.view.page.operation.GiveActivity
+import ir.nilva.abotorab.view.page.operation.ReportActivity
+import ir.nilva.abotorab.view.page.operation.TakeActivity
 import org.jetbrains.anko.startActivity
 
 /**
@@ -18,5 +22,6 @@ fun Activity.gotoCabinetPage(cabinet: CabinetResponse? = null) = startActivity<C
 fun Activity.gotoCabinetListPage() = startActivity<CabinetListActivity>().apply { finish() }
 fun Activity.gotoReportPage() = startActivity<ReportActivity>()
 fun Activity.gotoBarcodePage(isQR: Boolean) = startActivity<BarcodeActivity>("isQR" to isQR).apply { finish() }
+
 
 

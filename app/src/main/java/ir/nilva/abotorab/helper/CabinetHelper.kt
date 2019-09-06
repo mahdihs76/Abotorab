@@ -1,7 +1,7 @@
 package ir.nilva.abotorab.helper
 
-import ir.nilva.abotorab.webservices.cabinet.CabinetResponse
-import ir.nilva.abotorab.webservices.model.Cell
+import ir.nilva.abotorab.model.CabinetResponse
+import ir.nilva.abotorab.model.Cell
 
 fun CabinetResponse.getCell(index: Int): Cell {
     val rowIndex = index / getColumnsNumber()

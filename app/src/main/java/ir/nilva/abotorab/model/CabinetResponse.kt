@@ -1,0 +1,10 @@
+package ir.nilva.abotorab.model
+
+import com.google.gson.annotations.SerializedName
+import ir.nilva.abotorab.webservices.BaseResponse
+import java.io.Serializable
+
+class CabinetResponse(
+    @SerializedName("code") val code: Int,
+    @SerializedName("rows") val rows: ArrayList<Row>
+    ) : BaseResponse(), Serializable

@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@mipmap/background"
-                tools:context=".AccountingActivity">
+                tools:context=".view.page.main.LoginActivity">
 
    <!-- <EditText
             android:id="@+id/firstName"
@@ -73,7 +73,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-    <ir.nilva.abotorab.view.button.UnoSubmitButton
+    <ir.nilva.abotorab.view.widget.UnoSubmitButton
             android:id="@+id/submit"
             android:layout_width="220dp"
             android:layout_height="50dp"

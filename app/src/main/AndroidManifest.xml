@@ -15,34 +15,34 @@
             android:supportsRtl="false"
             android:theme="@style/AppTheme"
             tools:replace="android:supportsRtl">
-        <activity android:name=".cabinet.CabinetListActivity">
+        <activity android:name="ir.nilva.abotorab.view.page.cabinet.CabinetListActivity">
         </activity>
         <activity
-                android:name=".ReportActivity"
+                android:name=".view.page.operation.ReportActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".cabinet.CabinetActivity"
+                android:name="ir.nilva.abotorab.view.page.cabinet.CabinetActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".GiveActivity"
+                android:name=".view.page.operation.GiveActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".BarcodeActivity"
+                android:name=".view.page.operation.BarcodeActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".TakeActivity"
+                android:name=".view.page.operation.TakeActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".MainActivity"
+                android:name=".view.page.main.MainActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".AccountingActivity"
+                android:name=".view.page.main.LoginActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
