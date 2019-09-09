@@ -2,6 +2,8 @@ package ir.nilva.abotorab.view.page.main
 
 import android.os.Bundle
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -17,6 +19,15 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounting_main)
 
+        ip.setOnClickListener {
+            MaterialDialog(this).show {
+                title(text = "آدرس سرور جدید را وارد کنید")
+                input(hint = "مثلا: 192.168.100.5", prefill = MyRetrofit.getBaseUrl()){_, text ->
+                    connect2Server(text.toString())
+                }
+                positiveButton(text = "اتصال")
+            }
+        }
         submit.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
@@ -39,6 +50,10 @@ class LoginActivity : BaseActivity() {
 
         val token: String? = defaultCache()["token"]
         if (token != null) gotoMainPage()
+    }
+
+    private fun connect2Server(ip: String) {
+        MyRetrofit.setBaseUrl(ip)
     }
 
     private fun showLoading() {

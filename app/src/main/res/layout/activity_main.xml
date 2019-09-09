@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@mipmap/background"
-                android:orientation="vertical"
-                tools:context=".view.page.main.MainActivity">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/background"
+        android:orientation="vertical"
+        tools:context=".view.page.main.MainActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage"
@@ -14,9 +14,20 @@
             android:layout_height="115dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:src="@mipmap/me"
+            android:src="@mipmap/avatar"
             app:civ_border_color="#FFFFFF"
             app:civ_border_width="1dp" />
+
+    <ImageView
+            android:id="@+id/logout"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_below="@id/profileImage"
+            android:layout_marginStart="-32dp"
+            android:layout_marginTop="-32dp"
+            android:layout_toEndOf="@id/profileImage"
+            android:rotation="180"
+            android:src="@mipmap/logout" />
 
     <TextView
             android:id="@+id/rish"
@@ -27,7 +38,7 @@
             android:layout_marginTop="2dp"
             android:background="@drawable/level_background"
             android:padding="8dp"
-            android:text="مهدی حسن زاده"
+            android:text="کاربر سیستم"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

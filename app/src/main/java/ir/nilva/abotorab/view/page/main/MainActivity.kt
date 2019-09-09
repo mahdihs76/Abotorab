@@ -3,12 +3,10 @@ package ir.nilva.abotorab.view.page.main
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import com.afollestad.materialdialogs.MaterialDialog
 import com.ramotion.circlemenu.CircleMenuView
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.gotoCabinetListPage
-import ir.nilva.abotorab.helper.gotoGivePage
-import ir.nilva.abotorab.helper.gotoReportPage
-import ir.nilva.abotorab.helper.gotoTakePage
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,6 +16,18 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCircularMenu()
+        logout.setOnClickListener {
+            MaterialDialog(this).show {
+                title(text = "آیا برای خروج اطمینان دارید؟")
+                positiveButton(text = "بله"){ logout() }
+                negativeButton(text = "خیر") {}
+            }
+        }
+    }
+
+    private fun logout(){
+        defaultCache()["token"] = null
+        finish()
     }
 
     private fun initCircularMenu() {
