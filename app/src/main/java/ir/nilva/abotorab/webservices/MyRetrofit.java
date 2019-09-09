@@ -27,7 +27,7 @@ public class MyRetrofit {
         return instance;
     }
 
-    private static void newInstance(){
+    public static void newInstance(){
         instance = new MyRetrofit();
     }
 

@@ -1,4 +1,4 @@
- <resources>
+<resources>
     <string name="app_name">Abotorab</string>
     <string name="submit">تایید</string>
     <string name="phone_number">شماره همراه</string>
@@ -68,5 +68,8 @@
     <string name="cabinet_format">قفسه شماره %s</string>
     <string name="row_and_column_format">ستون: %d - ردیف:‌ %d</string>
     <string name="search">جست و جو</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

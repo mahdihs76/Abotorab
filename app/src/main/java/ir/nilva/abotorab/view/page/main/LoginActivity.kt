@@ -38,6 +38,7 @@ class LoginActivity : BaseActivity() {
                     )
                     if (response.isSuccessful) {
                         defaultCache()["token"] = response.body()?.token
+                        MyRetrofit.newInstance()
                         gotoMainPage()
                     } else toastError(response.toString())
                 } catch (e: Exception) {
