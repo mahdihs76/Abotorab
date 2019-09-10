@@ -18,4 +18,10 @@ interface CabinetDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(items: List<CabinetResponse>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: CabinetResponse)
+
+    @Query("DELETE FROM delivery")
+    suspend fun clear()
 }

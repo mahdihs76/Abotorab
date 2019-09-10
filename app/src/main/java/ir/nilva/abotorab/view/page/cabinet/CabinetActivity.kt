@@ -63,6 +63,7 @@ class CabinetActivity : BaseActivity() {
                 currentCabinet = MyRetrofit.getInstance().webserviceUrls
                     .cabinet("", rows, columns, 1, 1)
                     .body()!!
+                AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 adapter.cabinet = currentCabinet
                 moveToNextStep(true)
             } catch (e: Exception) {
@@ -92,13 +93,15 @@ class CabinetActivity : BaseActivity() {
         columnsCount.minValue = 1
         rowsCount.maxValue = 10
         columnsCount.maxValue = 10
+
+        rowsCount.count = rows
+        columnsCount.count = columns
     }
 
     private fun refresh() {
         rowsCount.count = rows
         columnsCount.count = columns
         grid.numColumns = columns
-
     }
 
     private fun moveToNextStep(withAnimation: Boolean) {
@@ -149,14 +152,14 @@ class CabinetActivity : BaseActivity() {
         if (currentCabinet.getCell(index).isHealthy) {
             popupView.layout1.setOnClickListener {
                 popup.dissmiss()
-                changeStatus(view, index, false)
+                changeStatus(index, false)
             }
             popupView.text1.text = "غیر قابل استفاده"
             popupView.image1.imageResource = R.mipmap.error
         } else {
             popupView.layout1.setOnClickListener {
                 popup.dissmiss()
-                changeStatus(view, index, true)
+                changeStatus(index, true)
             }
             popupView.text1.text = "قابل استفاده"
             popupView.image1.imageResource = R.mipmap.success
@@ -170,18 +173,13 @@ class CabinetActivity : BaseActivity() {
             .showAsDropDown(view, 0, 10)
     }
 
-    private fun changeStatus(view: View, index: Int, isHealthy: Boolean) =
+    private fun changeStatus(index: Int, isHealthy: Boolean) =
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val cell = currentCabinet.getCell(index)
-                MyRetrofit.getService().changeStatus(
-                    cell.code,
-                    isHealthy
-                )
+                MyRetrofit.getService().changeStatus(cell.code, isHealthy)
                 cell.isHealthy = isHealthy
-                ViewAnimator.animate(view)
-                    .alpha(if (isHealthy) 1F else 0.3F)
-                    .start()
+                AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
             } catch (e: Exception) {
                 toastError(e.message.toString())
             }

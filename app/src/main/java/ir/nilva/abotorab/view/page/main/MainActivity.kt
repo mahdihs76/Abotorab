@@ -62,6 +62,7 @@ fun Activity.logout() {
         positiveButton(text = "بله") {
             CoroutineScope(Dispatchers.Main).launch {
                 AppDatabase.getInstance().deliveryDao().clear()
+                AppDatabase.getInstance().cabinetDao().clear()
                 defaultCache()["token"] = null
                 finish()
             }
