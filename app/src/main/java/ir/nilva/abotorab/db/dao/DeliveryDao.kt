@@ -19,4 +19,7 @@ interface DeliveryDao {
     @Delete
     suspend fun delete(item: DeliveryEntity)
 
+    @Query("DELETE FROM delivery")
+    suspend fun clear()
+
 }

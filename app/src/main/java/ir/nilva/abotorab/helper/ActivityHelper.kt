@@ -1,7 +1,6 @@
 package ir.nilva.abotorab.helper
 
 import android.app.Activity
-import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.view.page.cabinet.CabinetActivity
 import ir.nilva.abotorab.view.page.cabinet.CabinetListActivity
 import ir.nilva.abotorab.view.page.main.MainActivity
@@ -18,8 +17,8 @@ import org.jetbrains.anko.startActivity
 fun Activity.gotoMainPage() = startActivity<MainActivity>().apply { finish() }
 fun Activity.gotoTakePage(barcode: String = "") = startActivity<TakeActivity>("barcode" to barcode)
 fun Activity.gotoGivePage(barcode: String = "") = startActivity<GiveActivity>("barcode" to barcode)
-fun Activity.gotoCabinetPage(cabinet: CabinetResponse? = null) = startActivity<CabinetActivity>("cabinet" to cabinet)
-fun Activity.gotoCabinetListPage() = startActivity<CabinetListActivity>().apply { finish() }
+fun Activity.gotoCabinetPage(code: Int = -1) = startActivity<CabinetActivity>("code" to code)
+fun Activity.gotoCabinetListPage() = startActivity<CabinetListActivity>()
 fun Activity.gotoReportPage() = startActivity<ReportActivity>()
 fun Activity.gotoBarcodePage(isQR: Boolean) = startActivity<BarcodeActivity>("isQR" to isQR).apply { finish() }
 

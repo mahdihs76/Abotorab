@@ -1,12 +1,12 @@
 package ir.nilva.abotorab.view.page.cabinet
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import ir.nilva.abotorab.R
+import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.gotoCabinetPage
-import ir.nilva.abotorab.helper.gotoMainPage
 import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
-import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.view.widget.MarginItemDecoration
 import ir.nilva.abotorab.webservices.MyRetrofit
@@ -29,18 +29,21 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         recyclerView.addItemDecoration(MarginItemDecoration(20))
         getCabinetList()
         fab.setOnClickListener { gotoCabinetPage() }
+        AppDatabase.getInstance().cabinetDao().getAll().observe(this, Observer {
+            adapter.submitList(it)
+        })
     }
 
     private fun getCabinetList() {
         CoroutineScope(Dispatchers.Main).launch {
             val response = MyRetrofit.getInstance().webserviceUrls.cabinetList()
             if (response.isSuccessful) {
-                adapter.submitList(response.body())
+                AppDatabase.getInstance().cabinetDao().insert(response.body()!!)
             }
         }
     }
 
-    override fun cabinetClicked(cabinet: CabinetResponse) = gotoCabinetPage(cabinet)
+    override fun cabinetClicked(code: Int) = gotoCabinetPage(code)
 
     override fun printCabinet(code: Int) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -53,8 +56,4 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        gotoMainPage()
-    }
 }

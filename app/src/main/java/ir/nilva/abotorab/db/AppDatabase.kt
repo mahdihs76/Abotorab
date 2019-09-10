@@ -4,18 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import ir.nilva.abotorab.ApplicationContext
+import ir.nilva.abotorab.db.dao.CabinetDao
 import ir.nilva.abotorab.db.dao.DeliveryDao
 import ir.nilva.abotorab.db.model.DeliveryEntity
+import ir.nilva.abotorab.model.CabinetResponse
 
 /**
  * The Room database for this app
  */
-@Database(entities = [DeliveryEntity::class], version = 1)
-//@TypeConverters(Converters::class)
+@Database(entities = [DeliveryEntity::class, CabinetResponse::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun deliveryDao(): DeliveryDao
-//    abstract fun plantDao(): PlantDao
+    abstract fun cabinetDao(): CabinetDao
 
     companion object {
 

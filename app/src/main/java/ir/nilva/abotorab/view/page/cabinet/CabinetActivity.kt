@@ -3,10 +3,15 @@ package ir.nilva.abotorab.view.page.cabinet
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.Observer
 import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.*
+import ir.nilva.abotorab.db.AppDatabase
+import ir.nilva.abotorab.helper.getCell
+import ir.nilva.abotorab.helper.getColumnsNumber
+import ir.nilva.abotorab.helper.getRowsNumber
+import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
@@ -30,16 +35,51 @@ class CabinetActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cabinet)
+        initUi()
 
-        val cabinet = intent?.extras?.getSerializable("cabinet") as CabinetResponse?
-        if (cabinet != null) {
-            rows = cabinet.getRowsNumber()
-            columns = cabinet.getColumnsNumber()
-            currentCabinet = cabinet
-            adapter.cabinet = currentCabinet
-            moveToNextStep(false)
+        val code = intent?.extras?.getInt("code")
+        if (code != null && code != -1) {
+            AppDatabase.getInstance().cabinetDao().get(code).observe(this, Observer {
+                rows = it.getRowsNumber()
+                columns = it.getColumnsNumber()
+                currentCabinet = it
+                adapter.cabinet = currentCabinet
+                moveToNextStep(false)
+                refresh()
+            })
         }
+    }
 
+    private fun initUi() {
+        initSteppers()
+        initGrid()
+        submit.setOnClickListener { addCabinet() }
+    }
+
+    private fun addCabinet() {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                submit.isClickable = false
+                currentCabinet = MyRetrofit.getInstance().webserviceUrls
+                    .cabinet("", rows, columns, 1, 1)
+                    .body()!!
+                adapter.cabinet = currentCabinet
+                moveToNextStep(true)
+            } catch (e: Exception) {
+                toastError(e.message.toString())
+            }
+        }
+    }
+
+    private fun initGrid() {
+        grid.adapter = adapter
+        grid.setOnItemClickListener { _, view, index, _ ->
+            if (step == 0) return@setOnItemClickListener
+            showPopup(view, index)
+        }
+    }
+
+    private fun initSteppers() {
         rowsCount.addStepCallback(object : OnStepCallback {
             override fun onStep(value: Int, positive: Boolean) = updateRows(value)
         })
@@ -48,41 +88,16 @@ class CabinetActivity : BaseActivity() {
             override fun onStep(value: Int, positive: Boolean) = updateColumns(value)
         })
 
-        rowsCount.count = rows
-        columnsCount.count = columns
-
         rowsCount.minValue = 1
         columnsCount.minValue = 1
-
         rowsCount.maxValue = 10
         columnsCount.maxValue = 10
+    }
 
+    private fun refresh() {
+        rowsCount.count = rows
+        columnsCount.count = columns
         grid.numColumns = columns
-        grid.adapter = adapter
-
-        grid.setOnItemClickListener { _, view, index, _ ->
-            if (step == 0) return@setOnItemClickListener
-            showPopup(
-                view,
-                index
-            )
-        }
-
-        submit.setOnClickListener {
-            if (step == 0) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    try {
-                        currentCabinet = MyRetrofit.getInstance().webserviceUrls
-                            .cabinet("", rows, columns, 1, 1)
-                            .body()!!
-                        adapter.cabinet = currentCabinet
-                        moveToNextStep(true)
-                    } catch (e: Exception) {
-                        toastError(e.message.toString())
-                    }
-                }
-            }
-        }
 
     }
 
@@ -171,10 +186,5 @@ class CabinetActivity : BaseActivity() {
                 toastError(e.message.toString())
             }
         }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        gotoCabinetListPage()
-    }
 
 }
