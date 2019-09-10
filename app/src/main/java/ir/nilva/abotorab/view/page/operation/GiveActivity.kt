@@ -10,7 +10,10 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.google.android.material.tabs.TabLayout
+import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
+import ir.nilva.abotorab.db.AppDatabase
+import ir.nilva.abotorab.db.model.DeliveryEntity
 import ir.nilva.abotorab.helper.gotoBarcodePage
 import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
@@ -120,10 +123,21 @@ class GiveActivity : BaseActivity() {
         }
     }
 
-    private fun callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
+    fun callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
         try {
-            MyRetrofit.getService().give(hashId)
-            toastSuccess("محموله با موفقیت تحویل داده شد")
+            val response = MyRetrofit.getService().give(hashId)
+            if (response.isSuccessful) {
+                toastSuccess("محموله با موفقیت تحویل داده شد")
+                val delivery = response.body() ?: return@launch
+                AppDatabase.getInstance().deliveryDao().insert(
+                    listOf(
+                    DeliveryEntity(
+                        nickname = delivery.pilgrim,
+                        exitedAt = delivery.exitAt,
+                        hashId = delivery.hashId)
+                )
+                )
+            } else toastError(response.toString())
         } catch (e: Exception) {
             toastError(e.message.toString())
         }

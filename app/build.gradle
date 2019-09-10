@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
@@ -60,10 +62,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:3.1.1'
 
     implementation "androidx.room:room-runtime:2.2.0-rc01"
-    annotationProcessor "androidx.room:room-compiler:2.2.0-rc01"
-    // For Kotlin use kapt instead of annotationProcessor
-
-    // optional - Kotlin Extensions and Coroutines support for Room
+    kapt "androidx.room:room-compiler:2.2.0-rc01"
     implementation "androidx.room:room-ktx:2.2.0-rc01"
 
     implementation('com.microblink:blinkid:4.11.0@aar') {

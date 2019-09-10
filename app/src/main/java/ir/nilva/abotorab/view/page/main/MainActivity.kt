@@ -16,18 +16,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCircularMenu()
-        logout.setOnClickListener {
-            MaterialDialog(this).show {
-                title(text = "آیا برای خروج اطمینان دارید؟")
-                positiveButton(text = "بله"){ logout() }
-                negativeButton(text = "خیر") {}
-            }
-        }
-    }
-
-    private fun logout(){
-        defaultCache()["token"] = null
-        finish()
     }
 
     private fun initCircularMenu() {
@@ -51,6 +39,18 @@ fun MenuItem.action(activity: Activity) {
         MenuItem.CABINET_TAKE -> activity.gotoTakePage()
         MenuItem.CABINET_INIT -> activity.gotoCabinetListPage()
         MenuItem.CABINET_REPORT -> activity.gotoReportPage()
+        MenuItem.LOGOUT -> activity.logout()
+    }
+}
+
+fun Activity.logout(){
+    MaterialDialog(this).show {
+        title(text = "آیا برای خروج اطمینان دارید؟")
+        positiveButton(text = "بله"){
+            defaultCache()["token"] = null
+            finish()
+        }
+        negativeButton(text = "خیر") {}
     }
 }
 

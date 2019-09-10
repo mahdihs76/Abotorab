@@ -12,7 +12,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.toastError
-import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.model.DeliveryResponse
 import ir.nilva.abotorab.webservices.MyRetrofit
 import kotlinx.android.synthetic.main.fragment_give.*
@@ -43,7 +42,8 @@ class GiveFragment : Fragment() {
                         lastName.text.toString(),
                         country.text.toString(),
                         phone.text.toString(),
-                        passportId.text.toString()
+                        passportId.text.toString(),
+                        true
                     )
                     if (response.isSuccessful) {
                         showSearchResult(response.body())
@@ -78,21 +78,11 @@ class GiveFragment : Fragment() {
                 subTitle.text = item.enteredAt
                 setOnClickListener {
                     dialog.dismiss()
-                    callGiveWS(item.hashId)
+                    (activity as GiveActivity).callGiveWS(item.hashId)
                 }
             })
         }
         dialog.customView(view = view, scrollable = true).show()
     }
-
-    private fun callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
-        try {
-            MyRetrofit.getService().give(hashId)
-            toastSuccess("محموله با موفقیت تحویل داده شد")
-        } catch (e: Exception) {
-            toastError(e.message.toString())
-        }
-    }
-
 
 }

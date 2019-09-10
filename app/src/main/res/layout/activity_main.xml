@@ -18,17 +18,6 @@
             app:civ_border_color="#FFFFFF"
             app:civ_border_width="1dp" />
 
-    <ImageView
-            android:id="@+id/logout"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_below="@id/profileImage"
-            android:layout_marginStart="-32dp"
-            android:layout_marginTop="-32dp"
-            android:layout_toEndOf="@id/profileImage"
-            android:rotation="180"
-            android:src="@mipmap/logout" />
-
     <TextView
             android:id="@+id/rish"
             android:layout_width="wrap_content"

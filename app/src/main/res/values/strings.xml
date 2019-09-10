@@ -4,6 +4,7 @@
     <string name="phone_number">شماره همراه</string>
     <string name="cabinet_take">تحویل گرفتن</string>
     <string name="init">راه اندازی اولیه</string>
+    <string name="logout">خروج</string>
     <string name="report">گزارش گیری</string>
     <string name="trusted">معتمدها</string>
     <string name="apply_loan">دریافت وام</string>

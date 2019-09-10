@@ -20,5 +20,6 @@
     <color name="menuColor">#D5D5DE</color>
     <color name="gray">#6effffff</color>
     <color name="ssss">#00E990</color>
+    <color name="tiny_transparent">#33242222</color>
 
 </resources>

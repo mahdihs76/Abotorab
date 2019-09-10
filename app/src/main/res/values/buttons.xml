@@ -5,6 +5,7 @@
         <item>@drawable/statistics</item>
         <item>@drawable/cabinet_minus</item>
         <item>@drawable/cabinets</item>
+        <item>@drawable/shut_down</item>
     </array>
     <array name="colors">
         <item>@color/menuColor</item>
