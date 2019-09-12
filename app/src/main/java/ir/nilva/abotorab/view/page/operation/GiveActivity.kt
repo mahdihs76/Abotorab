@@ -21,7 +21,7 @@ import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
 import kotlinx.android.synthetic.main.activity_give.*
 import kotlinx.android.synthetic.main.activity_take.bottom_navigation
-import kotlinx.android.synthetic.main.give_verification.*
+import kotlinx.android.synthetic.main.give_verification.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,12 +83,11 @@ class GiveActivity : BaseActivity() {
                     Charsets.UTF_8
                 ).split("#")
                 val hashId = text[2]
-                val view = layoutInflater.inflate(R.layout.give_verification, null).apply {
-                    fullName.text = text[0]
-                    county.text = text[1]
-                    phoneNumber.text = text[3]
-                    cellCode.text = text[4]
-                }
+                val view = layoutInflater.inflate(R.layout.give_verification, null)
+                view.nickName.text = text[0]
+                view.county.text = "از کشور ${text[1]}"
+                view.phoneNumber.text = "شماره تلفن‌ : ${text[3]}" + "********"
+                view.cellCode.text = "شماره قفسه : ${text[4]}"
                 MaterialDialog(this).show {
                     customView(view = view)
                     title(text = "تایید")

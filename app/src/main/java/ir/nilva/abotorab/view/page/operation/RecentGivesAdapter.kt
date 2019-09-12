@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.model.DeliveryEntity
-import kotlinx.android.synthetic.main.item_pilgirim.view.*
+import kotlinx.android.synthetic.main.item_delivery.view.*
 
 class RecentGivesAdapter(val listener: RecentGivesListener) :
     ListAdapter<DeliveryEntity, RecentGivesAdapter.RecentGiveVH>(DeliveryDiff) {
@@ -22,8 +22,10 @@ class RecentGivesAdapter(val listener: RecentGivesListener) :
     inner class RecentGiveVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: DeliveryEntity) = with(itemView) {
             title.text = item.nickname
+            phone.text = item.phone
+            country.text = item.country
             subTitle.text = item.exitedAt
-            setOnClickListener {listener.undoClicked(item)}
+            setOnClickListener { listener.undoClicked(item) }
         }
     }
 

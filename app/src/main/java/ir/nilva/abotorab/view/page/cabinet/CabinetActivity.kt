@@ -152,6 +152,7 @@ class CabinetActivity : BaseActivity() {
         val popupView = LayoutInflater.from(this).inflate(R.layout.cabinet_popup, null)
 
         val cell = currentCabinet.getCell(index)
+        popupView.cabinetCode.text = "شماره " + cell.code
         if (cell.age > -1) {
             popupView.layout1.visibility = View.GONE
         }

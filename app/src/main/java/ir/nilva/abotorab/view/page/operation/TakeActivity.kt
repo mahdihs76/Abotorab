@@ -62,9 +62,9 @@ class TakeActivity : BaseActivity() {
                     )
                     hideLoading()
                     if (response.isSuccessful) {
+                        resetUi()
                         toastSuccess("محموله با موفقیت تحویل گرفته شد")
                     } else toastError(response.errorBody()?.string()?:"")
-                    resetUi()
                 } catch (e: Exception) {
                     hideLoading()
                     toastError(e.message.toString())

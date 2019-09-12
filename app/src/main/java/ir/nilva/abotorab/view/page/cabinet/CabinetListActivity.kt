@@ -52,8 +52,10 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
                 val response = MyRetrofit.getService().printCabinet(code)
                 if (response.isSuccessful) {
                     toastSuccess("برچسب های قفسه فوق چاپ شد")
-                } else toastError(response.toString())
-            }catch (e: Exception){ toastError(e.message.toString())}
+                } else toastError(response.errorBody()?.string() ?: "")
+            } catch (e: Exception) {
+                toastError(e.message.toString())
+            }
         }
     }
 
