@@ -3,7 +3,7 @@ package ir.nilva.abotorab.model
 import com.google.gson.annotations.SerializedName
 
 data class DeliveryResponse(
-    @SerializedName("pilgrim") val pilgrim: String,
+    @SerializedName("pilgrim") val pilgrim: Pilgrim,
     @SerializedName("taker") val taker: Int,
     @SerializedName("giver") val giver: Int,
     @SerializedName("hash_id") val hashId: String,
@@ -11,6 +11,12 @@ data class DeliveryResponse(
     @SerializedName("exited_at") val exitAt: String,
     @SerializedName("exit_type") val exitType: Int,
     @SerializedName("pack") val pack: ArrayList<Pack>
+)
+
+data class Pilgrim(
+    @SerializedName("phone") val phone: String,
+    @SerializedName("country") val country: String,
+    @SerializedName("name") val name: String
 )
 
 data class Pack(

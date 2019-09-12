@@ -40,7 +40,7 @@ interface WebserviceUrls {
     @POST("reception/give/")
     suspend fun give(
         @Field("hash_id") hashId: String
-    ): Response<DeliveryResponse>
+    ): Response<GiveResponse>
 
     @FormUrlEncoded
     @POST("cabinet/")
@@ -80,4 +80,10 @@ interface WebserviceUrls {
 
     @POST("delivery/{hash_id}/revert_exit/")
     suspend fun undoDelivery(@Path("hash_id") hashId: String): Response<BaseResponse>
+
+    @POST("cell/{id}/deliver_to_store/")
+    suspend fun deliverToStore(@Path("id") id: Int): Response<BaseResponse>
+
+    @POST("cell/{id}/favorite/")
+    suspend fun favorite(@Path("id") id: Int): Response<BaseResponse>
 }

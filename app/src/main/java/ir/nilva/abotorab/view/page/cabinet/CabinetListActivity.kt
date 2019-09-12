@@ -27,17 +27,18 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         adapter = CabinetListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(MarginItemDecoration(20))
-        getCabinetList()
         fab.setOnClickListener { gotoCabinetPage() }
         AppDatabase.getInstance().cabinetDao().getAll().observe(this, Observer {
             adapter.submitList(it)
         })
+        getCabinetList()
     }
 
     private fun getCabinetList() {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val response = MyRetrofit.getInstance().webserviceUrls.cabinetList()
             if (response.isSuccessful) {
+                AppDatabase.getInstance().cabinetDao().clear()
                 AppDatabase.getInstance().cabinetDao().insert(response.body()!!)
             }
         }

@@ -60,7 +60,7 @@ class GiveFragment : Fragment() {
     }
 
     private fun showSearchResult(list: List<DeliveryResponse>?) {
-        if (list == null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             toastError("هیچ موردی یافت نشد")
             return
         }
@@ -74,8 +74,13 @@ class GiveFragment : Fragment() {
         val dialog = MaterialDialog(context!!)
         list.forEach { item ->
             view.addView(layoutInflater.inflate(R.layout.item_pilgirim, null).apply {
-                title.text = item.pilgrim
-                subTitle.text = item.enteredAt
+                var cabinetCode = -1
+                val packs = item.pack
+                if (packs.isNotEmpty()) cabinetCode = packs[0].cell
+                title.text = item.pilgrim.country + " از " + item.pilgrim.name
+                phoneNumber.text = "شماره تلفن:" + item.pilgrim.phone
+                cabinet.text = " شماره قفسه:$cabinetCode"
+                subTitle.text = "زمان تحویل:" + item.enteredAt
                 setOnClickListener {
                     dialog.dismiss()
                     (activity as GiveActivity).callGiveWS(item.hashId)

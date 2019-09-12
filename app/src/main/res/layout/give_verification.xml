@@ -30,49 +30,37 @@
             android:paddingTop="16dp">
 
         <TextView
-                android:id="@+id/title"
-                style="@style/TextAppearance.AppCompat.Body1"
+                android:id="@+id/fullName"
+                style="@style/TextAppearance.AppCompat.Display1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 tools:text="First Line" />
 
         <TextView
+                android:id="@+id/county"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                tools:text="Second Line"/>
+
+        <TextView
                 android:id="@+id/phoneNumber"
-                style="@style/TextAppearance.AppCompat.Caption"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 tools:text="Second Line"/>
 
         <TextView
-                android:id="@+id/cabinet"
-                style="@style/TextAppearance.AppCompat.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                tools:text="Second Line"/>
-
-        <TextView
-                android:id="@+id/subTitle"
-                style="@style/TextAppearance.AppCompat.Caption"
+                android:id="@+id/cellCode"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 tools:text="Second Line" />
     </LinearLayout>
 
-    <!-- Can be replaced by a widget -->
-    <ImageView
-            android:id="@+id/secondary_action"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerInside"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/avatar"/>
+
 </RelativeLayout>

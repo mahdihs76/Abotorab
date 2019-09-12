@@ -54,14 +54,16 @@ class TakeActivity : BaseActivity() {
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
                 try {
-                    MyRetrofit.getService().take(
+                    val response = MyRetrofit.getService().take(
                         firstName.text.toString(),
                         lastName.text.toString(), phone.text.toString(),
                         country.text.toString(), passportId.text.toString(),
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
                     hideLoading()
-                    toastSuccess("محموله با موفقیت تحویل گرفته شد")
+                    if (response.isSuccessful) {
+                        toastSuccess("محموله با موفقیت تحویل گرفته شد")
+                    } else toastError(response.errorBody()?.string()?:"")
                     resetUi()
                 } catch (e: Exception) {
                     hideLoading()
@@ -108,9 +110,11 @@ class TakeActivity : BaseActivity() {
 
     private fun showLoading() {
         spinKit.visibility = View.VISIBLE
+        submit.visibility = View.INVISIBLE
     }
 
     private fun hideLoading() {
         spinKit.visibility = View.GONE
+        submit.visibility = View.VISIBLE
     }
 }

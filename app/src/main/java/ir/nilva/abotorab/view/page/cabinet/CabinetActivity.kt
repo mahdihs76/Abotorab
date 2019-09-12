@@ -13,6 +13,7 @@ import ir.nilva.abotorab.helper.getColumnsNumber
 import ir.nilva.abotorab.helper.getRowsNumber
 import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.model.CabinetResponse
+import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
 import kotlinx.android.synthetic.main.activity_cabinet.*
@@ -149,7 +150,12 @@ class CabinetActivity : BaseActivity() {
 
     private fun showPopup(view: View, index: Int) {
         val popupView = LayoutInflater.from(this).inflate(R.layout.cabinet_popup, null)
-        if (currentCabinet.getCell(index).isHealthy) {
+
+        val cell = currentCabinet.getCell(index)
+        if (cell.age > -1) {
+            popupView.layout1.visibility = View.GONE
+        }
+        if (cell.isHealthy) {
             popupView.layout1.setOnClickListener {
                 popup.dissmiss()
                 changeStatus(index, false)
@@ -157,6 +163,7 @@ class CabinetActivity : BaseActivity() {
             popupView.text1.text = "غیر قابل استفاده"
             popupView.image1.imageResource = R.mipmap.error
         } else {
+            popupView.layout2.visibility = View.GONE
             popupView.layout1.setOnClickListener {
                 popup.dissmiss()
                 changeStatus(index, true)
@@ -164,6 +171,29 @@ class CabinetActivity : BaseActivity() {
             popupView.text1.text = "قابل استفاده"
             popupView.image1.imageResource = R.mipmap.success
         }
+        popupView.layout2.setOnClickListener {
+            popup.dissmiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                val response = MyRetrofit.getService().favorite(cell.code.toInt())
+                if (response.isSuccessful){
+                    getPrevFavorite()?.isFavorite = false
+                    cell.isFavorite = true
+                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                } else toastError("Error")
+            }
+        }
+        if (cell.age == 1) {
+            popupView.layout3.visibility = View.VISIBLE
+        }
+
+        popupView.layout3.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                MyRetrofit.getService().deliverToStore(cell.code.toInt())
+                cell.age = -1
+                AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+            }
+        }
+
         popup = CustomPopWindow.PopupWindowBuilder(this)
             .setView(popupView)
             .size(500, 300)
@@ -171,6 +201,15 @@ class CabinetActivity : BaseActivity() {
             .setOutsideTouchable(true)
             .create()
             .showAsDropDown(view, 0, 10)
+    }
+
+    private fun getPrevFavorite(): Cell? {
+        for (row in currentCabinet.rows) {
+            for (cell in row.cells) {
+                if (cell.isFavorite) return cell
+            }
+        }
+        return null
     }
 
     private fun changeStatus(index: Int, isHealthy: Boolean) =

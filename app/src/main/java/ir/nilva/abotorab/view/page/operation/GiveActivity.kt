@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.google.android.material.tabs.TabLayout
-import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
@@ -21,6 +21,7 @@ import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
 import kotlinx.android.synthetic.main.activity_give.*
 import kotlinx.android.synthetic.main.activity_take.bottom_navigation
+import kotlinx.android.synthetic.main.give_verification.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,16 +75,23 @@ class GiveActivity : BaseActivity() {
         if (extras != null && extras.containsKey("barcode")) {
             val barcode = extras.getString("barcode")
             if (!barcode.isNullOrEmpty()) {
-                val data = Base64.decode(barcode.toString(), Base64.DEFAULT)
-                val text = String(data, Charsets.UTF_8)
-                val splitted = text.split("#")
-                val firstName = splitted[0]
-                val lastName = splitted[1]
-                val lastPhoneDigits = splitted[2]
-                val hashId = splitted[3]
+                val text = String(
+                    Base64.decode(
+                        barcode.toString(),
+                        Base64.DEFAULT
+                    ),
+                    Charsets.UTF_8
+                ).split("#")
+                val hashId = text[2]
+                val view = layoutInflater.inflate(R.layout.give_verification, null).apply {
+                    fullName.text = text[0]
+                    county.text = text[1]
+                    phoneNumber.text = text[3]
+                    cellCode.text = text[4]
+                }
                 MaterialDialog(this).show {
+                    customView(view = view)
                     title(text = "تایید")
-                    message(text = "محموله به $firstName $lastName تحویل داده شود؟ ")
                     positiveButton(text = "بله") { callGiveWS(hashId) }
                     negativeButton(text = "خیر")
                 }
@@ -131,13 +139,16 @@ class GiveActivity : BaseActivity() {
                 val delivery = response.body() ?: return@launch
                 AppDatabase.getInstance().deliveryDao().insert(
                     listOf(
-                    DeliveryEntity(
-                        nickname = delivery.pilgrim,
-                        exitedAt = delivery.exitAt,
-                        hashId = delivery.hashId)
+                        DeliveryEntity(
+                            nickname = delivery.pilgrim.name,
+                            country = delivery.pilgrim.country,
+                            phone = delivery.pilgrim.phone,
+                            exitedAt = delivery.exitAt,
+                            hashId = delivery.hashId
+                        )
+                    )
                 )
-                )
-            } else toastError(response.toString())
+            } else toastError(response.errorBody()?.string() ?: "")
         } catch (e: Exception) {
             toastError(e.message.toString())
         }

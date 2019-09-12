@@ -6,8 +6,9 @@ import java.io.Serializable
 data class Cell(
     @SerializedName("id") val id: Int,
     @SerializedName("code") val code: String,
-    @SerializedName("age") val age: Int,
+    @SerializedName("age") var age: Int,
     @SerializedName("is_healthy") var isHealthy: Boolean,
+    @SerializedName("is_fav") var isFavorite: Boolean,
     @SerializedName("size") val size: Int,
     @SerializedName("row") val row: Int
 ) : Serializable

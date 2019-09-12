@@ -8,6 +8,7 @@ import android.widget.BaseAdapter
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.getCell
+import ir.nilva.abotorab.helper.getImageResource
 import ir.nilva.abotorab.model.CabinetResponse
 import kotlinx.android.synthetic.main.cabinet.view.*
 
@@ -18,7 +19,8 @@ class CabinetAdapter(var cabinet: CabinetResponse?, var rows: Int, var columns: 
         LayoutInflater.from(ApplicationContext.context).inflate(R.layout.cabinet, null).apply {
             cabinet ?: return@apply
             val cell = cabinet?.getCell(p0)
-            image.alpha = if(cell != null && cell.isHealthy) 1.0F else 0.3F
+            cell ?: return@apply
+            image.setImageResource(cell.getImageResource())
         }
 
     override fun getItem(p0: Int) = null
