@@ -18,7 +18,6 @@
             android:hint="@string/first_name"
             android:inputType="text"
             android:textColor="#000000"
-            android:maxLength="11"
             android:textColorHint="#000000"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -35,7 +34,6 @@
             android:hint="@string/last_name"
             android:inputType="text"
             android:textColor="#000000"
-            android:maxLength="11"
             android:textColorHint="#000000"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -53,7 +51,6 @@
             android:hint="@string/countryHint"
             android:inputType="text"
             android:textColor="#000000"
-            android:maxLength="11"
             android:textColorHint="#000000"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -87,7 +84,6 @@
             android:hint="@string/phoneNumberHint"
             android:inputType="phone"
             android:textColor="#000000"
-            android:maxLength="11"
             android:textColorHint="#000000"
             android:textSize="20sp"
             android:textStyle="bold"/>

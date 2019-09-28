@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.llollox:androidtoggleswitch:2.0.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.afollestad.material-dialogs:input:3.1.1'
+    implementation 'com.github.navasmdc:MaterialDesign:1.5@aar'
 
     implementation "androidx.room:room-runtime:2.2.0-rc01"
     kapt "androidx.room:room-compiler:2.2.0-rc01"
