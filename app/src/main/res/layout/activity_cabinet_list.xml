@@ -23,6 +23,7 @@
             android:src="@drawable/add_white"
             android:background="@color/colorAccent"
             android:contentDescription="@string/submit"
+            app:fabCustomSize="60dp"
             android:layout_margin="16dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

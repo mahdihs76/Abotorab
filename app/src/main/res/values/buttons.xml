@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="icons">
-        <item>@drawable/cabinet_plus</item>
-        <item>@drawable/statistics</item>
-        <item>@drawable/cabinet_minus</item>
-        <item>@drawable/cabinets</item>
-        <item>@drawable/shut_down</item>
+        <item>@mipmap/briefcase</item>
+        <item>@mipmap/abacus</item>
+        <item>@mipmap/receipt</item>
+        <item>@mipmap/shelves_icon</item>
     </array>
     <array name="colors">
-        <item>@color/menuColor</item>
         <item>@color/menuColor</item>
         <item>@color/menuColor</item>
         <item>@color/menuColor</item>

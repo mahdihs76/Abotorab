@@ -12,7 +12,6 @@ enum class MenuItem(val index: Int, val text: String) {
     CABINET_REPORT(1, ApplicationContext.context.getString(R.string.report)),
     CABINET_GIVE(2, ApplicationContext.context.getString(R.string.cabinet_give)),
     CABINET_INIT(3, ApplicationContext.context.getString(R.string.init)),
-    LOGOUT(4, ApplicationContext.context.getString(R.string.logout));
 }
 
 fun getMenuItem(index: Int) = MenuItem.values().toList().find { item -> item.index == index }

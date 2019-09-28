@@ -75,24 +75,28 @@ class GiveActivity : BaseActivity() {
         if (extras != null && extras.containsKey("barcode")) {
             val barcode = extras.getString("barcode")
             if (!barcode.isNullOrEmpty()) {
-                val text = String(
-                    Base64.decode(
-                        barcode.toString(),
-                        Base64.DEFAULT
-                    ),
-                    Charsets.UTF_8
-                ).split("#")
-                val hashId = text[2]
-                val view = layoutInflater.inflate(R.layout.give_verification, null)
-                view.nickName.text = text[0]
-                view.county.text = "از کشور ${text[1]}"
-                view.phoneNumber.text = "شماره تلفن‌ : ${text[3]}" + "********"
-                view.cellCode.text = "شماره قفسه : ${text[4]}"
-                MaterialDialog(this).show {
-                    customView(view = view)
-                    title(text = "تایید")
-                    positiveButton(text = "بله") { callGiveWS(hashId) }
-                    negativeButton(text = "خیر")
+                try {
+                    val text = String(
+                        Base64.decode(
+                            barcode.toString(),
+                            Base64.DEFAULT
+                        ),
+                        Charsets.UTF_8
+                    ).split("#")
+                    val hashId = text[2]
+                    val view = layoutInflater.inflate(R.layout.give_verification, null)
+                    view.nickName.text = text[0]
+                    view.county.text = "از کشور ${text[1]}"
+                    view.phoneNumber.text = "شماره تلفن‌ : ${text[3]}" + "********"
+                    view.cellCode.text = "شماره قفسه : ${text[4]}"
+                    MaterialDialog(this).show {
+                        customView(view = view)
+                        title(text = "تایید")
+                        positiveButton(text = "بله") { callGiveWS(hashId) }
+                        negativeButton(text = "خیر")
+                    }
+                } catch (e: Exception) {
+                    toastError("بارکد اسکن شده معتبر نمیباشد")
                 }
             }
         }

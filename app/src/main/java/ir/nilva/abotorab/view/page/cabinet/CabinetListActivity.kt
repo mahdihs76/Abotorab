@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.activity_cabinet_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.RecyclerView
+
 
 class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetListener {
 
@@ -27,6 +29,14 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         adapter = CabinetListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(MarginItemDecoration(20))
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0)
+                    fab.hide()
+                else if (dy < 0)
+                    fab.show()
+            }
+        })
         fab.setOnClickListener { gotoCabinetPage() }
         AppDatabase.getInstance().cabinetDao().getAll().observe(this, Observer {
             adapter.submitList(it)

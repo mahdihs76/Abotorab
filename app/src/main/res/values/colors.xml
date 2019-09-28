@@ -17,7 +17,7 @@
     <color name="rateColor">#965acaaf</color>
     <color name="lightGreen">#56E392</color>
     <color name="strongGreen">#0c8c42</color>
-    <color name="menuColor">#D5D5DE</color>
+    <color name="menuColor">@color/colorAccent</color>
     <color name="gray">#6effffff</color>
     <color name="ssss">#00E990</color>
     <color name="tiny_transparent">#33242222</color>

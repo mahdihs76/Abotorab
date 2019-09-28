@@ -20,6 +20,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCircularMenu()
+        logout.setOnClickListener { logout() }
     }
 
     private fun initCircularMenu() {
@@ -52,7 +53,6 @@ fun MenuItem.action(activity: Activity) {
         MenuItem.CABINET_TAKE -> activity.gotoTakePage()
         MenuItem.CABINET_INIT -> activity.gotoCabinetListPage()
         MenuItem.CABINET_REPORT -> activity.gotoReportPage()
-        MenuItem.LOGOUT -> activity.logout()
     }
 }
 
