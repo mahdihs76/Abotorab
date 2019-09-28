@@ -50,10 +50,12 @@ class CabinetListAdapter(
     }
 
     fun deleteItem(position: Int) {
-        notifyItemRemoved(position)
         listener.deleteCabinet(
             getItem(position).code
-        )
+        ) {
+            notifyItemRemoved(position)
+            notifyDataSetChanged()
+        }
     }
 
     object CabinetDiff : DiffUtil.ItemCallback<CabinetResponse>() {
@@ -67,7 +69,7 @@ class CabinetListAdapter(
     interface OnClickCabinetListener {
         fun cabinetClicked(code: Int)
         fun printCabinet(view: View, code: Int)
-        fun deleteCabinet(code: Int)
+        fun deleteCabinet(code: Int, callback: () -> Unit)
     }
 
 }

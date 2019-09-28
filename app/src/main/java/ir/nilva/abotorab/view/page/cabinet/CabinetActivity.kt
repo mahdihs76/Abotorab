@@ -39,6 +39,10 @@ class CabinetActivity : BaseActivity() {
         initUi()
 
         val code = intent?.extras?.getInt("code")
+        observeOnDb(code)
+    }
+
+    private fun observeOnDb(code: Int?) {
         if (code != null && code != -1) {
             AppDatabase.getInstance().cabinetDao().get(code).observe(this, Observer {
                 rows = it.getRowsNumber()
@@ -67,6 +71,7 @@ class CabinetActivity : BaseActivity() {
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 adapter.cabinet = currentCabinet
                 moveToNextStep(true)
+                observeOnDb(currentCabinet.code)
             } catch (e: Exception) {
                 toastError(e.message.toString())
             }
@@ -108,6 +113,7 @@ class CabinetActivity : BaseActivity() {
     }
 
     private fun moveToNextStep(withAnimation: Boolean) {
+        if (step == 1) return
         step++
         if (withAnimation) {
             ViewAnimator
@@ -178,7 +184,7 @@ class CabinetActivity : BaseActivity() {
             popup.dissmiss()
             CoroutineScope(Dispatchers.Main).launch {
                 val response = MyRetrofit.getService().favorite(cell.code.toInt())
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     getPrevFavorite()?.isFavorite = false
                     cell.isFavorite = true
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)

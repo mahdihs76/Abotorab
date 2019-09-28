@@ -85,7 +85,7 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         }
     }
 
-    override fun deleteCabinet(code: Int) {
+    override fun deleteCabinet(code: Int, callback: () -> Unit) {
 //        MaterialDialog(this).show {
 //            title(text = "قفسه شماره $code حذف شود؟ ")
 //            positiveButton(text = "بله") {
@@ -100,7 +100,7 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
                     } catch (e: Exception) {
                         toastError(e.message.toString())
                     }
-
+                    callback()
                 }
 //            }
 //            negativeButton(text = "خیر")
