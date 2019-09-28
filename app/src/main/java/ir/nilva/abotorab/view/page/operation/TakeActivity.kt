@@ -33,8 +33,11 @@ class TakeActivity : BaseActivity() {
         setContentView(R.layout.activity_take)
 
         bagCount.minValue = 0
+        bagCount.sideTapEnabled = true
         suitcaseCount.minValue = 0
+        suitcaseCount.sideTapEnabled = true
         pramCount.minValue = 0
+        pramCount.sideTapEnabled = true
 
         bottom_navigation.addItem(AHBottomNavigationItem("دوربین", android.R.drawable.ic_menu_camera))
         bottom_navigation.defaultBackgroundColor = Color.parseColor("#0E4C59")

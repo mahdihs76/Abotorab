@@ -94,6 +94,8 @@ class CabinetActivity : BaseActivity() {
         columnsCount.minValue = 1
         rowsCount.maxValue = 10
         columnsCount.maxValue = 10
+        rowsCount.sideTapEnabled = true
+        columnsCount.sideTapEnabled = true
 
         rowsCount.count = rows
         columnsCount.count = columns
