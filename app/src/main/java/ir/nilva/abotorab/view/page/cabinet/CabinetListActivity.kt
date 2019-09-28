@@ -1,7 +1,10 @@
 package ir.nilva.abotorab.view.page.cabinet
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.gotoCabinetPage
@@ -14,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_cabinet_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.recyclerview.widget.RecyclerView
 
 
 class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetListener {
@@ -39,7 +41,9 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         })
         fab.setOnClickListener { gotoCabinetPage() }
         AppDatabase.getInstance().cabinetDao().getAll().observe(this, Observer {
-            adapter.submitList(it)
+            if (it.isNotEmpty()) {
+                adapter.submitList(it)
+            }
         })
         getCabinetList()
     }
@@ -56,8 +60,13 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
 
     override fun cabinetClicked(code: Int) = gotoCabinetPage(code)
 
-    override fun printCabinet(code: Int) {
+    override fun printCabinet(view: View, code: Int) {
         CoroutineScope(Dispatchers.Main).launch {
+            view.background = ContextCompat.getDrawable(
+                this@CabinetListActivity,
+                R.drawable.disable_bg
+            )
+            view.isEnabled = false
             try {
                 val response = MyRetrofit.getService().printCabinet(code)
                 if (response.isSuccessful) {
@@ -66,6 +75,11 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
             } catch (e: Exception) {
                 toastError(e.message.toString())
             }
+            view.background = ContextCompat.getDrawable(
+                this@CabinetListActivity,
+                R.drawable.print_bg
+            )
+            view.isEnabled = true
         }
     }
 

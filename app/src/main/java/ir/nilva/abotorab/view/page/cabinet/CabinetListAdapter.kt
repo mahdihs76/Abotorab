@@ -43,7 +43,9 @@ class CabinetListAdapter(
                 item.getColumnsNumber()
             )
             show.setOnClickListener { listener.cabinetClicked(item.code) }
-            print.setOnClickListener { listener.printCabinet(item.code) }
+            print.setOnClickListener {
+                listener.printCabinet(print, item.code)
+            }
         }
     }
 
@@ -57,7 +59,7 @@ class CabinetListAdapter(
 
     interface OnClickCabinetListener {
         fun cabinetClicked(code: Int)
-        fun printCabinet(code: Int)
+        fun printCabinet(view:View, code: Int)
     }
 
 }

@@ -49,7 +49,7 @@
                     android:layout_width="72dp"
                     android:text="چاپ"
                     android:textStyle="bold"
-                    android:background="@drawable/action_bg"
+                    android:background="@drawable/print_bg"
                     android:textSize="14sp"
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/show"
