@@ -68,6 +68,9 @@ interface WebserviceUrls {
     @POST("cabinet/{code}/print/")
     suspend fun printCabinet(@Path("code") code: Int): Response<BaseResponse>
 
+    @DELETE("cabinet/{code}/")
+    suspend fun deleteCabinet(@Path("code") code: Int): Response<BaseResponse>
+
     @GET("delivery/")
     suspend fun deliveryList(
         @Query("first_name") firstName: String,

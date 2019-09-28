@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
@@ -17,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_cabinet_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetListener {
 
@@ -39,6 +39,8 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
                     fab.show()
             }
         })
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
         fab.setOnClickListener { gotoCabinetPage() }
         AppDatabase.getInstance().cabinetDao().getAll().observe(this, Observer {
             if (it.isNotEmpty()) {
@@ -83,4 +85,26 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         }
     }
 
+    override fun deleteCabinet(code: Int) {
+//        MaterialDialog(this).show {
+//            title(text = "قفسه شماره $code حذف شود؟ ")
+//            positiveButton(text = "بله") {
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        val response = MyRetrofit.getService().deleteCabinet(code)
+                        if (response.isSuccessful) {
+                            AppDatabase.getInstance().cabinetDao().delete(code)
+                        } else {
+                            toastError(response.errorBody()?.string() ?: "")
+                        }
+                    } catch (e: Exception) {
+                        toastError(e.message.toString())
+                    }
+
+                }
+//            }
+//            negativeButton(text = "خیر")
+//        }
+
+    }
 }

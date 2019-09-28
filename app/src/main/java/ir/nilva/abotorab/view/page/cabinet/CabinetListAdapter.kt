@@ -49,6 +49,13 @@ class CabinetListAdapter(
         }
     }
 
+    fun deleteItem(position: Int) {
+        notifyItemRemoved(position)
+        listener.deleteCabinet(
+            getItem(position).code
+        )
+    }
+
     object CabinetDiff : DiffUtil.ItemCallback<CabinetResponse>() {
         override fun areItemsTheSame(oldItem: CabinetResponse, newItem: CabinetResponse) =
             oldItem.code == newItem.code
@@ -59,7 +66,8 @@ class CabinetListAdapter(
 
     interface OnClickCabinetListener {
         fun cabinetClicked(code: Int)
-        fun printCabinet(view:View, code: Int)
+        fun printCabinet(view: View, code: Int)
+        fun deleteCabinet(code: Int)
     }
 
 }
