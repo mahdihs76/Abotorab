@@ -13,6 +13,9 @@ interface CabinetDao {
     @Query("SELECT * FROM cabinetresponse")
     fun getAll(): LiveData<List<CabinetResponse>>
 
+    @Query("SELECT * FROM cabinetresponse")
+    suspend fun getCabinets(): List<CabinetResponse>
+
     @Query("SELECT * FROM cabinetresponse WHERE code=:code")
     fun get(code: Int): LiveData<CabinetResponse>
 

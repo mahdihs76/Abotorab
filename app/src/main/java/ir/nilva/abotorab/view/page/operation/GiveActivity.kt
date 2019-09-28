@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
+import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
 import ir.nilva.abotorab.helper.gotoBarcodePage
 import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
@@ -140,21 +141,30 @@ class GiveActivity : BaseActivity() {
             if (response.isSuccessful) {
                 toastSuccess("محموله با موفقیت تحویل داده شد")
                 val delivery = response.body() ?: return@launch
-                AppDatabase.getInstance().deliveryDao().insert(
-                    listOf(
-                        DeliveryEntity(
-                            nickname = delivery.pilgrim.name,
-                            country = delivery.pilgrim.country,
-                            phone = delivery.pilgrim.phone,
-                            exitedAt = delivery.exitAt,
-                            hashId = delivery.hashId
-                        )
+                AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
+                    DeliveryEntity(
+                        nickname = delivery.pilgrim.name,
+                        country = delivery.pilgrim.country,
+                        phone = delivery.pilgrim.phone,
+                        exitedAt = delivery.exitAt,
+                        hashId = delivery.hashId
                     )
                 )
-            } else toastError(response.errorBody()?.string() ?: "")
+            } else {
+                toastError(
+                    response.errorBody()?.string() ?: "" + "\n"
+                    + "پس از برقراری ارتباط با سرور گزارش میشود"
+                )
+                cacheHashId(hashId)
+            }
         } catch (e: Exception) {
-            toastError(e.message.toString())
+            toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
+            cacheHashId(hashId)
         }
+    }
+
+    private suspend fun cacheHashId(hashId: String) {
+        AppDatabase.getInstance().offlineDeliveryDao().insert(OfflineDeliveryEntity(hashId))
     }
 
 }

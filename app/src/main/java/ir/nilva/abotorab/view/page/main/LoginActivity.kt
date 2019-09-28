@@ -22,7 +22,7 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(ir.nilva.abotorab.R.layout.accounting_main)
+        setContentView(R.layout.accounting_main)
 
         ip.setOnClickListener {
             MaterialDialog(this).show {
@@ -99,10 +99,12 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun showLoading() {
+        submit.visibility = View.INVISIBLE
         spinKit.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
+        submit.visibility = View.VISIBLE
         spinKit.visibility = View.GONE
     }
 }

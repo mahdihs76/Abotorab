@@ -3,12 +3,17 @@ package ir.nilva.abotorab.view.page.main
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.ramotion.circlemenu.CircleMenuView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
+import ir.nilva.abotorab.work.DeliveryWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +26,41 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         initCircularMenu()
         logout.setOnClickListener { logout() }
+        sendCachedHashes2Server()
+        fillHeader()
+    }
+
+    private fun fillHeader() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val cabinets = AppDatabase.getInstance().cabinetDao().getCabinets()
+            val deliveries = AppDatabase.getInstance().deliveryDao().getDeliveries()
+            cabinetCount.text = cabinets.size.toString()
+            registerCount.text = deliveries.size.toString()
+            var emptySpace = 0
+            cabinets.forEach {
+                emptySpace += it.rows.size * it.rows[0].cells.size
+            }
+            emptySpace -= deliveries.size
+            emptyCabinets.text = emptySpace.toString()
+        }
+    }
+
+    private fun sendCachedHashes2Server() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val offlineDeliveries =
+                AppDatabase.getInstance().offlineDeliveryDao().getAll()
+            if (!offlineDeliveries.isNullOrEmpty()) {
+                WorkManager.getInstance(this@MainActivity).enqueue(
+                    OneTimeWorkRequestBuilder<DeliveryWorker>()
+                        .setConstraints(
+                            Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+        }
     }
 
     private fun initCircularMenu() {
@@ -63,6 +103,7 @@ fun Activity.logout() {
             CoroutineScope(Dispatchers.Main).launch {
                 AppDatabase.getInstance().deliveryDao().clear()
                 AppDatabase.getInstance().cabinetDao().clear()
+                AppDatabase.getInstance().offlineDeliveryDao().clear()
                 defaultCache()["token"] = null
                 finish()
             }

@@ -7,6 +7,14 @@
         tools:context=".view.page.main.LoginActivity">
 
 
+    <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:src="@mipmap/mosque" />
+
     <EditText
             android:id="@+id/username"
             android:layout_width="220dp"
@@ -48,6 +56,18 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="80dp" />
 
+
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spinKit"
+            style="@style/SpinKitView.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ipLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:visibility="gone"
+            app:SpinKit_Color="@color/gray" />
+
     <LinearLayout
             android:id="@+id/ipLayout"
             android:layout_width="match_parent"
@@ -69,9 +89,9 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="|"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:text="|" />
+                android:textSize="16sp" />
 
 
         <TextView
@@ -87,15 +107,5 @@
     </LinearLayout>
 
 
-    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/spinKit"
-            style="@style/SpinKitView.CubeGrid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/username"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:visibility="gone"
-            app:SpinKit_Color="@color/gray" />
 
 </RelativeLayout>

@@ -183,12 +183,16 @@ class CabinetActivity : BaseActivity() {
         popupView.layout2.setOnClickListener {
             popup.dissmiss()
             CoroutineScope(Dispatchers.Main).launch {
-                val response = MyRetrofit.getService().favorite(cell.code.toInt())
-                if (response.isSuccessful) {
-                    getPrevFavorite()?.isFavorite = false
-                    cell.isFavorite = true
-                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
-                } else toastError("Error")
+                try {
+                    val response = MyRetrofit.getService().favorite(cell.code.toInt())
+                    if (response.isSuccessful) {
+                        getPrevFavorite()?.isFavorite = false
+                        cell.isFavorite = true
+                        AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                    } else toastError("Error")
+                } catch (e: Exception) {
+                    toastError("Error")
+                }
             }
         }
         if (cell.age == 1) {
