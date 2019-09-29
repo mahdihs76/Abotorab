@@ -5,22 +5,11 @@
     <color name="colorAccent">#0E4C59</color>
     <color name="trans">#00000000 </color>.
     <color name="full_screen">#33000000</color>.
-    <color name="seekBar">#0008ff</color>
-    <color name="buttonBackground">#be3da4f0</color>
-    <color name="paymentButtonBackground">#803bccea</color>
-    <color name="paymentButtonSelectedBackground">#00f5ff</color>.
-    <color name="paymentButtonSelectedTextColor">#134abe</color>
-    <color name="addColor">#00ccff</color>
-    <color name="editTextBackgroundColor">#7f63c7fa</color>
-    <color name="editTextBorderColor">#8a9bed</color>
+    .
     <color name="white">#ffffff</color>
-    <color name="progressColor">#E56126</color>
     <color name="rateColor">#965acaaf</color>
-    <color name="lightGreen">#56E392</color>
-    <color name="strongGreen">#0c8c42</color>
     <color name="menuColor">@color/colorAccent</color>
     <color name="gray">#6effffff</color>
-    <color name="ssss">#00E990</color>
     <color name="tiny_transparent">#33242222</color>
     <color name="action_color">#57B99D</color>
     <color name="print_color">#38495C</color>

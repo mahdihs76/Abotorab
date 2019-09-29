@@ -1,55 +1,17 @@
 <resources>
     <string name="app_name">Abotorab</string>
     <string name="submit">تایید</string>
-    <string name="phone_number">شماره همراه</string>
     <string name="cabinet_take">تحویل گرفتن</string>
     <string name="init">راه اندازی اولیه</string>
-    <string name="logout">خروج</string>
     <string name="report">گزارش گیری</string>
-    <string name="trusted">معتمدها</string>
-    <string name="apply_loan">دریافت وام</string>
     <string name="cabinet_give">تحویل دادن</string>
 
-    <string name="action_overflow_menu">overflow menu</string>
-    <string name="lending">ارائه وام</string>
-    <string name="loanAmountLabel">میزان وام</string>
-    <string name="paymentTime">مدت پرداخت</string>
-    <string name="loanRequest">درخواست وام</string>
-    <string name="monthlyPayment">میزان قسط ماهیانه</string>
-    <string name="paymentAmount">۸۰ تومان</string>
-    <string name="paymentDescription">توضیحات</string>
-    <string name="loanAmount">%s تومان</string>
-
-    <string name="nameHint">نام و نام خانوادگی</string>
     <string name="phoneNumberHint">شماره تماس</string>
-    <string name="creditNumberHint">شماره حساب</string>
-    <string name="emailHint">ایمیل</string>
-    <string name="addressHint">آدرس</string>
     <string name="cancel">انصراف</string>
-    <string name="currentPayment">قسط های جاری</string>
-    <string name="paidPayment">قسط های گذشته</string>
-    <string name="paymentDateLabel">زمان قسط</string>
-    <string name="pay">پرداخت</string>
-    <string name="paid">تصویه شد</string>
-    <string name="empty_cabinet">قفسه های خالی</string>
-    <string name="cabinet_count">کل قفسه ها</string>
     <string name="register_count">پذیرش شده</string>
-    <string name="zero">0</string>
     <string name="password">رمز عبور</string>
-    <string name="again_password">رمز عبور مجدد</string>
-    <string name="login_page_title">فعالسازی اکانت شما با موفقیت انجام شد \n رمز عبوری برای ورود به اکانت خود انتخاب
-        کنید
-    </string>
-    <string name="add_certified_person">افزودن فرد</string>
-    <string name="add_certified_person_description">تا چه میزان به صورت ماهانه ایشان را ضمانت میکنید؟</string>
-    <string name="phone_number_error">شماره تلفن وارد شده صحیح نیست</string>
     <string name="error">خطا</string>
     <string name="successful">موفق</string>
-    <string name="register_error">ثبت رمزعبور امکانپذیر نیست لطفا دوباره ثبتنام کنید</string>
-    <string name="login_error">خطایی در ورود به برنامه رخ داده است</string>
-    <string name="toman_format">%d تومان</string>
-    <string name="create_loan_request_success">درخواست وام شما ثبت شد</string>
-    <string name="trust_successful">درخواست اعتماد شما ثبت شد</string>
     <string name="first_name">نام</string>
     <string name="last_name">نام خانوادگی</string>
     <string name="usernameHint">نام کاربری</string>
@@ -60,17 +22,13 @@
     <string name="pram">کالسکه</string>
     <string name="take">تحویل گرفتن</string>
     <string name="camera_permission_warning">دسترسی به دوربین فراهم نشد</string>
-    <string name="QRCodeHint">کد رسید</string>
-    <string name="give">تحویل دادن</string>
     <string name="rowsCount">ردیف</string>
     <string name="columnsCount">ستون</string>
-    <string name="impossible_to_use">غیرقابل استفاده</string>
 
     <string name="cabinet_format">قفسه شماره %s</string>
     <string name="row_and_column_format">ستون: %d - ردیف:‌ %d</string>
     <string name="search">جست و جو</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
