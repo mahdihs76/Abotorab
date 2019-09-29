@@ -62,6 +62,9 @@ interface WebserviceUrls {
     @GET("report/")
     suspend fun report(): Response<ReportResponse>
 
+    @GET("report/start/")
+    suspend fun startReport(): Response<StartReportResponse>
+
     @GET("cabinet/")
     suspend fun cabinetList(): Response<List<CabinetResponse>>
 

@@ -8,10 +8,7 @@ import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.helper.getCell
-import ir.nilva.abotorab.helper.getColumnsNumber
-import ir.nilva.abotorab.helper.getRowsNumber
-import ir.nilva.abotorab.helper.toastError
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -45,6 +42,7 @@ class CabinetActivity : BaseActivity() {
     private fun observeOnDb(code: Int?) {
         if (code != null && code != -1) {
             AppDatabase.getInstance().cabinetDao().get(code).observe(this, Observer {
+                it ?: return@Observer
                 rows = it.getRowsNumber()
                 columns = it.getColumnsNumber()
                 currentCabinet = it
@@ -59,6 +57,7 @@ class CabinetActivity : BaseActivity() {
         initSteppers()
         initGrid()
         submit.setOnClickListener { addCabinet() }
+        fullScreen.setOnClickListener { gotoFullScreenPage(currentCabinet.code) }
     }
 
     private fun addCabinet() {
@@ -129,6 +128,8 @@ class CabinetActivity : BaseActivity() {
                 .alpha(0F)
                 .andAnimate(secondSubHeader)
                 .alpha(1F)
+                .andAnimate(fullScreen)
+                .alpha(1F)
                 .start()
         } else {
             steppers.visibility = View.GONE
@@ -136,6 +137,7 @@ class CabinetActivity : BaseActivity() {
             submit.visibility = View.GONE
             subHeader.alpha = 0F
             secondSubHeader.alpha = 1F
+            fullScreen.alpha = 1F
         }
         header.text = String.format(
             getString(R.string.cabinet_format),

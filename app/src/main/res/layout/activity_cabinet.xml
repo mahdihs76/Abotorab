@@ -1,126 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent" android:layout_height="match_parent"
-                android:background="@mipmap/background"
-                tools:context=".view.page.operation.TakeActivity">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/background"
+        tools:context=".view.page.operation.TakeActivity">
 
     <TextView
             android:id="@+id/header"
-            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="راه اندازی قفسه"
             android:textColor="@color/white"
             android:textSize="28sp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="راه اندازی قفسه"/>
+            android:textStyle="bold" />
+
     <TextView
             android:id="@+id/subHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:alpha="1"
+            android:gravity="right"
+            android:text="برای راه اندازی قفسه امانت داری تعداد ستون و ردیف قفسه را وارد کنید:"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:layout_marginRight="24dp"
-            android:layout_marginLeft="24dp"
-            android:gravity="right"
-            android:layout_below="@id/header"
-            android:textStyle="bold"
-            android:alpha="1"
-            android:text="برای راه اندازی قفسه امانت داری تعداد ستون و ردیف قفسه را وارد کنید:"/>
+            android:textStyle="bold" />
 
     <TextView
             android:id="@+id/secondSubHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:layout_marginRight="24dp"
+            android:layout_below="@id/header"
             android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:alpha="0"
             android:gravity="right"
-            android:layout_below="@id/header"
-            android:textStyle="bold"
-            android:text="برای تغییر وضعیت هر یک از سلول ها روی آن کلیک کنید:"/>
+            android:text="برای تغییر وضعیت هر یک از سلول ها روی آن کلیک کنید:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
-    <LinearLayout android:id="@+id/labels"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:layout_marginTop="12dp"
-                  android:layout_below="@id/subHeader"
-                  android:orientation="horizontal">
+    <LinearLayout
+            android:id="@+id/labels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subHeader"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
         <TextView
                 android:id="@+id/rowsLabel"
                 android:layout_width="100dp"
-                android:layout_marginLeft="12dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
                 android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/white"
                 android:text="@string/rowsCount"
-                android:layout_marginStart="12dp"/>
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
         <TextView
                 android:id="@+id/columnsLabel"
                 android:layout_width="100dp"
-                android:layout_marginLeft="12dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
                 android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/white"
                 android:text="@string/columnsCount"
-                android:layout_marginStart="12dp"/>
+                android:textColor="@color/white"
+                android:textSize="20sp" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/steppers" android:layout_below="@id/labels"
-                  android:gravity="center"
-                  android:layout_marginTop="8dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
+    <LinearLayout
+            android:id="@+id/steppers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/labels"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
 
 
         <nl.dionsegijn.steppertouch.StepperTouch
                 android:id="@+id/rowsCount"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                app:stepperBackgroundColor="@color/colorAccent" android:layout_marginStart="12dp"/>
+                app:stepperBackgroundColor="@color/colorAccent" />
 
 
         <nl.dionsegijn.steppertouch.StepperTouch
                 android:id="@+id/columnsCount"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                app:stepperBackgroundColor="@color/colorAccent" android:layout_marginStart="12dp"/>
+                app:stepperBackgroundColor="@color/colorAccent" />
 
     </LinearLayout>
 
     <GridView
             android:id="@+id/grid"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/submit"
             android:layout_below="@id/steppers"
             android:layout_marginTop="12dp"
             android:horizontalSpacing="4dp"
-            android:verticalSpacing="4dp"
             android:padding="24dp"
             android:scaleType="centerCrop"
-            android:layout_above="@id/submit"
-            android:layout_height="wrap_content"/>
+            android:verticalSpacing="4dp" />
+
+
+    <ImageView
+            android:id="@+id/fullScreen"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:alpha="1"
+            android:background="@drawable/full_screen_bg"
+            android:src="@mipmap/full_size" />
 
     <Button
             android:id="@+id/submit"
             android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
+            android:layout_height="42dp"
             android:layout_alignParentBottom="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="اعمال کردن"
+            android:background="@color/colorPrimary"
             android:gravity="center"
-            android:layout_height="42dp"/>
+            android:text="اعمال کردن"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
 </RelativeLayout>

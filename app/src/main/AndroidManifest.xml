@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="ir.nilva.abotorab">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="ir.nilva.abotorab">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
             android:name=".MyApplication"
@@ -12,43 +12,40 @@
             android:label="@string/app_name"
             android:networkSecurityConfig="@xml/network_security_config"
             android:roundIcon="@mipmap/mosque"
-            android:usesCleartextTraffic="true"
             android:supportsRtl="false"
             android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true"
             tools:replace="android:supportsRtl">
-        <activity android:name="ir.nilva.abotorab.view.page.cabinet.CabinetListActivity">
-        </activity>
+        <activity
+                android:name=".view.page.cabinet.FullScreenActivity"
+                android:screenOrientation="landscape" />
+        <activity android:name=".view.page.cabinet.CabinetListActivity"></activity>
         <activity
                 android:name=".view.page.operation.ReportActivity"
-                android:screenOrientation="portrait">
-        </activity>
+                android:screenOrientation="portrait"></activity>
         <activity
-                android:name="ir.nilva.abotorab.view.page.cabinet.CabinetActivity">
-        </activity>
+                android:name=".view.page.cabinet.CabinetActivity"
+                android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.operation.GiveActivity"
-                android:windowSoftInputMode="adjustNothing"
-                android:screenOrientation="portrait">
-        </activity>
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustNothing"></activity>
         <activity
                 android:name=".view.page.operation.BarcodeActivity"
-                android:screenOrientation="portrait">
-        </activity>
+                android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.operation.TakeActivity"
-                android:screenOrientation="portrait">
-        </activity>
+                android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.main.MainActivity"
-                android:screenOrientation="portrait">
-        </activity>
+                android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.main.LoginActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

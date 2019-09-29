@@ -13,6 +13,7 @@ import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
+import ir.nilva.abotorab.webservices.MyRetrofit
 import ir.nilva.abotorab.work.DeliveryWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,16 +33,15 @@ class MainActivity : BaseActivity() {
 
     private fun fillHeader() {
         CoroutineScope(Dispatchers.Main).launch {
-            val cabinets = AppDatabase.getInstance().cabinetDao().getCabinets()
-            val deliveries = AppDatabase.getInstance().deliveryDao().getDeliveries()
-            cabinetCount.text = cabinets.size.toString()
-            registerCount.text = deliveries.size.toString()
-            var emptySpace = 0
-            cabinets.forEach {
-                emptySpace += it.rows.size * it.rows[0].cells.size
-            }
-            emptySpace -= deliveries.size
-            emptyCabinets.text = emptySpace.toString()
+            try {
+                val response = MyRetrofit.getService().startReport()
+                if (response.isSuccessful) {
+                    val startReport = response.body() ?: return@launch
+                    cabinetCount.text = startReport.totalCabinets.toString()
+                    emptyCabinets.text = startReport.emptyCells.toString()
+                    registerCount.text = startReport.totalDeliveries.toString()
+                }
+            } catch (e: Exception) { }
         }
     }
 
