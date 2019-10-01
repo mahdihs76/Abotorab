@@ -2,12 +2,7 @@ package ir.nilva.abotorab.webservices
 
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.helper.toastError
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import java.net.UnknownHostException
 
@@ -49,36 +44,11 @@ suspend fun <T> callWebservice(
     }
 }
 
-fun <T> Call<T>.call(success: ((T) -> Unit)? = null): Callback<T>? {
-    try {
-        val callback = object : Callback<T> {
-            override fun onFailure(call: Call<T>, t: Throwable) {
-                handleFailure(t)
-            }
-
-            override fun onResponse(call: Call<T>, response: Response<T>) {
-                if (response.isSuccessful) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        success?.invoke(response.body()!!)
-                    }
-                } else {
-                    handleError(response.code(), response.errorBody())
-                }
-            }
-        }
-        enqueue(callback)
-        return callback
-    } catch (e: java.lang.Exception) {
-        handleException(e)
-    }
-    return null
-}
-
 private fun handleError(
     code: Int,
     errorBody: ResponseBody?
 ) {
-    onFailed(WebServiceError(), errorBody?.string() ?: "")
+    onFailed(WebServiceError(), errorBody?.string() ?: "", code)
 }
 
 private fun handleFailure(t: Throwable) {
@@ -93,12 +63,16 @@ private fun handleException(e: java.lang.Exception) {
     onFailed(e, e.message.toString())
 }
 
-fun onFailed(throwable: Throwable, errorBody: String) {
+fun onFailed(throwable: Throwable, errorBody: String, errorCode: Int = -1) {
     val context = ApplicationContext.context
     when (throwable) {
         is UnknownHostException -> context.toastError("لطفا اتصال خود را بررسی کنید")
         is WebServiceError -> {
-            context.toastError(errorBody)
+            if (errorCode == 403) {
+                context.toastError("شما دسترسی لازم را ندارید")
+            } else {
+                context.toastError(errorBody)
+            }
         }
     }
 }
