@@ -19,7 +19,8 @@ import ir.nilva.abotorab.helper.gotoBarcodePage
 import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebserviceWithFailure
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_give.*
 import kotlinx.android.synthetic.main.activity_take.bottom_navigation
 import kotlinx.android.synthetic.main.give_verification.view.*
@@ -136,34 +137,24 @@ class GiveActivity : BaseActivity() {
     }
 
     fun callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
-        try {
-            val response = MyRetrofit.getService().give(hashId)
-            if (response.isSuccessful) {
-                toastSuccess("محموله با موفقیت تحویل داده شد")
-                val delivery = response.body() ?: return@launch
-                AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
-                    DeliveryEntity(
-                        nickname = delivery.pilgrim.name,
-                        country = delivery.pilgrim.country,
-                        phone = delivery.pilgrim.phone,
-                        exitedAt = delivery.exitAt,
-                        hashId = delivery.hashId
-                    )
-                )
-            } else {
-                toastError(
-                    response.errorBody()?.string() ?: "" + "\n"
-                    + "پس از برقراری ارتباط با سرور گزارش میشود"
-                )
-                cacheHashId(hashId)
-            }
-        } catch (e: Exception) {
+        callWebserviceWithFailure({ getServices().give(hashId) }) {
             toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
             cacheHashId(hashId)
+        }?.run {
+            toastSuccess("محموله با موفقیت تحویل داده شد")
+            AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
+                DeliveryEntity(
+                    nickname = pilgrim.name,
+                    country = pilgrim.country,
+                    phone = pilgrim.phone,
+                    exitedAt = exitAt,
+                    hashId = hashId
+                )
+            )
         }
     }
 
-    private suspend fun cacheHashId(hashId: String) {
+    private fun cacheHashId(hashId: String) = CoroutineScope(Dispatchers.IO).launch {
         AppDatabase.getInstance().offlineDeliveryDao().insert(OfflineDeliveryEntity(hashId))
     }
 

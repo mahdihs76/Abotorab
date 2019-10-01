@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.toastError
+import ir.nilva.abotorab.helper.toastWarning
 import ir.nilva.abotorab.model.DeliveryResponse
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.fragment_give.*
 import kotlinx.android.synthetic.main.item_pilgirim.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -34,10 +35,10 @@ class GiveFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         search.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    search.visibility = View.INVISIBLE
-                    spinKit.visibility = View.VISIBLE
-                    val response = MyRetrofit.getService().deliveryList(
+                search.visibility = View.INVISIBLE
+                spinKit.visibility = View.VISIBLE
+                callWebservice {
+                    getServices().deliveryList(
                         firstName.text.toString(),
                         lastName.text.toString(),
                         country.text.toString(),
@@ -45,15 +46,9 @@ class GiveFragment : Fragment() {
                         passportId.text.toString(),
                         true
                     )
-                    if (response.isSuccessful) {
-                        showSearchResult(response.body())
-                    } else toastError(response.toString())
-                } catch (e: Exception) {
-                    toastError(e.message.toString())
-                } finally {
-                    search.visibility = View.VISIBLE
-                    spinKit.visibility = View.INVISIBLE
-                }
+                }?.run { showSearchResult(this) }
+                search.visibility = View.VISIBLE
+                spinKit.visibility = View.INVISIBLE
             }
         }
 
@@ -61,7 +56,7 @@ class GiveFragment : Fragment() {
 
     private fun showSearchResult(list: List<DeliveryResponse>?) {
         if (list == null || list.isEmpty()) {
-            toastError("هیچ موردی یافت نشد")
+            context?.toastWarning("هیچ موردی یافت نشد")
             return
         }
         val view = LinearLayout(context).apply {

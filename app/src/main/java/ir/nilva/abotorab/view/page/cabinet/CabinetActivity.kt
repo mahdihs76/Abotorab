@@ -8,11 +8,15 @@ import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.helper.*
+import ir.nilva.abotorab.helper.getCell
+import ir.nilva.abotorab.helper.getColumnsNumber
+import ir.nilva.abotorab.helper.getRowsNumber
+import ir.nilva.abotorab.helper.gotoFullScreenPage
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet.*
 import kotlinx.android.synthetic.main.cabinet_popup.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -62,17 +66,15 @@ class CabinetActivity : BaseActivity() {
 
     private fun addCabinet() {
         CoroutineScope(Dispatchers.Main).launch {
-            try {
-                submit.isClickable = false
-                currentCabinet = MyRetrofit.getInstance().webserviceUrls
-                    .cabinet("", rows, columns, 1, 1)
-                    .body()!!
+            submit.isClickable = false
+            callWebservice {
+                getServices().cabinet("", rows, columns, 1, 1)
+            }?.run {
+                currentCabinet = this
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 adapter.cabinet = currentCabinet
                 moveToNextStep(true)
                 observeOnDb(currentCabinet.code)
-            } catch (e: Exception) {
-                toastError(e.message.toString())
             }
         }
     }
@@ -185,15 +187,10 @@ class CabinetActivity : BaseActivity() {
         popupView.layout2.setOnClickListener {
             popup.dissmiss()
             CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    val response = MyRetrofit.getService().favorite(cell.code.toInt())
-                    if (response.isSuccessful) {
-                        getPrevFavorite()?.isFavorite = false
-                        cell.isFavorite = true
-                        AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
-                    } else toastError("Error")
-                } catch (e: Exception) {
-                    toastError("Error")
+                callWebservice { getServices().favorite(cell.code.toInt()) }?.run {
+                    getPrevFavorite()?.isFavorite = false
+                    cell.isFavorite = true
+                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
             }
         }
@@ -203,9 +200,10 @@ class CabinetActivity : BaseActivity() {
 
         popupView.layout3.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
-                MyRetrofit.getService().deliverToStore(cell.code.toInt())
-                cell.age = -1
-                AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                callWebservice { getServices().deliverToStore(cell.code.toInt()) }?.run {
+                    cell.age = -1
+                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                }
             }
         }
 
@@ -229,14 +227,12 @@ class CabinetActivity : BaseActivity() {
 
     private fun changeStatus(index: Int, isHealthy: Boolean) =
         CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val cell = currentCabinet.getCell(index)
-                MyRetrofit.getService().changeStatus(cell.code, isHealthy)
+            val cell = currentCabinet.getCell(index)
+            callWebservice {
+                getServices().changeStatus(cell.code, isHealthy)
+            }?.run {
                 cell.isHealthy = isHealthy
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
-            } catch (e: Exception) {
-                toastError(e.message.toString())
             }
         }
-
 }

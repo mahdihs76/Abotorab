@@ -14,12 +14,12 @@ import com.anychart.enums.*
 import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.dp
-import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.model.Distribution
 import ir.nilva.abotorab.model.House
 import ir.nilva.abotorab.model.ReportResponse
 import ir.nilva.abotorab.view.page.base.BaseActivity
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_report.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +44,7 @@ class ReportActivity : BaseActivity() {
         val layoutParams = RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         layoutParams.centerHorizontally()
         layoutParams.below(R.id.switchButton)
-        layoutParams.topMargin = dp(125)/*+ (chartLayout.layoutParams as RelativeLayout.LayoutParams).topMargin*/
+        layoutParams.topMargin = dp(125)
         progressBar.layoutParams = layoutParams
         rootLayout.addView(progressBar)
 
@@ -56,14 +56,9 @@ class ReportActivity : BaseActivity() {
         }
 
         CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val response = MyRetrofit.getService().report()
-                if (response.isSuccessful) {
-                    data = response.body()
-                    triggerChart()
-                } else toastError(response.toString())
-            } catch (e: Exception) {
-                toastError(e.message.toString())
+            callWebservice { getServices().report() }?.run {
+                data = this
+                triggerChart()
             }
         }
     }

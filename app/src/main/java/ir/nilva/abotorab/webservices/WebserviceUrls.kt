@@ -1,7 +1,6 @@
 package ir.nilva.abotorab.webservices
 
 import ir.nilva.abotorab.model.*
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -13,15 +12,6 @@ interface WebserviceUrls {
         @Field("username") username: String,
         @Field("password") password: String
     ): Response<SigninResponse>
-
-    @FormUrlEncoded
-    @POST("accounting/")
-    fun accounting(
-        @Field("first_name") firstName: String,
-        @Field("last_name") lastName: String,
-        @Field("email") email: String,
-        @Field("password") password: String
-    ): Call<BaseResponse>
 
     @FormUrlEncoded
     @POST("reception/take/")

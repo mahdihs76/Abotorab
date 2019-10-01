@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.gotoCabinetPage
-import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.view.widget.MarginItemDecoration
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,10 +52,9 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
 
     private fun getCabinetList() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MyRetrofit.getInstance().webserviceUrls.cabinetList()
-            if (response.isSuccessful) {
+            callWebservice { getServices().cabinetList() }?.run {
                 AppDatabase.getInstance().cabinetDao().clear()
-                AppDatabase.getInstance().cabinetDao().insert(response.body()!!)
+                AppDatabase.getInstance().cabinetDao().insert(this)
             }
         }
     }
@@ -69,13 +68,8 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
                 R.drawable.disable_bg
             )
             view.isEnabled = false
-            try {
-                val response = MyRetrofit.getService().printCabinet(code)
-                if (response.isSuccessful) {
-                    toastSuccess("برچسب های قفسه فوق چاپ شد")
-                } else toastError(response.errorBody()?.string() ?: "")
-            } catch (e: Exception) {
-                toastError(e.message.toString())
+            callWebservice { getServices().printCabinet(code) }?.run {
+                toastSuccess("برچسب های قفسه فوق چاپ شد")
             }
             view.background = ContextCompat.getDrawable(
                 this@CabinetListActivity,
@@ -86,25 +80,13 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
     }
 
     override fun deleteCabinet(code: Int, callback: () -> Unit) {
-//        MaterialDialog(this).show {
-//            title(text = "قفسه شماره $code حذف شود؟ ")
-//            positiveButton(text = "بله") {
-                CoroutineScope(Dispatchers.Main).launch {
-                    try {
-                        val response = MyRetrofit.getService().deleteCabinet(code)
-                        if (response.isSuccessful) {
-                            AppDatabase.getInstance().cabinetDao().delete(code)
-                        } else {
-                            toastError(response.errorBody()?.string() ?: "")
-                        }
-                    } catch (e: Exception) {
-                        toastError(e.message.toString())
-                    }
-                    callback()
-                }
-//            }
-//            negativeButton(text = "خیر")
-//        }
-
+        CoroutineScope(Dispatchers.Main).launch {
+            callWebservice {
+                getServices().deleteCabinet(code)
+            }?.run {
+                AppDatabase.getInstance().cabinetDao().delete(code)
+            }
+            callback()
+        }
     }
 }

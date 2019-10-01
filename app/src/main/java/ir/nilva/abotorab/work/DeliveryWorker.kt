@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebserviceWithFailure
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.coroutines.coroutineScope
 
 class DeliveryWorker(
@@ -18,15 +19,10 @@ class DeliveryWorker(
             Result.success()
         } else {
             offlineDeliveries.forEach {
-                try {
-                    val response = MyRetrofit.getService().give(it.hashId)
-                    if (response.isSuccessful) {
-                        AppDatabase.getInstance().offlineDeliveryDao().delete(it)
-                    } else {
-                        Result.retry()
-                    }
-                } catch (e: Exception) {
+                callWebserviceWithFailure({ getServices().give(it.hashId) }) {
                     Result.retry()
+                }?.run {
+                    AppDatabase.getInstance().offlineDeliveryDao().delete(it)
                 }
             }
             Result.success()

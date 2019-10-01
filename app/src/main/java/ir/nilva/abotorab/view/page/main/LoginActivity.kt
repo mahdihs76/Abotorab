@@ -8,9 +8,14 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.input.input
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.*
+import ir.nilva.abotorab.helper.defaultCache
+import ir.nilva.abotorab.helper.get
+import ir.nilva.abotorab.helper.gotoMainPage
+import ir.nilva.abotorab.helper.set
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.accounting_main.*
 import kotlinx.android.synthetic.main.progress_dialog_material.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -51,18 +56,15 @@ class LoginActivity : BaseActivity() {
         submit.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
-                try {
-                    val response = MyRetrofit.getService().login(
+                callWebservice {
+                    getServices().login(
                         username.text.toString(),
                         password.text.toString()
                     )
-                    if (response.isSuccessful) {
-                        defaultCache()["token"] = response.body()?.token
-                        MyRetrofit.newInstance()
-                        gotoMainPage()
-                    } else toastError(response.toString())
-                } catch (e: Exception) {
-                    toastError(e.message.toString())
+                }?.run {
+                    defaultCache()["token"] = token
+                    MyRetrofit.newInstance()
+                    gotoMainPage()
                 }
                 hideLoading()
             }
@@ -76,7 +78,6 @@ class LoginActivity : BaseActivity() {
     private fun connect2Server(ip: String) {
         MyRetrofit.setBaseUrl(ip)
     }
-
 
     private suspend fun connectAutomatic() {
         val validIps = arrayOf(
@@ -92,9 +93,10 @@ class LoginActivity : BaseActivity() {
         for (ip in validIps) {
             connect2Server(ip)
             try {
-                MyRetrofit.getService().test()
+                getServices().test()
                 break
-            } catch (e: Exception) { }
+            } catch (e: Exception) {
+            }
         }
     }
 

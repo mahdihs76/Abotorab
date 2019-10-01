@@ -41,11 +41,6 @@ public class MyRetrofit {
         return urls;
     }
 
-    public static WebserviceUrls getService(){
-        return getInstance().getWebserviceUrls();
-    }
-
-
     private WebserviceUrls getUrls() {
         Gson gson = new GsonBuilder()
                 .setLenient()

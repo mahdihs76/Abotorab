@@ -14,10 +14,10 @@ import com.microblink.uisettings.ActivityRunner
 import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_take.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +39,12 @@ class TakeActivity : BaseActivity() {
         pramCount.minValue = 0
         pramCount.sideTapEnabled = true
 
-        bottom_navigation.addItem(AHBottomNavigationItem("دوربین", android.R.drawable.ic_menu_camera))
+        bottom_navigation.addItem(
+            AHBottomNavigationItem(
+                "دوربین",
+                android.R.drawable.ic_menu_camera
+            )
+        )
         bottom_navigation.defaultBackgroundColor = Color.parseColor("#0E4C59")
         bottom_navigation.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
         bottom_navigation.accentColor = Color.parseColor("#00E990")
@@ -56,23 +61,18 @@ class TakeActivity : BaseActivity() {
         submit.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
-                try {
-                    val response = MyRetrofit.getService().take(
+                callWebservice {
+                    getServices().take(
                         firstName.text.toString(),
                         lastName.text.toString(), phone.text.toString(),
                         country.text.toString(), passportId.text.toString(),
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
-                    hideLoading()
-                    if (response.isSuccessful) {
-                        resetUi()
-                        toastSuccess("محموله با موفقیت تحویل گرفته شد")
-                    } else toastError(response.errorBody()?.string()?:"")
-                } catch (e: Exception) {
-                    hideLoading()
-                    toastError(e.message.toString())
+                }?.run {
+                    resetUi()
+                    toastSuccess("محموله با موفقیت تحویل گرفته شد")
                 }
-
+                hideLoading()
             }
         }
 
@@ -107,6 +107,9 @@ class TakeActivity : BaseActivity() {
         phone.setText("")
         country.setText("")
         passportId.setText("")
+        bagCount.count = 0
+        suitcaseCount.count = 0
+        pramCount.count = 0
 
         firstName.requestFocus()
     }

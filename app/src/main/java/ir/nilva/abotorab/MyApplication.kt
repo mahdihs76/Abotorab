@@ -2,7 +2,9 @@ package ir.nilva.abotorab
 
 import androidx.multidex.MultiDexApplication
 import com.microblink.MicroblinkSDK
+import es.dmoral.toasty.Toasty
 import ir.nilva.abotorab.db.AppDatabase
+import ir.nilva.abotorab.helper.getAppTypeface
 
 /**
  *
@@ -20,5 +22,10 @@ class MyApplication : MultiDexApplication() {
 
 
         AppDatabase.getInstance()
+
+        Toasty.Config.getInstance()
+            .setToastTypeface(getAppTypeface())
+            .setTextSize(14)
+            .apply()
     }
 }

@@ -1,23 +1,11 @@
 package ir.nilva.abotorab.helper
 
-import android.app.Activity
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.irozon.sneaker.Sneaker
-import ir.nilva.abotorab.R
+import android.content.Context
+import android.widget.Toast
+import es.dmoral.toasty.Toasty
 
-fun Activity.toastError(text:String) = Sneaker.with(this)
-        .setTitle(getString(R.string.error))
-        .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-        .setMessage(text)
-        .setTypeface(getAppTypeface()).sneakWarning()
+fun Context.toastError(text:String) = Toasty.error(this, text, Toast.LENGTH_SHORT, true).show()
 
-fun Fragment.toastError(text: String) = activity?.toastError(text)
+fun Context.toastWarning(text:String) = Toasty.warning(this, text, Toast.LENGTH_SHORT, true).show()
 
-fun Fragment.toastSuccess(text: String) = activity?.toastSuccess(text)
-
-fun Activity.toastSuccess(text:String) = Sneaker.with(this)
-        .setTitle(getString(R.string.successful))
-        .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-        .setMessage(text)
-        .setTypeface(getAppTypeface()).sneakSuccess()
+fun Context.toastSuccess(text:String) = Toasty.success(this, text, Toast.LENGTH_SHORT, true).show()

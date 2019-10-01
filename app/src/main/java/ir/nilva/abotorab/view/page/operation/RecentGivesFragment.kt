@@ -9,10 +9,10 @@ import androidx.lifecycle.Observer
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
-import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.widget.MarginItemDecoration
-import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.fragment_recent_gives.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,22 +38,17 @@ class RecentGivesFragment : Fragment(),
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(MarginItemDecoration(20))
 
-            AppDatabase.getInstance().deliveryDao()
-                .getAll().observe(this@RecentGivesFragment, Observer {
-                    adapter.submitList(it)
-                })
+        AppDatabase.getInstance().deliveryDao()
+            .getAll().observe(this@RecentGivesFragment, Observer {
+                adapter.submitList(it)
+            })
     }
 
     override fun undoClicked(item: DeliveryEntity) {
         CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val response = MyRetrofit.getService().undoDelivery(item.hashId)
-                if (response.isSuccessful) {
-                    AppDatabase.getInstance().deliveryDao().delete(item)
-                    toastSuccess("این محموله بازگردانده شد")
-                } else toastError(response.toString())
-            } catch (e: Exception) {
-                toastError(e.message.toString())
+            callWebservice { getServices().undoDelivery(item.hashId) }?.run {
+                context?.toastSuccess("این محموله بازگردانده شد")
+                AppDatabase.getInstance().deliveryDao().delete(item)
             }
         }
     }

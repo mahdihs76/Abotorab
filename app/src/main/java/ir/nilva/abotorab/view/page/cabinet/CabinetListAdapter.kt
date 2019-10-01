@@ -43,6 +43,7 @@ class CabinetListAdapter(
                 item.getColumnsNumber()
             )
             setOnClickListener { listener.cabinetClicked(item.code) }
+            show.setOnClickListener { listener.cabinetClicked(item.code) }
             print.setOnClickListener {
                 listener.printCabinet(print, item.code)
             }
