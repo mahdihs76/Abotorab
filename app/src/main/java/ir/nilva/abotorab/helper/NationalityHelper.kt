@@ -15,6 +15,11 @@ fun getCountryName(code: String): String {
     return countries.find { it.alpha3Code == code }?.shortName ?: ""
 }
 
+fun getCountryNames() : List<String>{
+    val inputStream = ApplicationContext.context.resources.openRawResource(R.raw.nationality)
+    val jsonString = readTextFile(inputStream)
+    return Gson().fromJson<Array<CountryModel>>(jsonString, Array<CountryModel>::class.java).map { it.shortName }
+}
 
 fun readTextFile(inputStream: InputStream): String {
     val outputStream = ByteArrayOutputStream()

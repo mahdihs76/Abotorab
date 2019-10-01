@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.microblink.activity.DocumentScanActivity
@@ -14,6 +15,7 @@ import com.microblink.uisettings.ActivityRunner
 import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.getCountryName
+import ir.nilva.abotorab.helper.getCountryNames
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
@@ -74,6 +76,10 @@ class TakeActivity : BaseActivity() {
                 }
                 hideLoading()
             }
+        }
+
+       ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCountryNames()).also {
+            country.setAdapter(it)
         }
 
     }
