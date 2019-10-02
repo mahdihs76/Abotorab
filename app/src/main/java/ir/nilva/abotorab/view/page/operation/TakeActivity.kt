@@ -46,19 +46,22 @@ class TakeActivity : BaseActivity() {
         bottom_app_bar.setNavigationOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 callWebservice {
-                    getServices().deliveryList(
+                    getServices().deliveryListWithLimit(
                         firstName.text.toString(),
                         lastName.text.toString(),
                         country.text.toString(),
                         phone.text.toString(),
                         passportId.text.toString(),
-                        true
+                        true,
+                        5
                     )
                 }?.run {
                     showSearchResult(this) {
-                        CoroutineScope(Dispatchers.IO).launch {
+                        CoroutineScope(Dispatchers.Main).launch {
                             callWebservice {
                                 getServices().reprint(it)
+                            }?.run {
+                                toastSuccess("برگه تحویل با موفقیت چاپ شد")
                             }
                         }
                     }

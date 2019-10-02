@@ -74,6 +74,18 @@ interface WebserviceUrls {
         @Query("in_house") inHouse: Boolean
     ): Response<List<DeliveryResponse>>
 
+
+    @GET("delivery/")
+    suspend fun deliveryListWithLimit(
+        @Query("first_name") firstName: String,
+        @Query("last_name") lastName: String,
+        @Query("country") country: String,
+        @Query("phone") phone: String,
+        @Query("passport_id") passportId: String,
+        @Query("in_house") inHouse: Boolean,
+        @Query("limit") limit: Int
+    ): Response<List<DeliveryResponse>>
+
     @POST("delivery/{hash_id}/revert_exit/")
     suspend fun undoDelivery(@Path("hash_id") hashId: String): Response<BaseResponse>
 
