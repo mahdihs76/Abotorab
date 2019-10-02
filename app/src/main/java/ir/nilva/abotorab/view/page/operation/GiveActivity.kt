@@ -22,7 +22,6 @@ import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebserviceWithFailure
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_give.*
-import kotlinx.android.synthetic.main.activity_take.bottom_navigation
 import kotlinx.android.synthetic.main.give_verification.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

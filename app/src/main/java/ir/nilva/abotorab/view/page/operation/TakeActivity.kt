@@ -1,12 +1,9 @@
 package ir.nilva.abotorab.view.page.operation
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.microblink.activity.DocumentScanActivity
 import com.microblink.entities.recognizers.Recognizer
 import com.microblink.entities.recognizers.RecognizerBundle
@@ -16,6 +13,7 @@ import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.getCountryName
 import ir.nilva.abotorab.helper.getCountryNames
+import ir.nilva.abotorab.helper.showSearchResult
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
@@ -41,20 +39,31 @@ class TakeActivity : BaseActivity() {
         pramCount.minValue = 0
         pramCount.sideTapEnabled = true
 
-        bottom_navigation.addItem(
-            AHBottomNavigationItem(
-                "دوربین",
-                android.R.drawable.ic_menu_camera
-            )
-        )
-        bottom_navigation.defaultBackgroundColor = Color.parseColor("#0E4C59")
-        bottom_navigation.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
-        bottom_navigation.accentColor = Color.parseColor("#00E990")
-        bottom_navigation.inactiveColor = Color.parseColor("#00E990")
-
-        bottom_navigation.setOnTabSelectedListener { _, _ ->
+        fab.setOnClickListener {
             startScanning()
-            true
+        }
+
+        bottom_app_bar.setNavigationOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebservice {
+                    getServices().deliveryList(
+                        firstName.text.toString(),
+                        lastName.text.toString(),
+                        country.text.toString(),
+                        phone.text.toString(),
+                        passportId.text.toString(),
+                        true
+                    )
+                }?.run {
+                    showSearchResult(this) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            callWebservice {
+                                getServices().reprint(it)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         recognizer = PassportRecognizer()
@@ -78,7 +87,7 @@ class TakeActivity : BaseActivity() {
             }
         }
 
-       ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCountryNames()).also {
+        ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCountryNames()).also {
             country.setAdapter(it)
         }
 

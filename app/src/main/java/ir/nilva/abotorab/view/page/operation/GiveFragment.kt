@@ -4,19 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.customview.customView
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.toastWarning
-import ir.nilva.abotorab.model.DeliveryResponse
+import ir.nilva.abotorab.helper.showSearchResult
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.fragment_give.*
-import kotlinx.android.synthetic.main.item_pilgirim.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,43 +39,16 @@ class GiveFragment : Fragment() {
                         passportId.text.toString(),
                         true
                     )
-                }?.run { showSearchResult(this) }
+                }?.run {
+                    context?.showSearchResult(this) {
+                        (activity as GiveActivity).callGiveWS(it)
+                    }
+                }
                 search.visibility = View.VISIBLE
                 spinKit.visibility = View.INVISIBLE
             }
         }
 
-    }
-
-    private fun showSearchResult(list: List<DeliveryResponse>?) {
-        if (list == null || list.isEmpty()) {
-            context?.toastWarning("هیچ موردی یافت نشد")
-            return
-        }
-        val view = LinearLayout(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                WRAP_CONTENT
-            )
-            orientation = LinearLayout.VERTICAL
-        }
-        val dialog = MaterialDialog(context!!)
-        list.forEach { item ->
-            view.addView(layoutInflater.inflate(R.layout.item_pilgirim, null).apply {
-                var cabinetCode = -1
-                val packs = item.pack
-                if (packs.isNotEmpty()) cabinetCode = packs[0].cell
-                title.text = item.pilgrim.country + " از " + item.pilgrim.name
-                phoneNumber.text = "شماره تلفن:" + item.pilgrim.phone
-                cabinet.text = " شماره قفسه:$cabinetCode"
-                subTitle.text = "زمان تحویل:" + item.enteredAt
-                setOnClickListener {
-                    dialog.dismiss()
-                    (activity as GiveActivity).callGiveWS(item.hashId)
-                }
-            })
-        }
-        dialog.customView(view = view, scrollable = true).show()
     }
 
 }

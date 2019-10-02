@@ -77,6 +77,9 @@ interface WebserviceUrls {
     @POST("delivery/{hash_id}/revert_exit/")
     suspend fun undoDelivery(@Path("hash_id") hashId: String): Response<BaseResponse>
 
+    @POST("delivery/{hash_id}/reprint/")
+    suspend fun reprint(@Path("hash_id") hashId: String): Response<BaseResponse>
+
     @POST("cell/{id}/deliver_to_store/")
     suspend fun deliverToStore(@Path("id") id: Int): Response<BaseResponse>
 
