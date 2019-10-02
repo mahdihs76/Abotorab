@@ -18,11 +18,11 @@ class DeliveryWorker(
         if (offlineDeliveries.isEmpty()) {
             Result.success()
         } else {
-            offlineDeliveries.forEach {
-                callWebserviceWithFailure({ getServices().give(it.hashId) }) {
-                    Result.retry()
-                }?.run {
-                    AppDatabase.getInstance().offlineDeliveryDao().delete(it)
+            callWebserviceWithFailure({ getServices().give(offlineDeliveries.map { it.hashId }) }) {
+                Result.retry()
+            }?.run {
+                this.forEach {
+                    AppDatabase.getInstance().offlineDeliveryDao().delete(it.hashId)
                 }
             }
             Result.success()

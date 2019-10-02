@@ -21,7 +21,7 @@ suspend fun <T> callWebserviceWithFailure(
             null
         }
     } catch (e: Exception) {
-        handleException(e)
+        failure()
         null
     }
 }

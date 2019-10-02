@@ -33,6 +33,12 @@ interface WebserviceUrls {
     ): Response<GiveResponse>
 
     @FormUrlEncoded
+    @POST("reception/give_list/")
+    suspend fun give(
+        @Field("hash_ids") hashId: List<String>
+    ): Response<List<GiveResponse>>
+
+    @FormUrlEncoded
     @POST("cabinet/")
     suspend fun cabinet(
         @Field("code") code: String,

@@ -15,6 +15,9 @@ interface OfflineDeliveryDao {
     @Insert
     suspend fun insert(item: OfflineDeliveryEntity)
 
+    @Query("DELETE FROM offline_delivery WHERE hashId =:hashId")
+    suspend fun delete(hashId: String)
+
     @Delete
     suspend fun delete(item: OfflineDeliveryEntity)
 
