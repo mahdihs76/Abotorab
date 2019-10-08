@@ -104,6 +104,9 @@ interface WebserviceUrls {
     @POST("cell/{id}/favorite/")
     suspend fun favorite(@Path("id") id: Int): Response<BaseResponse>
 
+    @POST("cell/{id}/free/")
+    suspend fun free(@Path("id") id: Int): Response<BaseResponse>
+
     @GET("admin")
     suspend fun test(): Response<BaseResponse>
 }

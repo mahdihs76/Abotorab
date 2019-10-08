@@ -167,6 +167,7 @@ class CabinetActivity : BaseActivity() {
         popupView.cabinetCode.text = "شماره " + cell.code
         if (cell.age > -1) {
             popupView.layout1.visibility = View.GONE
+            popupView.layout4.visibility = View.VISIBLE
         }
         if (cell.isHealthy) {
             popupView.layout1.setOnClickListener {
@@ -207,9 +208,18 @@ class CabinetActivity : BaseActivity() {
             }
         }
 
+        popupView.layout4.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebservice { getServices().free(cell.code.toInt()) }?.run {
+                    cell.age = -1
+                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                }
+            }
+        }
+
         popup = CustomPopWindow.PopupWindowBuilder(this)
             .setView(popupView)
-            .size(500, 300)
+            .size(500, 500)
             .setFocusable(true)
             .setOutsideTouchable(true)
             .create()

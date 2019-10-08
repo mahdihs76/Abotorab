@@ -88,4 +88,29 @@
                 android:src="@mipmap/search" />
     </LinearLayout>
 
+    <LinearLayout
+            android:id="@+id/layout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout3"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/text5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="خالی کردن"
+                android:textSize="16sp" />
+
+        <ImageView
+                android:id="@+id/image6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="8dp"
+                android:src="@mipmap/cabinet_empty" />
+    </LinearLayout>
+
 </RelativeLayout>
