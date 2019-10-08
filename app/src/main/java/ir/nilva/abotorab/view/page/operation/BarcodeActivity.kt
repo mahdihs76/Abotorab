@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.gotoGivePage
-import ir.nilva.abotorab.helper.gotoTakePage
+import ir.nilva.abotorab.helper.gotoLoginPage
 import kotlinx.android.synthetic.main.activity_barcode.*
 
 
@@ -28,7 +28,7 @@ class BarcodeActivity : AppCompatActivity(), QRCodeReaderView.OnQRCodeReadListen
 
     override fun onQRCodeRead(text: String?, points: Array<out PointF>?) {
         val result = text ?: ""
-        if (!isQR) gotoTakePage(result) else gotoGivePage(result)
+        if (!isQR) gotoLoginPage(result) else gotoGivePage(result)
         finish()
     }
 

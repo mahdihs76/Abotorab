@@ -219,7 +219,7 @@ class CabinetActivity : BaseActivity() {
 
         popup = CustomPopWindow.PopupWindowBuilder(this)
             .setView(popupView)
-            .size(500, 500)
+            .size(550, 550)
             .setFocusable(true)
             .setOutsideTouchable(true)
             .create()

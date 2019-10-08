@@ -1,9 +1,6 @@
 package ir.nilva.abotorab.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
 
 @Dao
@@ -12,7 +9,7 @@ interface OfflineDeliveryDao {
     @Query("SELECT * FROM offline_delivery")
     suspend fun getAll(): List<OfflineDeliveryEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: OfflineDeliveryEntity)
 
     @Query("DELETE FROM offline_delivery WHERE hashId =:hashId")

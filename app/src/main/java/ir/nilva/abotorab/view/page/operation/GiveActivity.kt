@@ -121,6 +121,7 @@ class GiveActivity : BaseActivity() {
                         ),
                         Charsets.UTF_8
                     ).split("#")
+
                     val hashId = text[2]
                     val view = layoutInflater.inflate(R.layout.give_verification, null)
                     view.nickName.text = text[0]
