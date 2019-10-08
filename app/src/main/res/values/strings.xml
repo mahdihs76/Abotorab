@@ -29,6 +29,10 @@
     <string name="row_and_column_format">ستون: %d - ردیف:‌ %d</string>
     <string name="search">جست و جو</string>
 
+    <string name="camera_permission_message">برای اسکن لازم است مجوز دسترسی به دوربین را به برنامه بدهید</string>
+    <string name="permisson_ok">موافقم</string>
+    <string name="permission_deny">فعلا نه</string>
+    <string name="no_camera_permission">دسترسی به دوربین داده نشد</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

@@ -1,5 +1,6 @@
 package ir.nilva.abotorab.view.page.operation
 
+import android.Manifest
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Base64
@@ -26,8 +27,44 @@ import kotlinx.android.synthetic.main.give_verification.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.toast
+import permissions.dispatcher.*
 
+@RuntimePermissions
 class GiveActivity : BaseActivity() {
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    fun scanVisitCard() {
+        gotoBarcodePage(true)
+    }
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    fun showDialogBeforeCameraPermission(request: PermissionRequest) {
+        MaterialDialog(this).show {
+            message(R.string.camera_permission_message)
+            positiveButton(R.string.permisson_ok) { request.proceed() }
+            negativeButton(R.string.permission_deny) { request.cancel() }
+        }
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    fun onCameraDenied() {
+        toast(getString(R.string.no_camera_permission))
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    fun onCameraNeverAskAgain() {
+        toast(getString(R.string.no_camera_permission))
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +82,7 @@ class GiveActivity : BaseActivity() {
         bottom_navigation.inactiveColor = Color.parseColor("#00E990")
 
         bottom_navigation.setOnTabSelectedListener { _, _ ->
-            gotoBarcodePage(true)
+            scanVisitCardWithPermissionCheck()
             true
         }
 

@@ -67,7 +67,11 @@ dependencies {
     implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
     implementation 'com.github.DanielMartinus:Stepper-Touch:1.0.1'
     implementation 'com.google.android.gms:play-services-vision:18.0.0'
-    implementation 'info.androidhive:barcode-reader:1.1.5'
+//    implementation 'info.androidhive:barcode-reader:1.1.5'
+    implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
+    implementation "org.permissionsdispatcher:permissionsdispatcher:4.5.0"
+    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:4.5.0"
+
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     implementation 'com.github.florent37:viewanimator:1.1.0'
