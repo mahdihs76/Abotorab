@@ -3,7 +3,6 @@ package ir.nilva.abotorab.view.page.operation
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import com.microblink.activity.DocumentScanActivity
 import com.microblink.entities.recognizers.Recognizer
 import com.microblink.entities.recognizers.RecognizerBundle
@@ -11,8 +10,8 @@ import com.microblink.entities.recognizers.blinkid.passport.PassportRecognizer
 import com.microblink.uisettings.ActivityRunner
 import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
+import ir.nilva.abotorab.helper.getCountries
 import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.getCountryNames
 import ir.nilva.abotorab.helper.showSearchResult
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -90,9 +89,8 @@ class TakeActivity : BaseActivity() {
             }
         }
 
-        ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCountryNames()).also {
-            country.setAdapter(it)
-        }
+        country.threshold = 1
+        country.setAdapter(CountryAdapter(this, R.layout.item_country, ArrayList(getCountries())))
 
     }
 
