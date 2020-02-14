@@ -15,102 +15,125 @@
             android:textStyle="bold"/>
 
     <LinearLayout
-            android:id="@+id/layout1"
+            android:id="@+id/unusable_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/cabinetCode"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal"
             android:padding="4dp">
 
         <TextView
-                android:id="@+id/text1"
+                android:id="@+id/unusable_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="غیرقابل استفاده"
+                android:text="@string/unusable"
                 android:textSize="14sp" />
 
         <ImageView
-                android:id="@+id/image1"
+                android:id="@+id/unusable_image"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:src="@mipmap/error" />
     </LinearLayout>
 
 
     <LinearLayout
-            android:id="@+id/layout2"
+            android:id="@+id/favorite_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout1"
-            android:layout_alignParentRight="true"
+            android:layout_below="@id/unusable_layout"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal"
             android:padding="4dp">
 
         <TextView
-                android:id="@+id/text3"
+                android:id="@+id/favorite_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="محبوب"
+                android:text="@string/favorite"
                 android:textSize="14sp" />
 
         <ImageView
-                android:id="@+id/image3"
+                android:id="@+id/favorite_image"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:src="@mipmap/star" />
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/layout3"
+            android:id="@+id/store_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout2"
-            android:layout_alignParentRight="true"
+            android:layout_below="@id/favorite_layout"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal"
             android:padding="4dp"
             android:visibility="gone">
 
         <TextView
-                android:id="@+id/text4"
+                android:id="@+id/store_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="انتقال به انبار"
+                android:text="@string/store"
                 android:textSize="14sp" />
 
         <ImageView
-                android:id="@+id/image5"
+                android:id="@+id/store_image"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:src="@mipmap/search" />
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/layout4"
+            android:id="@+id/empty_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout3"
-            android:layout_alignParentRight="true"
+            android:layout_below="@id/store_layout"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal"
             android:padding="4dp"
             android:visibility="gone">
 
         <TextView
-                android:id="@+id/text5"
+                android:id="@+id/empty_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="خالی کردن"
+                android:text="@string/empty"
                 android:textSize="14sp" />
 
         <ImageView
-                android:id="@+id/image6"
+                android:id="@+id/empty_image"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:src="@mipmap/cabinet_empty" />
     </LinearLayout>
 
+    <LinearLayout
+            android:id="@+id/print_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/empty_layout"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+        <TextView
+                android:id="@+id/print_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/print"
+                android:textSize="14sp" />
+
+        <ImageView
+                android:id="@+id/print_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_print_black" />
+    </LinearLayout>
 </RelativeLayout>

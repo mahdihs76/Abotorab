@@ -33,6 +33,11 @@
     <string name="permisson_ok">موافقم</string>
     <string name="permission_deny">فعلا نه</string>
     <string name="no_camera_permission">دسترسی به دوربین داده نشد</string>
+    <string name="unusable">غیرقابل استفاده</string>
+    <string name="favorite">محبوب</string>
+    <string name="store">انتقال به انبار</string>
+    <string name="empty">خالی کردن</string>
+    <string name="print">پرینت</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

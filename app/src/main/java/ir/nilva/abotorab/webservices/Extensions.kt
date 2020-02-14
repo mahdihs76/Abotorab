@@ -3,6 +3,7 @@ package ir.nilva.abotorab.webservices
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.helper.toastError
 import okhttp3.ResponseBody
+import org.jetbrains.anko.runOnUiThread
 import retrofit2.Response
 import java.net.UnknownHostException
 
@@ -66,7 +67,9 @@ private fun handleException(e: java.lang.Exception) {
 fun onFailed(throwable: Throwable, errorBody: String, errorCode: Int = -1) {
     val context = ApplicationContext.context
     when (throwable) {
-        is UnknownHostException -> context.toastError("لطفا اتصال خود را بررسی کنید")
+        is UnknownHostException -> context.runOnUiThread {
+            context.toastError("لطفا اتصال خود را بررسی کنید")
+        }
         is WebServiceError -> {
             if (errorCode == 403) {
                 context.toastError("شما دسترسی لازم را ندارید")

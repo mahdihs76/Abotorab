@@ -166,26 +166,26 @@ class CabinetActivity : BaseActivity() {
         val cell = currentCabinet.getCell(index)
         popupView.cabinetCode.text = "شماره " + cell.code
         if (cell.age > -1) {
-            popupView.layout1.visibility = View.GONE
-            popupView.layout4.visibility = View.VISIBLE
+            popupView.unusable_layout.visibility = View.GONE
+            popupView.empty_layout.visibility = View.VISIBLE
         }
         if (cell.isHealthy) {
-            popupView.layout1.setOnClickListener {
+            popupView.unusable_layout.setOnClickListener {
                 popup.dissmiss()
                 changeStatus(index, false)
             }
-            popupView.text1.text = "غیر قابل استفاده"
-            popupView.image1.imageResource = R.mipmap.error
+            popupView.unusable_tv.text = "غیر قابل استفاده"
+            popupView.unusable_image.imageResource = R.mipmap.error
         } else {
-            popupView.layout2.visibility = View.GONE
-            popupView.layout1.setOnClickListener {
+            popupView.favorite_layout.visibility = View.GONE
+            popupView.unusable_layout.setOnClickListener {
                 popup.dissmiss()
                 changeStatus(index, true)
             }
-            popupView.text1.text = "قابل استفاده"
-            popupView.image1.imageResource = R.mipmap.success
+            popupView.unusable_tv.text = "قابل استفاده"
+            popupView.unusable_image.imageResource = R.mipmap.success
         }
-        popupView.layout2.setOnClickListener {
+        popupView.favorite_layout.setOnClickListener {
             popup.dissmiss()
             CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().favorite(cell.code.toInt()) }?.run {
@@ -196,10 +196,10 @@ class CabinetActivity : BaseActivity() {
             }
         }
         if (cell.age == 1) {
-            popupView.layout3.visibility = View.VISIBLE
+            popupView.store_layout.visibility = View.VISIBLE
         }
 
-        popupView.layout3.setOnClickListener {
+        popupView.store_layout.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().deliverToStore(cell.code.toInt()) }?.run {
                     cell.age = -1
@@ -208,12 +208,19 @@ class CabinetActivity : BaseActivity() {
             }
         }
 
-        popupView.layout4.setOnClickListener {
+        popupView.empty_layout.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().free(cell.code.toInt()) }?.run {
                     cell.age = -1
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
+            }
+        }
+
+        popupView.print_layout.setOnClickListener {
+            popup.dissmiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebservice { getServices().print(cell.code.toInt()) }
             }
         }
 
