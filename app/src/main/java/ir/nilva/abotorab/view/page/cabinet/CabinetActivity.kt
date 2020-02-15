@@ -1,9 +1,11 @@
 package ir.nilva.abotorab.view.page.cabinet
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
+import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
+import com.commit451.modalbottomsheetdialogfragment.Option
+import com.commit451.modalbottomsheetdialogfragment.OptionRequest
 import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
@@ -18,14 +20,19 @@ import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet.*
-import kotlinx.android.synthetic.main.cabinet_popup.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nl.dionsegijn.steppertouch.OnStepCallback
-import org.jetbrains.anko.imageResource
 
-class CabinetActivity : BaseActivity() {
+const val UNUSABLE_OPTION_ID = 1
+const val USABLE_OPTION_ID = 2
+const val EMPTY_OPTION_ID = 3
+const val FAV_OPTION_ID = 4
+const val STORE_OPTION_ID = 5
+const val PRINT_OPTION_ID = 6
+
+class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener {
 
     private var rows = 1
     private var columns = 1
@@ -83,7 +90,7 @@ class CabinetActivity : BaseActivity() {
         grid.adapter = adapter
         grid.setOnItemClickListener { _, view, index, _ ->
             if (step == 0) return@setOnItemClickListener
-            showPopup(view, index)
+            showPopup(index)
         }
     }
 
@@ -160,77 +167,109 @@ class CabinetActivity : BaseActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun showPopup(view: View, index: Int) {
-        val popupView = LayoutInflater.from(this).inflate(R.layout.cabinet_popup, null)
+    private fun ModalBottomSheetDialogFragment.Builder.addOptions(cell: Cell, index: Int) {
+        if (cell.age <= -1 && cell.isHealthy) {
+            add(
+                OptionRequest(
+                    (index.toString() + UNUSABLE_OPTION_ID).toInt(),
+                    getString(R.string.unusable),
+                    R.drawable.round_visibility_off_black_24
+                )
+            )
+        } else if (cell.age <= -1) {
+            add(
+                OptionRequest(
+                    (index.toString() + USABLE_OPTION_ID).toInt(),
+                    getString(R.string.usable),
+                    R.drawable.round_visibility_black_24
+                )
+            )
+        }
+        if (cell.age > -1) {
+            add(
+                OptionRequest(
+                    (index.toString() + EMPTY_OPTION_ID).toInt(),
+                    getString(R.string.empty),
+                    R.drawable.round_move_to_inbox_black_24
+                )
+            )
+        }
+
+        if (cell.isHealthy) {
+            add(
+                OptionRequest(
+                    (index.toString() + FAV_OPTION_ID).toInt(),
+                    getString(R.string.favorite),
+                    R.drawable.round_favorite_black_24
+                )
+            )
+        }
+        if (cell.age == 1) {
+            add(
+                OptionRequest(
+                    (index.toString() + STORE_OPTION_ID).toInt(),
+                    getString(R.string.store),
+                    R.drawable.round_store_black_24
+                )
+            )
+        }
+        add(
+            OptionRequest(
+                (index.toString() + PRINT_OPTION_ID).toInt(),
+                getString(R.string.print),
+                R.drawable.baseline_print_black_24
+            )
+        )
+    }
+
+    private fun showPopup(index: Int) {
 
         val cell = currentCabinet.getCell(index)
-        popupView.cabinetCode.text = "شماره " + cell.code
-        if (cell.age > -1) {
-            popupView.unusable_layout.visibility = View.GONE
-            popupView.empty_layout.visibility = View.VISIBLE
-        }
-        if (cell.isHealthy) {
-            popupView.unusable_layout.setOnClickListener {
-                popup.dissmiss()
-                changeStatus(index, false)
+
+        val modalBuilder =
+            ModalBottomSheetDialogFragment.Builder()
+                .header(getHeaderTitle(cell))
+
+        modalBuilder.addOptions(cell, index)
+
+        modalBuilder.show(supportFragmentManager, "bottomsheet")
+
+    }
+
+    private fun getHeaderTitle(cell: Cell) =
+        if (cell.pilgrim?.name.isNullOrEmpty()) String.format("شماره : %s", cell.code)
+        else String.format("شماره : %s - رزرو شده توسط %s", cell.code, cell.pilgrim?.name ?: "")
+
+
+    override fun onModalOptionSelected(tag: String?, option: Option) {
+        val cellIndex = option.id / 10
+        val cell = currentCabinet.getCell(cellIndex)
+        when (option.id % 10) {
+            UNUSABLE_OPTION_ID -> changeStatus(cellIndex, false)
+            USABLE_OPTION_ID -> changeStatus(cellIndex, true)
+            EMPTY_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
+                callWebservice { getServices().free(currentCabinet.getCell(cellIndex).code.toInt()) }?.run {
+                    cell.age = -1
+                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+                }
             }
-            popupView.unusable_tv.text = "غیر قابل استفاده"
-            popupView.unusable_image.imageResource = R.mipmap.error
-        } else {
-            popupView.favorite_layout.visibility = View.GONE
-            popupView.unusable_layout.setOnClickListener {
-                popup.dissmiss()
-                changeStatus(index, true)
-            }
-            popupView.unusable_tv.text = "قابل استفاده"
-            popupView.unusable_image.imageResource = R.mipmap.success
-        }
-        popupView.favorite_layout.setOnClickListener {
-            popup.dissmiss()
-            CoroutineScope(Dispatchers.Main).launch {
+            FAV_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().favorite(cell.code.toInt()) }?.run {
                     getPrevFavorite()?.isFavorite = false
                     cell.isFavorite = true
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
             }
-        }
-        if (cell.age == 1) {
-            popupView.store_layout.visibility = View.VISIBLE
-        }
-
-        popupView.store_layout.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
+            STORE_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().deliverToStore(cell.code.toInt()) }?.run {
                     cell.age = -1
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
             }
-        }
-
-        popupView.empty_layout.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                callWebservice { getServices().free(cell.code.toInt()) }?.run {
-                    cell.age = -1
-                    AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
-                }
-            }
-        }
-
-        popupView.print_layout.setOnClickListener {
-            popup.dissmiss()
-            CoroutineScope(Dispatchers.Main).launch {
+            PRINT_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
                 callWebservice { getServices().print(cell.code.toInt()) }
             }
         }
-
-        popup = CustomPopWindow.PopupWindowBuilder(this)
-            .setView(popupView)
-            .size(550, 550)
-            .setFocusable(true)
-            .setOutsideTouchable(true)
-            .create()
-            .showAsDropDown(view, 0, 10)
     }
 
     private fun getPrevFavorite(): Cell? {

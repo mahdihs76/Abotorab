@@ -7,6 +7,7 @@
     <color name="full_screen">#33000000</color>.
     .
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="rateColor">#965acaaf</color>
     <color name="menuColor">@color/colorAccent</color>
     <color name="gray">#6effffff</color>

@@ -29,11 +29,11 @@
                 android:name=".view.page.cabinet.CabinetActivity"
                 android:screenOrientation="portrait"></activity>
         <activity
-                android:name=".view.page.operation.GiveActivity"
+                android:name=".view.page.operation.GiveSearchActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustNothing"></activity>
         <activity
-                android:name=".view.page.operation.BarcodeActivity"
+                android:name=".view.page.operation.CameraActivity"
                 android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.operation.TakeActivity"
@@ -51,6 +51,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.page.operation.RecentGivesActivity" />
     </application>
 
 </manifest>

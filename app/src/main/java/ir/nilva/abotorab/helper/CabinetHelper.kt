@@ -10,6 +10,8 @@ fun CabinetResponse.getCell(index: Int): Cell {
     return rows[rowIndex].cells[columnIndex]
 }
 
+fun Cell.getIndex() = ((id % 100) / 10) * size +  (id % 10)
+
 fun CabinetResponse.getRowsNumber() = rows.size
 
 fun CabinetResponse.getColumnsNumber() = rows[0].cells.size

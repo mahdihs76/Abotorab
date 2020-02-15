@@ -1,5 +1,6 @@
 package ir.nilva.abotorab.view.page.main
 
+import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
@@ -20,8 +21,44 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.toast
+import permissions.dispatcher.*
 
+@RuntimePermissions
 class MainActivity : BaseActivity() {
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    fun openCamera() {
+        gotoBarcodePage(true)
+    }
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    fun showDialogBeforeCameraPermission(request: PermissionRequest) {
+        MaterialDialog(this).show {
+            message(R.string.camera_permission_message)
+            positiveButton(R.string.permisson_ok) { request.proceed() }
+            negativeButton(R.string.permission_deny) { request.cancel() }
+        }
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    fun onCameraDenied() {
+        toast(getString(R.string.no_camera_permission))
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    fun onCameraNeverAskAgain() {
+        toast(getString(R.string.no_camera_permission))
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,9 +123,9 @@ class MainActivity : BaseActivity() {
 
 }
 
-fun MenuItem.action(activity: Activity) {
+fun MenuItem.action(activity: MainActivity) {
     when (this) {
-        MenuItem.CABINET_GIVE -> activity.gotoGivePage()
+        MenuItem.CABINET_GIVE -> activity.openCameraWithPermissionCheck()
         MenuItem.CABINET_TAKE -> activity.gotoTakePage()
         MenuItem.CABINET_INIT -> activity.gotoCabinetListPage()
         MenuItem.CABINET_REPORT -> activity.gotoReportPage()
