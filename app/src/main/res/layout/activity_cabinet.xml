@@ -114,9 +114,9 @@
             android:layout_height="match_parent"
             android:layout_above="@id/submit"
             android:layout_below="@id/steppers"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             android:horizontalSpacing="4dp"
-            android:padding="24dp"
+            android:padding="16dp"
             android:scaleType="centerCrop"
             android:verticalSpacing="4dp" />
 

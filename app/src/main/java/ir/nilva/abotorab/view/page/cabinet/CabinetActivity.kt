@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
-import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
@@ -33,9 +32,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private var rows = 1
     private var columns = 1
-    private var adapter = CabinetAdapter(null, rows, columns)
+    private var adapter = CabinetAdapter(this,null, rows, columns)
     private var step = 0
-    private lateinit var popup: CustomPopWindow
     private lateinit var currentCabinet: CabinetResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
