@@ -32,7 +32,7 @@ fun Context.showSearchResult(list: List<DeliveryResponse>?, click: (hashId: Stri
             phoneNumber.text = "شماره تلفن:" + item.pilgrim.phone
             cabinet.text = " شماره قفسه:$cabinetCode"
             subTitle.text = "زمان تحویل:" + item.enteredAt
-            setOnClickListener {
+            button.setOnClickListener {
                 dialog.dismiss()
                 click(item.hashId)
             }

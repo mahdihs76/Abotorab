@@ -1,6 +1,7 @@
 package ir.nilva.abotorab.view.page.operation
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
@@ -30,6 +31,11 @@ class RecentGivesActivity : BaseActivity(),
 
         AppDatabase.getInstance().deliveryDao()
             .getAll().observe(this, Observer {
+                if (it.isNullOrEmpty()) {
+                    emptyState.visibility = View.VISIBLE
+                } else {
+                    emptyState.visibility = View.GONE
+                }
                 adapter.submitList(it)
             })
     }
