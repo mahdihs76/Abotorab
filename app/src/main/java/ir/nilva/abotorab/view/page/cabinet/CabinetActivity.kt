@@ -10,10 +10,7 @@ import com.example.zhouwei.library.CustomPopWindow
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.helper.getCell
-import ir.nilva.abotorab.helper.getColumnsNumber
-import ir.nilva.abotorab.helper.getRowsNumber
-import ir.nilva.abotorab.helper.gotoFullScreenPage
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -267,7 +264,9 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 }
             }
             PRINT_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
-                callWebservice { getServices().print(cell.code.toInt()) }
+                callWebservice { getServices().print(cell.code.toInt()) }?.run {
+                    toastSuccess("برچسب های قفسه فوق چاپ شد")
+                }
             }
         }
     }

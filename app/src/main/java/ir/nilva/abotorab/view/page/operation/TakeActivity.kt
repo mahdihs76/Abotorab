@@ -16,6 +16,7 @@ import ir.nilva.abotorab.helper.showSearchResult
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.callWebserviceWithFailure
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_take.*
 import kotlinx.coroutines.CoroutineScope
@@ -74,13 +75,15 @@ class TakeActivity : BaseActivity() {
         submit.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
-                callWebservice {
+                callWebserviceWithFailure({
                     getServices().take(
                         firstName.text.toString(),
                         lastName.text.toString(), phone.text.toString(),
                         country.text.toString(), passportId.text.toString(),
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
+                }) {
+                    TODO()
                 }?.run {
                     resetUi()
                     toastSuccess("محموله با موفقیت تحویل گرفته شد")
