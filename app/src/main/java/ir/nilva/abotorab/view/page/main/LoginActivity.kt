@@ -14,6 +14,7 @@ import ir.nilva.abotorab.helper.gotoMainPage
 import ir.nilva.abotorab.helper.set
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
+import ir.nilva.abotorab.webservices.WebserviceUrls
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.accounting_main.*
@@ -83,7 +84,7 @@ class LoginActivity : BaseActivity() {
     private suspend fun connectAutomatic() {
         val validIps = arrayOf(
             "https://192.168.0.11/",
-            "http://depository.ketaabkhaane.ir/",
+            "http://depository.ceshora.ir/",
             "https://192.168.0.12/",
             "https://192.168.0.13/",
             "https://192.168.0.14/",
