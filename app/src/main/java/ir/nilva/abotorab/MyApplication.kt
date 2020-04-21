@@ -18,8 +18,7 @@ class MyApplication : MultiDexApplication() {
         ApplicationContext.initialize(this)
 
         /** Set the Base64 license */
-        MicroblinkSDK.setLicenseKey("sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lLgnoRkcC3kO/pero0WmCfflBdx7xBkZLZYZhPEFndvIOeMHSc2cF3RKrjYhb9B7MdXcKAiStc06EAw1zCEqJGXxbqA4sig6Czm8XHvHTbvaPLCinaSvmuY/jfs/H/pWisiswaedUKVEFZLz21wM0Dx6pRuo3IPIqqTSv9+pTsjic9b0TzJSCchqTZSgcCwow+PhlDU8kKYP6N3G3EgqqTE+K46DhKVB/ZvjGZUob8voR7aeEwruDk6jzz5FZfI9JcwKi4MpW/9p4=", this)
-
+        MicroblinkSDK.setLicenseKey("sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lLgnoRkcC3kO/tyhWdEIvXOHOP2helVqsNg7YJo6AuYpfbA/73WhedSm7r+awfPb/bYrhjkn+OJUhA7kFknTtbB03eBQQAI+EqFUtPiScbN8v6cRbMqfrx/TXsiniVt7HmP6xm/1+FXTC2t6+C5lu1gkSQ0V6lqB2f2TlAJ4GFAID7JVUrDKn7ekD1iWlYRDvn/XfcvJS64MmicWZldxuchOwYc/cUeh1SqJ3KJ+7b32adv1G4bfPy1KjAj7lv6iA0FL+zk17XX5IFmaw=", this)
 
         AppDatabase.getInstance()
 
