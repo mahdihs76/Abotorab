@@ -28,7 +28,7 @@ class FullScreenActivity : BaseActivity() {
 
         val code = intent?.extras?.getInt("code")
         AppDatabase.getInstance()
-            .cabinetDao().get(code!!).observe(this, Observer {
+            .cabinetDao().getLiveData(code!!).observe(this, Observer {
                 drawCabinet(it.rows)
             })
     }

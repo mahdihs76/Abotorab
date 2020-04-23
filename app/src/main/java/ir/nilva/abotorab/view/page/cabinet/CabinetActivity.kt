@@ -1,8 +1,11 @@
 package ir.nilva.abotorab.view.page.cabinet
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
@@ -20,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nl.dionsegijn.steppertouch.OnStepCallback
+import nl.dionsegijn.steppertouch.StepperTouch
 
 const val UNUSABLE_OPTION_ID = 1
 const val USABLE_OPTION_ID = 2
@@ -32,7 +36,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private var rows = 1
     private var columns = 1
-    private var adapter = CabinetAdapter(this,null, rows, columns)
+    private var adapter = CabinetAdapter(this, null, rows, columns)
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
 
@@ -47,7 +51,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun observeOnDb(code: Int?) {
         if (code != null && code != -1) {
-            AppDatabase.getInstance().cabinetDao().get(code).observe(this, Observer {
+            AppDatabase.getInstance().cabinetDao().getLiveData(code).observe(this, Observer {
                 it ?: return@Observer
                 rows = it.getRowsNumber()
                 columns = it.getColumnsNumber()
@@ -63,7 +67,49 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         initSteppers()
         initGrid()
         submit.setOnClickListener { addCabinet() }
-        fullScreen.setOnClickListener { gotoFullScreenPage(currentCabinet.code) }
+        extend.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.extend_dialog, null)
+            val rowsStepper = (view.findViewById(R.id.rowsCount) as StepperTouch)
+            val columnsStepper = (view.findViewById(R.id.columnsCount) as StepperTouch)
+            rowsStepper.apply {
+                count = rows
+                minValue = rows
+                maxValue = 10
+                sideTapEnabled = true
+            }
+            columnsStepper.apply {
+                count = columns
+                minValue = columns
+                maxValue = 10
+                sideTapEnabled = true
+            }
+            val dialog = MaterialDialog(this).customView(view = view).cornerRadius(20.0f)
+                .positiveButton(text = "تایید") {
+                    val newRowsCount = rowsStepper.count
+                    val newColumnsCount = columnsStepper.count
+                    CoroutineScope(Dispatchers.Main).launch {
+                        callWebservice {
+                            getServices().extendCabinet(
+                                currentCabinet.code,
+                                newColumnsCount - columns,
+                                newRowsCount - rows
+                            )
+                        }?.run {
+                            AppDatabase.getInstance().cabinetDao().update(this)
+                        }
+                    }
+                }
+            dialog.show()
+
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val newOrientation = newConfig.orientation
+        if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gotoFullScreenPage(currentCabinet.code)
+        }
     }
 
     private fun addCabinet() {
@@ -132,7 +178,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 .alpha(0F)
                 .andAnimate(secondSubHeader)
                 .alpha(1F)
-                .andAnimate(fullScreen)
+                .andAnimate(extend)
                 .alpha(1F)
                 .start()
         } else {
@@ -141,7 +187,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             submit.visibility = View.GONE
             subHeader.alpha = 0F
             secondSubHeader.alpha = 1F
-            fullScreen.alpha = 1F
+            extend.alpha = 1F
         }
         header.text = String.format(
             getString(R.string.cabinet_format),

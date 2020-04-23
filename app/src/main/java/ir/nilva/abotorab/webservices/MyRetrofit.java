@@ -3,13 +3,9 @@ package ir.nilva.abotorab.webservices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-
 import ir.nilva.abotorab.helper.CacheHelperKt;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -68,16 +64,13 @@ public class MyRetrofit {
     private void addAuthHeader(OkHttpClient.Builder client) {
         final String token = CacheHelperKt.defaultCache().getString("token", "");
         if (token.isEmpty()) return;
-        client.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
-                Request request = original.newBuilder()
-                        .addHeader("Authorization", "JWT " + token)
-                        .build();
+        client.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request request = original.newBuilder()
+                    .addHeader("Authorization", "JWT " + token)
+                    .build();
 
-                return chain.proceed(request);
-            }
+            return chain.proceed(request);
         });
     }
 

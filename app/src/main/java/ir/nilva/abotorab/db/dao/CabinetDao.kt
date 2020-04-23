@@ -1,10 +1,7 @@
 package ir.nilva.abotorab.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import ir.nilva.abotorab.model.CabinetResponse
 
 @Dao
@@ -17,7 +14,10 @@ interface CabinetDao {
     suspend fun getCabinets(): List<CabinetResponse>
 
     @Query("SELECT * FROM cabinetresponse WHERE code=:code")
-    fun get(code: Int): LiveData<CabinetResponse>
+    fun getLiveData(code: Int): LiveData<CabinetResponse>
+
+    @Query("SELECT * FROM cabinetresponse WHERE code=:code")
+    suspend fun get(code: Int): CabinetResponse
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(items: List<CabinetResponse>)
@@ -30,4 +30,7 @@ interface CabinetDao {
 
     @Query("DELETE FROM cabinetresponse")
     suspend fun clear()
+
+    @Update
+    suspend fun update(item: CabinetResponse)
 }

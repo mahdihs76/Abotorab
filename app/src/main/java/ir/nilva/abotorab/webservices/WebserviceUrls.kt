@@ -67,6 +67,14 @@ interface WebserviceUrls {
     @POST("cabinet/{code}/print/")
     suspend fun printCabinet(@Path("code") code: Int): Response<BaseResponse>
 
+
+    @FormUrlEncoded
+    @POST("cabinet/{code}/extend/")
+    suspend fun extendCabinet(@Path("code") code: Int,
+                              @Field("num_of_cols") newColumnsCount: Int,
+                              @Field("num_of_rows") newRowsCount: Int): Response<CabinetResponse>
+
+
     @DELETE("cabinet/{code}/")
     suspend fun deleteCabinet(@Path("code") code: Int): Response<BaseResponse>
 
