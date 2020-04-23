@@ -1,13 +1,21 @@
 package ir.nilva.abotorab.view.page.operation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.microblink.activity.DocumentScanActivity
+import com.microblink.entities.recognizers.Recognizer
+import com.microblink.entities.recognizers.RecognizerBundle
+import com.microblink.entities.recognizers.blinkid.passport.PassportRecognizer
+import com.microblink.uisettings.ActivityRunner
+import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
 import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
 import ir.nilva.abotorab.helper.getCountries
+import ir.nilva.abotorab.helper.getCountryName
 import ir.nilva.abotorab.helper.showSearchResult
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -21,9 +29,15 @@ import kotlinx.coroutines.launch
 
 class GiveSearchActivity : BaseActivity() {
 
+    private lateinit var recognizer: PassportRecognizer
+    private lateinit var recognizerBundle: RecognizerBundle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_give)
+
+        recognizer = PassportRecognizer()
+        recognizerBundle = RecognizerBundle(recognizer)
 
         search.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
@@ -51,10 +65,39 @@ class GiveSearchActivity : BaseActivity() {
         country.threshold = 1
         country.setAdapter(CountryAdapter(this, R.layout.item_country, ArrayList(getCountries())))
 
+        fab.setOnClickListener {
+            startScanning()
+        }
+
 
     }
 
+    private fun startScanning() {
+        val settings = DocumentUISettings(recognizerBundle)
+        ActivityRunner.startActivityForResult(this, 100, settings)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100) {
+            if (resultCode == DocumentScanActivity.RESULT_OK && data != null) {
+                recognizerBundle.loadFromIntent(data)
+                val result = recognizer.result
+                if (result.resultState == Recognizer.Result.State.Valid) {
+                    val passport = result.mrzResult
+                    firstName.setText(passport.secondaryId)
+                    lastName.setText(passport.primaryId)
+                    passportId.setText(passport.documentNumber)
+                    country.setText(getCountryName(passport.nationality))
+                }
+            }
+        }
+    }
+
 }
+
+
 
 fun Context.callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
     callWebserviceWithFailure({ getServices().give(hashId) }) {

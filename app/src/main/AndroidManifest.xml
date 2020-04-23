@@ -31,6 +31,7 @@
         <activity
                 android:name=".view.page.operation.GiveSearchActivity"
                 android:screenOrientation="portrait"
+                android:theme="@style/AppTheme2"
                 android:windowSoftInputMode="adjustNothing"></activity>
         <activity
                 android:name=".view.page.operation.CameraActivity"

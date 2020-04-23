@@ -34,8 +34,8 @@ const val PRINT_OPTION_ID = 6
 
 class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener {
 
-    private var rows = 1
-    private var columns = 1
+    private var rows = 3
+    private var columns = 4
     private var adapter = CabinetAdapter(this, null, rows, columns)
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
