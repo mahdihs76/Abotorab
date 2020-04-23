@@ -8,7 +8,7 @@ import ir.nilva.abotorab.ApplicationContext
 import java.util.*
 
 
-fun ConnectToNetworkWPA(networkSSID: String, password: String): Boolean {
+fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {
     return try {
         val conf = WifiConfiguration()
         conf.SSID =
