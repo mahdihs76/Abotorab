@@ -1,6 +1,5 @@
 package ir.nilva.abotorab.view.page.cabinet
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -12,7 +11,10 @@ import com.commit451.modalbottomsheetdialogfragment.OptionRequest
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.helper.*
+import ir.nilva.abotorab.helper.getCell
+import ir.nilva.abotorab.helper.getColumnsNumber
+import ir.nilva.abotorab.helper.getRowsNumber
+import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -101,14 +103,6 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 }
             dialog.show()
 
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val newOrientation = newConfig.orientation
-        if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gotoFullScreenPage(currentCabinet.code)
         }
     }
 

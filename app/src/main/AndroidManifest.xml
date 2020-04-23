@@ -27,7 +27,7 @@
                 android:screenOrientation="portrait"></activity>
         <activity
                 android:name=".view.page.cabinet.CabinetActivity"
-                android:screenOrientation="portrait"></activity>
+                android:configChanges="orientation|screenSize"></activity>
         <activity
                 android:name=".view.page.operation.GiveSearchActivity"
                 android:screenOrientation="portrait"
