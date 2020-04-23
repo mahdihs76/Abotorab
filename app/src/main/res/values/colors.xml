@@ -15,5 +15,6 @@
     <color name="action_color">#57B99D</color>
     <color name="print_color">#38495C</color>
     <color name="disable_color">#8F8F8F</color>
+    <color name="red">#E53935</color>
 
 </resources>

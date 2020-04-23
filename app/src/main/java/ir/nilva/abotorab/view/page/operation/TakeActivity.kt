@@ -1,8 +1,12 @@
 package ir.nilva.abotorab.view.page.operation
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.microblink.activity.DocumentScanActivity
 import com.microblink.entities.recognizers.Recognizer
 import com.microblink.entities.recognizers.RecognizerBundle
@@ -10,10 +14,7 @@ import com.microblink.entities.recognizers.blinkid.passport.PassportRecognizer
 import com.microblink.uisettings.ActivityRunner
 import com.microblink.uisettings.DocumentUISettings
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.getCountries
-import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.showSearchResult
-import ir.nilva.abotorab.helper.toastSuccess
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.callWebserviceWithFailure
@@ -83,7 +84,11 @@ class TakeActivity : BaseActivity() {
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
                 }) {
-                    TODO()
+                    if (it == "[\"فضای خالی وجود ندارد\"]") {
+                        tryToFindEmptyCell()
+                    } else {
+                        toastError("درخواست شما با خطا روبه‌رو شد. مجدد تلاش کنید")
+                    }
                 }?.run {
                     resetUi()
                     toastSuccess("محموله با موفقیت تحویل گرفته شد")
@@ -94,7 +99,48 @@ class TakeActivity : BaseActivity() {
 
         country.threshold = 1
         country.setAdapter(CountryAdapter(this, R.layout.item_country, ArrayList(getCountries())))
+    }
 
+    private var tryToFindDialog: Dialog? = null
+    var findEmptyCellEnabled = false
+
+    private fun tryToFindEmptyCell() {
+        findEmptyCellEnabled = true
+        tryToFindDialog = MaterialDialog(this).show {
+            customView(R.layout.try_to_find_empty_cell_dialog)
+        }.cornerRadius(20f).negativeButton(text = "انصراف") {
+            findEmptyCellEnabled = false
+        }
+        tryToFindDialog?.show()
+        callApiAfter10Seconds()
+    }
+
+    private fun callApiAfter10Seconds() {
+        Handler().postDelayed({
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebserviceWithFailure({
+                    getServices().take(
+                        firstName.text.toString(),
+                        lastName.text.toString(), phone.text.toString(),
+                        country.text.toString(), passportId.text.toString(),
+                        bagCount.count, suitcaseCount.count, pramCount.count
+                    )
+                }) {
+                    if (it == "[\"فضای خالی وجود ندارد\"]") {
+                        if (findEmptyCellEnabled) callApiAfter10Seconds()
+                    } else {
+                        findEmptyCellEnabled = false
+                        tryToFindDialog?.dismiss()
+                        toastError("درخواست شما با خطا روبه‌رو شد. مجدد تلاش کنید")
+                    }
+                }?.run {
+                    findEmptyCellEnabled = false
+                    tryToFindDialog?.dismiss()
+                    resetUi()
+                    toastSuccess("محموله با موفقیت تحویل گرفته شد")
+                }
+            }
+        }, 10000)
     }
 
     private fun startScanning() {

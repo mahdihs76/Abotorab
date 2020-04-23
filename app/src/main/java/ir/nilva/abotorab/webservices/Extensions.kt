@@ -11,22 +11,21 @@ fun getServices(): WebserviceUrls = MyRetrofit.getInstance().webserviceUrls
 
 suspend fun <T> callWebserviceWithFailure(
     caller: suspend () -> Response<T>,
-    failure: () -> Unit
+    failure: (response : String) -> Unit
 ): T? {
     return try {
         val response = caller()
         if (response.isSuccessful) {
             response.body()
         } else {
-            failure()
+            failure(response.errorBody()?.string() ?: "")
             null
         }
     } catch (e: Exception) {
-        failure()
+        failure(e.toString())
         null
     }
 }
-
 
 suspend fun <T> callWebservice(
     caller: suspend () -> Response<T>
