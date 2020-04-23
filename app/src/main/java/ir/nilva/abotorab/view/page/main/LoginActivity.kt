@@ -12,9 +12,9 @@ import ir.nilva.abotorab.helper.defaultCache
 import ir.nilva.abotorab.helper.get
 import ir.nilva.abotorab.helper.gotoMainPage
 import ir.nilva.abotorab.helper.set
+import ir.nilva.abotorab.network.connectToNetwork
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
-import ir.nilva.abotorab.webservices.WebserviceUrls
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.accounting_main.*
@@ -33,6 +33,7 @@ class LoginActivity : BaseActivity() {
             MaterialDialog(this).show {
                 title(text = "آدرس سرور جدید را وارد کنید")
                 input(hint = "مثلا: 192.168.100.5", prefill = MyRetrofit.getBaseUrl()) { _, text ->
+                    connectToNetwork(text.toString(), "100+salavat")
                     connect2Server(text.toString())
                 }
                 positiveButton(text = "اتصال")
