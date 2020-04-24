@@ -38,7 +38,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private var rows = 3
     private var columns = 4
-    private var adapter = CabinetAdapter(this, null, rows, columns)
+    private var carriageEnabled = false
+    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled)
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
 
@@ -111,7 +112,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         CoroutineScope(Dispatchers.Main).launch {
             submit.isClickable = false
             callWebservice {
-                getServices().cabinet("", rows, columns, 1, 1)
+                getServices().cabinet("", rows, columns, 1, if(carriageEnabled)  1 else 0)
             }?.run {
                 currentCabinet = this
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
@@ -130,6 +131,12 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         }
     }
 
+    private fun updateCarriage(isChecked: Boolean){
+        carriageEnabled = isChecked
+        adapter.carriageEnabled = carriageEnabled
+        adapter.notifyDataSetChanged()
+    }
+
     private fun initSteppers() {
         rowsCount.addStepCallback(object : OnStepCallback {
             override fun onStep(value: Int, positive: Boolean) = updateRows(value)
@@ -138,6 +145,10 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         columnsCount.addStepCallback(object : OnStepCallback {
             override fun onStep(value: Int, positive: Boolean) = updateColumns(value)
         })
+
+        carriageSwitch.setOnCheckedChangeListener { _, isChecked ->
+            updateCarriage(isChecked)
+        }
 
         rowsCount.minValue = 1
         columnsCount.minValue = 1

@@ -17,12 +17,16 @@ class CabinetAdapter(
     val context: Context,
     var cabinet: CabinetResponse?,
     var rows: Int,
-    var columns: Int
+    var columns: Int,
+    var carriageEnabled: Boolean
 ) : BaseAdapter() {
 
     @SuppressLint("ViewHolder")
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View =
         LayoutInflater.from(context).inflate(R.layout.cabinet, null).apply {
+            if (carriageEnabled && p0 / columns == rows - 1){
+                image.setImageResource(R.mipmap.abacus)
+            }
             cabinet ?: return@apply
             val cell = cabinet?.getCell(p0)
             cell ?: return@apply
