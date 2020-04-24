@@ -9,6 +9,6 @@ import java.io.Serializable
 @Entity
 class CabinetResponse(
     @PrimaryKey
-    @SerializedName("code") val code: Int,
+    @SerializedName("code") val code: String,
     @SerializedName("rows") val rows: ArrayList<Row>
     ) : BaseResponse    (), Serializable

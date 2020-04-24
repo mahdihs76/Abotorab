@@ -10,7 +10,6 @@ import ir.nilva.abotorab.R
 import ir.nilva.abotorab.helper.getColumnsNumber
 import ir.nilva.abotorab.helper.getRowsNumber
 import ir.nilva.abotorab.model.CabinetResponse
-import kotlinx.android.synthetic.main.cabinet.view.*
 import kotlinx.android.synthetic.main.cabinet_item.view.*
 
 class CabinetListAdapter(
@@ -69,9 +68,9 @@ class CabinetListAdapter(
     }
 
     interface OnClickCabinetListener {
-        fun cabinetClicked(code: Int)
-        fun printCabinet(view: View, code: Int)
-        fun deleteCabinet(code: Int, callback: () -> Unit)
+        fun cabinetClicked(code: String)
+        fun printCabinet(view: View, code: String)
+        fun deleteCabinet(code: String, callback: () -> Unit)
     }
 
 }

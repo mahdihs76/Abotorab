@@ -59,9 +59,9 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         }
     }
 
-    override fun cabinetClicked(code: Int) = gotoCabinetPage(code)
+    override fun cabinetClicked(code: String) = gotoCabinetPage(code)
 
-    override fun printCabinet(view: View, code: Int) {
+    override fun printCabinet(view: View, code: String) {
         CoroutineScope(Dispatchers.Main).launch {
             view.background = ContextCompat.getDrawable(
                 this@CabinetListActivity,
@@ -79,7 +79,7 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
         }
     }
 
-    override fun deleteCabinet(code: Int, callback: () -> Unit) {
+    override fun deleteCabinet(code: String, callback: () -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {
             callWebservice {
                 getServices().deleteCabinet(code)

@@ -14,11 +14,11 @@ import org.jetbrains.anko.startActivity
  */
 
 fun Activity.gotoMainPage() = startActivity<MainActivity>().apply { finish() }
-fun Activity.gotoFullScreenPage(code: Int) = startActivity<FullScreenActivity>("code" to code)
+fun Activity.gotoFullScreenPage(code: String) = startActivity<FullScreenActivity>("code" to code)
 fun Activity.gotoTakePage(barcode: String = "") = startActivity<TakeActivity>("barcode" to barcode)
 fun Activity.gotoGivePage(barcode: String = "") = startActivity<GiveSearchActivity>("barcode" to barcode)
 fun Activity.gotoLoginPage(barcode: String = "") = startActivity<LoginActivity>("barcode" to barcode)
-fun Activity.gotoCabinetPage(code: Int = -1) = startActivity<CabinetActivity>("code" to code)
+fun Activity.gotoCabinetPage(code: String = "") = startActivity<CabinetActivity>("code" to code)
 fun Activity.gotoCabinetListPage() = startActivity<CabinetListActivity>()
 fun Activity.gotoReportPage() = startActivity<ReportActivity>()
 fun Activity.gotoGiveSearchPage() = startActivity<GiveSearchActivity>()

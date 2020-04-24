@@ -26,7 +26,7 @@ class FullScreenActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_full_screen)
 
-        val code = intent?.extras?.getInt("code")
+        val code = intent?.extras?.getString("code")
         AppDatabase.getInstance()
             .cabinetDao().getLiveData(code!!).observe(this, Observer {
                 drawCabinet(it.rows)

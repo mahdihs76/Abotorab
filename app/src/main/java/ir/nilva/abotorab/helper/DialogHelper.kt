@@ -25,7 +25,7 @@ fun Context.showSearchResult(list: List<DeliveryResponse>?, click: (hashId: Stri
     val dialog = MaterialDialog(this)
     list.forEach { item ->
         view.addView(layoutInflater.inflate(R.layout.item_pilgirim, null).apply {
-            var cabinetCode = -1
+            var cabinetCode = ""
             val packs = item.pack
             if (packs.isNotEmpty()) cabinetCode = packs[0].cell
             title.text = item.pilgrim.country + " از " + item.pilgrim.name

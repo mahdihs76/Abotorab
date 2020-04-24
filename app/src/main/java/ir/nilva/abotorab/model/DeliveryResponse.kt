@@ -25,5 +25,5 @@ data class Pack(
     @SerializedName("suitcase_count") val suitcaseCount: Int,
     @SerializedName("pram_count") val pramCount: Int,
     @SerializedName("delivery") val delivery: Int,
-    @SerializedName("cell") val cell: Int
+    @SerializedName("cell") val cell: String
 )

@@ -47,12 +47,12 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         setContentView(R.layout.activity_cabinet)
         initUi()
 
-        val code = intent?.extras?.getInt("code")
+        val code = intent?.extras?.getString("code")
         observeOnDb(code)
     }
 
-    private fun observeOnDb(code: Int?) {
-        if (code != null && code != -1) {
+    private fun observeOnDb(code: String?) {
+        if (code != null && code != "") {
             AppDatabase.getInstance().cabinetDao().getLiveData(code).observe(this, Observer {
                 it ?: return@Observer
                 rows = it.getRowsNumber()
@@ -66,6 +66,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     }
 
     private fun initUi() {
+        carriageSwitch.setEnableEffect(false)
         initSteppers()
         initGrid()
         submit.setOnClickListener { addCabinet() }
