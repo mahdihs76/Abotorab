@@ -11,10 +11,7 @@ import com.commit451.modalbottomsheetdialogfragment.OptionRequest
 import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
-import ir.nilva.abotorab.helper.getCell
-import ir.nilva.abotorab.helper.getColumnsNumber
-import ir.nilva.abotorab.helper.getRowsNumber
-import ir.nilva.abotorab.helper.toastSuccess
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 import ir.nilva.abotorab.view.page.base.BaseActivity
@@ -38,8 +35,9 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private var rows = 3
     private var columns = 4
+    private var dir = 0
     private var carriageEnabled = false
-    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled)
+    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled, dir)
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
 
@@ -137,6 +135,16 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         adapter.notifyDataSetChanged()
     }
 
+    private fun switchDirection() {
+        dir = (dir + 1) % 4
+        adapter.dir = dir
+        currentCabinet.rotate(dir)
+        adapter.notifyDataSetChanged()
+        CoroutineScope(Dispatchers.Main).launch {
+            AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
+        }
+    }
+
     private fun initSteppers() {
         rowsCount.addStepCallback(object : OnStepCallback {
             override fun onStep(value: Int, positive: Boolean) = updateRows(value)
@@ -148,6 +156,10 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
         carriageSwitch.setOnCheckedChangeListener { _, isChecked ->
             updateCarriage(isChecked)
+        }
+
+        directionSwitch.setOnClickListener {
+            switchDirection()
         }
 
         rowsCount.minValue = 1
@@ -184,6 +196,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 .alpha(0F)
                 .andAnimate(secondSubHeader)
                 .alpha(1F)
+                .andAnimate(subHeaderList)
+                .alpha(1F)
                 .andAnimate(extend)
                 .alpha(1F)
                 .start()
@@ -191,6 +205,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             steppers.visibility = View.GONE
             labels.visibility = View.GONE
             submit.visibility = View.GONE
+            subHeaderList.alpha = 1F
             subHeader.alpha = 0F
             secondSubHeader.alpha = 1F
             extend.alpha = 1F
@@ -271,7 +286,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun showPopup(index: Int) {
 
-        val cell = currentCabinet.getCell(index)
+        val cell = currentCabinet.getCell(index, dir)
 
         val modalBuilder =
             ModalBottomSheetDialogFragment.Builder()
@@ -290,12 +305,12 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     override fun onModalOptionSelected(tag: String?, option: Option) {
         val cellIndex = option.id / 10
-        val cell = currentCabinet.getCell(cellIndex)
+        val cell = currentCabinet.getCell(cellIndex, dir)
         when (option.id % 10) {
             UNUSABLE_OPTION_ID -> changeStatus(cellIndex, false)
             USABLE_OPTION_ID -> changeStatus(cellIndex, true)
             EMPTY_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
-                callWebservice { getServices().free(currentCabinet.getCell(cellIndex).code.toInt()) }?.run {
+                callWebservice { getServices().free(currentCabinet.getCell(cellIndex, dir).code.toInt()) }?.run {
                     cell.age = -1
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
@@ -332,7 +347,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun changeStatus(index: Int, isHealthy: Boolean) =
         CoroutineScope(Dispatchers.Main).launch {
-            val cell = currentCabinet.getCell(index)
+            val cell = currentCabinet.getCell(index, dir)
             callWebservice {
                 getServices().changeStatus(cell.code, isHealthy)
             }?.run {

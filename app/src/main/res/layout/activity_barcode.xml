@@ -25,10 +25,10 @@
                 android:id="@+id/search"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:src="@drawable/round_search_black_24" />
+                android:src="@drawable/round_visibility_off_black_48" />
     </FrameLayout>
 
-
+<!--TODO-->
 
     <FrameLayout
             android:id="@+id/recent_layout"
@@ -45,10 +45,10 @@
             android:id="@+id/recent"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:src="@drawable/ic_recent" />
+            android:src="@drawable/ic_camera" />
 
     </FrameLayout>
-
+<!--TODO-->
     <LinearLayout
             android:id="@+id/confirm_layout"
             android:layout_width="match_parent"

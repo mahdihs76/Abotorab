@@ -28,7 +28,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginStart="12dp"
             android:alpha="0"
-            android:src="@mipmap/extend" />
+            android:src="@mipmap/cabinet_empty" />
 
     <TextView
             android:id="@+id/subHeader"
@@ -44,7 +44,17 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/subHeaderList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subHeader"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:alpha="0"
+        android:orientation="vertical"
+        >
+        <TextView
             android:id="@+id/secondSubHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,6 +68,26 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/directionLabel"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+            android:text="تغییر جهت"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/directionSwitch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/exchange"
+            android:layout_marginLeft="12dp"/>
+
+    </LinearLayout>
 
     <LinearLayout
             android:id="@+id/labels"
@@ -100,6 +130,7 @@
                 android:text="کالسکه"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -135,6 +166,14 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"/>
 
+<!--        <com.gc.materialdesign.views.ButtonIcon-->
+<!--                android:id="@+id/directionSwitch"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginStart="12dp"-->
+
+<!--                android:layout_marginLeft="12dp"/>-->
+
 
     </LinearLayout>
 
@@ -144,7 +183,7 @@
             android:layout_height="match_parent"
             android:layout_above="@id/submit"
             android:layout_below="@id/steppers"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="120dp"
             android:horizontalSpacing="4dp"
             android:padding="16dp"
             android:scaleType="centerCrop"
