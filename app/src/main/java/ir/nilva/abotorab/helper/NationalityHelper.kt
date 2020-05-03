@@ -1,10 +1,10 @@
 package ir.nilva.abotorab.helper
 
 import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -13,8 +13,14 @@ import java.io.InputStream
 fun getCountryName(code: String): String {
     val inputStream = ApplicationContext.context.resources.openRawResource(R.raw.nationality)
     val jsonString = readTextFile(inputStream)
-    val countries = Gson().fromJson<Array<CountryModel>>(jsonString, Array<CountryModel>::class.java)
-    return countries.find { it.alpha3 == code }?.enName ?: ""
+    val jsonObject = JSONObject(jsonString)
+    for (key in jsonObject.keys()) {
+        val country = jsonObject.get(key) as JSONObject
+        if (country.get("alpha_3") == code) {
+            return country.get("en_name") as String;
+        }
+    }
+    return ""
 }
 
 fun getCountries() : List<CountryModel>{

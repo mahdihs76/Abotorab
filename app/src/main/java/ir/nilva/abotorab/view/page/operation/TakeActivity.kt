@@ -57,7 +57,7 @@ class TakeActivity : BaseActivity() {
                         5
                     )
                 }?.run {
-                    showSearchResult(this) {
+                    showResult("چاپ", this) {
                         CoroutineScope(Dispatchers.Main).launch {
                             callWebservice {
                                 getServices().reprint(it)

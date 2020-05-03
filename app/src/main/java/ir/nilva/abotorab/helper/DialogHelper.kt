@@ -10,7 +10,7 @@ import ir.nilva.abotorab.model.DeliveryResponse
 import kotlinx.android.synthetic.main.item_pilgirim.view.*
 import org.jetbrains.anko.layoutInflater
 
-fun Context.showSearchResult(list: List<DeliveryResponse>?, click: (hashId: String) -> Unit) {
+fun Context.showResult(actionLabel: String, list: List<DeliveryResponse>?, click: (hashId: String) -> Unit) {
     if (list == null || list.isEmpty()) {
         toastWarning("هیچ موردی یافت نشد")
         return
@@ -32,6 +32,7 @@ fun Context.showSearchResult(list: List<DeliveryResponse>?, click: (hashId: Stri
             phoneNumber.text = "شماره تلفن:" + item.pilgrim.phone
             cabinet.text = " شماره قفسه:$cabinetCode"
             subTitle.text = "زمان تحویل:" + item.enteredAt
+            button.text = actionLabel
             button.setOnClickListener {
                 dialog.dismiss()
                 click(item.hashId)

@@ -16,7 +16,7 @@ import ir.nilva.abotorab.db.model.DeliveryEntity
 import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
 import ir.nilva.abotorab.helper.getCountries
 import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.showSearchResult
+import ir.nilva.abotorab.helper.showResult
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
@@ -53,7 +53,7 @@ class GiveSearchActivity : BaseActivity() {
                         true
                     )
                 }?.run {
-                    showSearchResult(this) {
+                    showResult("تحویل", this) {
                         callGiveWS(it)
                     }
                 }
