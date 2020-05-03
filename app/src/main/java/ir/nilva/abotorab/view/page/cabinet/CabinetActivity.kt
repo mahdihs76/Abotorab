@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.list.listItems
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
@@ -14,6 +15,7 @@ import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
+import ir.nilva.abotorab.model.Pilgrim
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
@@ -111,7 +113,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         CoroutineScope(Dispatchers.Main).launch {
             submit.isClickable = false
             callWebservice {
-                getServices().cabinet("", rows, columns, 1, if(carriageEnabled)  1 else 0)
+                getServices().cabinet("", rows, columns, 1, if (carriageEnabled) 1 else 0)
             }?.run {
                 currentCabinet = this
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
@@ -130,7 +132,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         }
     }
 
-    private fun updateCarriage(isChecked: Boolean){
+    private fun updateCarriage(isChecked: Boolean) {
         carriageEnabled = isChecked
         adapter.carriageEnabled = carriageEnabled
         adapter.notifyDataSetChanged()
@@ -302,12 +304,30 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     }
 
-    private fun getHeaderTitle(cell: Cell) =
-        if (cell.pilgrim?.name.isNullOrEmpty()) String.format("شماره : %s", cell.code)
-        else String.format("شماره : %s - رزرو شده توسط %s", cell.code, cell.pilgrim?.name ?: "")
-
     private fun showPilgrimProfileDialog(cell: Cell) {
-        TODO()
+        cell.pilgrim ?: return
+        MaterialDialog(this).show {
+            cornerRadius(20F)
+            listItems(
+                items = preparePilgrimData(cell.code, cell.pilgrim!!),
+                waitForPositiveButton = true
+            )
+        }
+    }
+
+    private fun preparePilgrimData(code: String, pilgrim: Pilgrim): ArrayList<String> {
+        val data = ArrayList<String>()
+        data.add("شماره سلول : $code")
+        if (pilgrim.name.isNotEmpty()) {
+            data.add("نام زائر : ${pilgrim.name}")
+        }
+        if (pilgrim.country.isNotEmpty()) {
+            data.add("کشور : ${pilgrim.country}")
+        }
+        if (pilgrim.phone.isNotEmpty()) {
+            data.add("شماره تلفن : ${pilgrim.phone}")
+        }
+        return data
     }
 
     override fun onModalOptionSelected(tag: String?, option: Option) {
@@ -318,7 +338,14 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             UNUSABLE_OPTION_ID -> changeStatus(cellIndex, false)
             USABLE_OPTION_ID -> changeStatus(cellIndex, true)
             EMPTY_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
-                callWebservice { getServices().free(currentCabinet.getCell(cellIndex, dir).code.toInt()) }?.run {
+                callWebservice {
+                    getServices().free(
+                        currentCabinet.getCell(
+                            cellIndex,
+                            dir
+                        ).code.toInt()
+                    )
+                }?.run {
                     cell.age = -1
                     AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 }
