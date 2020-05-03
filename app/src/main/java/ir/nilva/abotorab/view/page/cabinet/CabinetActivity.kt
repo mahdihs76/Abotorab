@@ -192,13 +192,11 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 .alpha(0F)
                 .andAnimate(submit)
                 .translationY(submit.height.toFloat())
-                .andAnimate(subHeader)
-                .alpha(0F)
-                .andAnimate(secondSubHeader)
-                .alpha(1F)
                 .andAnimate(subHeaderList)
                 .alpha(1F)
                 .andAnimate(extend)
+                .alpha(1F)
+                .andAnimate(directionSwitch)
                 .alpha(1F)
                 .start()
         } else {
@@ -206,13 +204,13 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             labels.visibility = View.GONE
             submit.visibility = View.GONE
             subHeaderList.alpha = 1F
-            subHeader.alpha = 0F
-            secondSubHeader.alpha = 1F
             extend.alpha = 1F
+            directionSwitch.alpha = 1F
         }
+        subHeader.text = "برای تغییر وضعیت هر یک از سلول ها روی آن کلیک کنید:"
         header.text = String.format(
             getString(R.string.cabinet_format),
-            currentCabinet.code.toString()
+            currentCabinet.code
         )
     }
 

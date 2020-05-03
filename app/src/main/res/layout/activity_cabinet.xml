@@ -2,19 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/background"
-        android:id="@+id/rootLayout"
         tools:context=".view.page.cabinet.CabinetActivity">
 
     <TextView
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="راه اندازی قفسه"
             android:textColor="@color/white"
             android:textSize="28sp"
@@ -22,13 +22,24 @@
 
     <ImageView
             android:id="@+id/extend"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="24dp"
             android:layout_toRightOf="@id/header"
-            android:layout_marginTop="32dp"
+            android:alpha="0"
+            android:src="@mipmap/right" />
+
+
+    <ImageView
+            android:id="@+id/directionSwitch"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_toRightOf="@id/extend"
+            android:layout_marginTop="24dp"
             android:layout_marginStart="12dp"
             android:alpha="0"
-            android:src="@mipmap/cabinet_empty" />
+            android:src="@drawable/exchange"/>
 
     <TextView
             android:id="@+id/subHeader"
@@ -45,47 +56,14 @@
             android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/subHeaderList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/subHeader"
-        android:layout_marginTop="12dp"
-        android:gravity="center"
-        android:alpha="0"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/secondSubHeader"
+            android:id="@+id/subHeaderList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:alpha="0"
-            android:gravity="right"
-            android:text="برای تغییر وضعیت هر یک از سلول ها روی آن کلیک کنید:"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/directionLabel"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:gravity="center"
-            android:text="تغییر جهت"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <ImageView
-            android:id="@+id/directionSwitch"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_below="@id/subHeader"
             android:layout_marginTop="12dp"
-            android:src="@drawable/exchange"
-            android:layout_marginLeft="12dp"/>
+            android:alpha="0"
+            android:gravity="center"
+            android:orientation="vertical">
 
     </LinearLayout>
 
@@ -164,17 +142,7 @@
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"/>
-
-<!--        <com.gc.materialdesign.views.ButtonIcon-->
-<!--                android:id="@+id/directionSwitch"-->
-<!--                android:layout_width="80dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginStart="12dp"-->
-
-<!--                android:layout_marginLeft="12dp"/>-->
-
-
+                android:layout_marginLeft="12dp" />
     </LinearLayout>
 
     <GridView
@@ -183,7 +151,6 @@
             android:layout_height="match_parent"
             android:layout_above="@id/submit"
             android:layout_below="@id/steppers"
-            android:layout_marginTop="120dp"
             android:horizontalSpacing="4dp"
             android:padding="16dp"
             android:scaleType="centerCrop"
