@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import nl.dionsegijn.steppertouch.OnStepCallback
 import nl.dionsegijn.steppertouch.StepperTouch
 
+const val USER_OPTION_ID = 0
 const val UNUSABLE_OPTION_ID = 1
 const val USABLE_OPTION_ID = 2
 const val EMPTY_OPTION_ID = 3
@@ -248,6 +249,13 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         if (cell.age > -1) {
             add(
                 OptionRequest(
+                    (index.toString() + USER_OPTION_ID).toInt(),
+                    "مشخصات زائر",
+                    R.drawable.baseline_account_circle_black_24
+                )
+            )
+            add(
+                OptionRequest(
                     (index.toString() + EMPTY_OPTION_ID).toInt(),
                     getString(R.string.empty),
                     R.drawable.round_move_to_inbox_black_24
@@ -288,10 +296,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
         val modalBuilder =
             ModalBottomSheetDialogFragment.Builder()
-                .header(getHeaderTitle(cell))
 
         modalBuilder.addOptions(cell, index)
-
         modalBuilder.show(supportFragmentManager, "bottomsheet")
 
     }
@@ -300,11 +306,15 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         if (cell.pilgrim?.name.isNullOrEmpty()) String.format("شماره : %s", cell.code)
         else String.format("شماره : %s - رزرو شده توسط %s", cell.code, cell.pilgrim?.name ?: "")
 
+    private fun showPilgrimProfileDialog(cell: Cell) {
+        TODO()
+    }
 
     override fun onModalOptionSelected(tag: String?, option: Option) {
         val cellIndex = option.id / 10
         val cell = currentCabinet.getCell(cellIndex, dir)
         when (option.id % 10) {
+            USER_OPTION_ID -> showPilgrimProfileDialog(cell)
             UNUSABLE_OPTION_ID -> changeStatus(cellIndex, false)
             USABLE_OPTION_ID -> changeStatus(cellIndex, true)
             EMPTY_OPTION_ID -> CoroutineScope(Dispatchers.Main).launch {
