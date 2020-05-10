@@ -19,6 +19,7 @@
                 android:layout_marginLeft="12dp"
                 android:gravity="center"
                 android:text="@string/rowsCount"
+                android:visibility="gone"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp" />
 
@@ -49,6 +50,7 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
+                android:visibility="gone"
                 app:stepperBackgroundColor="@color/colorAccent" />
 
 
