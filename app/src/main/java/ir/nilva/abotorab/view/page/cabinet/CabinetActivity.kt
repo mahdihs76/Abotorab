@@ -15,9 +15,11 @@ import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
+import ir.nilva.abotorab.model.Pack
 import ir.nilva.abotorab.model.Pilgrim
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.callWebserviceWithFailure
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet.*
 import kotlinx.coroutines.CoroutineScope
@@ -112,8 +114,11 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     private fun addCabinet() {
         CoroutineScope(Dispatchers.Main).launch {
             submit.isClickable = false
-            callWebservice {
+            callWebserviceWithFailure({
                 getServices().cabinet("", rows, columns, 1, if (carriageEnabled) 1 else 0)
+            }){
+                toastError(it)
+                submit.isClickable = true
             }?.run {
                 currentCabinet = this
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
@@ -306,16 +311,21 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun showPilgrimProfileDialog(cell: Cell) {
         cell.pilgrim ?: return
+        cell.pack ?: return;
         MaterialDialog(this).show {
             cornerRadius(20F)
             listItems(
-                items = preparePilgrimData(cell.code, cell.pilgrim!!),
+                items = preparePilgrimData(cell.code, cell.pilgrim!!, cell.pack!!),
                 waitForPositiveButton = true
             )
         }
     }
 
-    private fun preparePilgrimData(code: String, pilgrim: Pilgrim): ArrayList<String> {
+    private fun preparePilgrimData(
+        code: String,
+        pilgrim: Pilgrim,
+        pack: Pack
+    ): ArrayList<String> {
         val data = ArrayList<String>()
         data.add("شماره سلول : $code")
         if (pilgrim.name.isNotEmpty()) {
@@ -326,6 +336,15 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         }
         if (pilgrim.phone.isNotEmpty()) {
             data.add("شماره تلفن : ${pilgrim.phone}")
+        }
+        if (pack.bagCount != 0) {
+            data.add("تعداد ساک : ${pack.bagCount}")
+        }
+        if (pack.suitcaseCount != 0) {
+            data.add("تعداد چمدان : ${pack.suitcaseCount}")
+        }
+        if (pack.pramCount != 0) {
+            data.add("تعداد کالسکه : ${pack.pramCount}")
         }
         return data
     }
