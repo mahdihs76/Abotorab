@@ -27,10 +27,14 @@ class LoginActivity : BaseActivity() {
 
         ip.setOnClickListener {
             MaterialDialog(this).show {
-                title(text = "آدرس سرور جدید را وارد کنید")
-                input(hint = "مثلا: 192.168.100.5", prefill = MyRetrofit.getBaseUrl()) { _, text ->
-                    connectToNetworkWPA(text.toString(), "100+salavat")
-                    connect2Server(text.toString())
+                title(text = "شماره امانت‌داری را وارد کنید")
+                input(hint = "مثلا: 14", prefill = "10") { _, text ->
+                    if(text == "10"){
+                        connect2Server("http://depository.ceshora.ir/")
+                    } else {
+                        connectToNetworkWPA("192.168.0.$text", "100+salavat")
+                        connect2Server("192.168.0.$text")
+                    }
                 }
                 positiveButton(text = "اتصال")
             }
