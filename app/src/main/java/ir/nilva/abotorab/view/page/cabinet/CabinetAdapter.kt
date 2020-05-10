@@ -13,6 +13,7 @@ import ir.nilva.abotorab.helper.getImageResource
 import ir.nilva.abotorab.model.CabinetResponse
 import kotlinx.android.synthetic.main.cabinet.view.*
 
+
 class CabinetAdapter(
     val context: Context,
     var cabinet: CabinetResponse?,
@@ -25,10 +26,8 @@ class CabinetAdapter(
     @SuppressLint("ViewHolder")
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View =
         LayoutInflater.from(context).inflate(R.layout.cabinet, null).apply {
-
-//            cellCab.rotation = -(dir * 90).toFloat()
             if (carriageEnabled && p0 / columns == rows - 1){
-                image.setImageResource(R.mipmap.abacus)
+                image.setImageResource(R.mipmap.cabinet_empty_long)
             }
             cabinet ?: return@apply
             val cell = cabinet?.getCell(p0, dir)
