@@ -37,8 +37,15 @@ class CabinetAdapter(
             cabinet ?: return@apply
             val cell = cabinet?.getCell(p0, dir)
             cell ?: return@apply
+            if (cell.size > 0) {
+                long_image.visibility = View.VISIBLE
+                long_image.requestLayout()
+                long_image.layoutParams.width = (activity.getScreenWidth() / columns)
+                long_image.layoutParams.height = (long_image.layoutParams.width * 1.3).toInt()
+                image.visibility = View.GONE
+            }
             val needLongCell = carriageEnabled && p0 / columns == rows - 1
-            if (needLongCell) {
+            if (needLongCell || cell.size > 0) {
                 long_image.setImageResource(cell.getImageResource(true))
             } else {
                 image.setImageResource(cell.getImageResource(false))
