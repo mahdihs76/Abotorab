@@ -13,6 +13,7 @@ import ir.nilva.abotorab.helper.getImageResource
 import ir.nilva.abotorab.helper.getScreenWidth
 import ir.nilva.abotorab.model.CabinetResponse
 import kotlinx.android.synthetic.main.cabinet.view.*
+import org.json.JSONObject
 
 
 class CabinetAdapter(
@@ -21,7 +22,8 @@ class CabinetAdapter(
     var rows: Int,
     var columns: Int,
     var carriageEnabled: Boolean,
-    var dir: Int
+    var dir: Int,
+    val mapping: String
 ) : BaseAdapter() {
 
     @SuppressLint("ViewHolder")
@@ -51,7 +53,14 @@ class CabinetAdapter(
                 image.setImageResource(cell.getImageResource(false))
             }
             codeTextView.visibility = View.VISIBLE
-            codeTextView.text = FormatHelper.toPersianNumber(cell.code)
+            val row = ((cell.code.toInt() % 100) / 10)
+            val column = cell.code.toInt() % 10
+            if(mapping.isNotEmpty()){
+                val mappedRow = JSONObject(mapping).get(row.toString())
+                codeTextView.text = FormatHelper.toPersianNumber("$column$mappedRow")
+            } else {
+                codeTextView.text = FormatHelper.toPersianNumber((cell.code.toInt() % 100).toString())
+            }
         }
 
     override fun getItem(p0: Int) = null

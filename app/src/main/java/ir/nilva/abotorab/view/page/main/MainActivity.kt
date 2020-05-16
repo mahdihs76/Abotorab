@@ -9,7 +9,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.microblink.MicroblinkSDK
 import com.ramotion.circlemenu.CircleMenuView
+import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
@@ -63,6 +65,20 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        CoroutineScope(Dispatchers.Main).launch {
+            callWebservice {
+                getServices().config()
+            }?.run {
+                val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
+                if (token.isNotEmpty()) {
+                    if(lastBlinkId != token) {
+                        MicroblinkSDK.setLicenseKey(token, ApplicationContext.context)
+                        defaultCache()["BLINK_ID"] = token
+                    }
+                }
+                defaultCache()["ROW_MAPPING"] = row_code_mapping.toString()
+            }
+        }
         initCircularMenu()
         logout.setOnClickListener { logout() }
         sendCachedHashes2Server()

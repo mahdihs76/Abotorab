@@ -42,7 +42,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     private var columns = 4
     private var dir = 0
     private var carriageEnabled = false
-    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled, dir)
+    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled, dir, defaultCache()["ROW_MAPPING"]?:"")
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
 
