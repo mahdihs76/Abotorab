@@ -20,26 +20,6 @@
             android:textSize="28sp"
             android:textStyle="bold" />
 
-    <ImageView
-            android:id="@+id/extend"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="24dp"
-            android:layout_toRightOf="@id/header"
-            android:alpha="0"
-            android:src="@mipmap/right" />
-
-
-    <ImageView
-            android:id="@+id/directionSwitch"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_toRightOf="@id/extend"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="12dp"
-            android:alpha="0"
-            android:src="@drawable/exchange"/>
 
     <TextView
             android:id="@+id/subHeader"
@@ -55,11 +35,52 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+    <RelativeLayout
+            android:id="@+id/actions_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subHeader"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            android:background="@mipmap/panel">
+
+        <ImageView
+                android:id="@+id/directionSwitch2"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="12dp"
+                android:layout_toStartOf="@id/extend"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="32dp"
+                android:src="@mipmap/cabinet_rotate2" />
+
+        <ImageView
+                android:id="@+id/extend"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="12dp"
+                android:src="@mipmap/cabinet_extend" />
+
+        <ImageView
+                android:id="@+id/directionSwitch"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="12dp"
+                android:layout_toEndOf="@id/extend"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="32dp"
+                android:src="@mipmap/cabinet_rotate" />
+
+    </RelativeLayout>
+
+
+
     <LinearLayout
             android:id="@+id/subHeaderList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/subHeader"
+            android:layout_below="@id/actions_layout"
             android:layout_marginTop="12dp"
             android:alpha="0"
             android:gravity="center"
@@ -71,7 +92,7 @@
             android:id="@+id/labels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/subHeader"
+            android:layout_below="@id/actions_layout"
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:orientation="horizontal">

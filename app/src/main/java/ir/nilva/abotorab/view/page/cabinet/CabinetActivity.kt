@@ -9,7 +9,6 @@ import com.afollestad.materialdialogs.list.listItems
 import com.commit451.modalbottomsheetdialogfragment.ModalBottomSheetDialogFragment
 import com.commit451.modalbottomsheetdialogfragment.Option
 import com.commit451.modalbottomsheetdialogfragment.OptionRequest
-import com.github.florent37.viewanimator.ViewAnimator
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
@@ -42,7 +41,15 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     private var columns = 4
     private var dir = 0
     private var carriageEnabled = false
-    private var adapter = CabinetAdapter(this, null, rows, columns, carriageEnabled, dir, defaultCache()["ROW_MAPPING"]?:"")
+    private var adapter = CabinetAdapter(
+        this,
+        null,
+        rows,
+        columns,
+        carriageEnabled,
+        dir,
+        defaultCache()["ROW_MAPPING"] ?: ""
+    )
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
 
@@ -63,7 +70,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                 columns = it.getColumnsNumber()
                 currentCabinet = it
                 adapter.cabinet = currentCabinet
-                moveToNextStep(false)
+                moveToNextStep()
                 refresh()
             })
         }
@@ -116,14 +123,14 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             submit.isClickable = false
             callWebserviceWithFailure({
                 getServices().cabinet("", rows, columns, 1, if (carriageEnabled) 1 else 0)
-            }){
+            }) {
                 toastError(it)
                 submit.isClickable = true
             }?.run {
                 currentCabinet = this
                 AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
                 adapter.cabinet = currentCabinet
-                moveToNextStep(true)
+                moveToNextStep()
                 observeOnDb(currentCabinet.code)
             }
         }
@@ -143,8 +150,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         adapter.notifyDataSetChanged()
     }
 
-    private fun switchDirection() {
-        dir = (dir + 1) % 4
+    private fun switchDirection(reverse: Boolean) {
+        dir = if(!reverse) (dir + 1) % 4 else (dir - 1) % 4
         adapter.dir = dir
         currentCabinet.rotate(dir)
         adapter.notifyDataSetChanged()
@@ -167,7 +174,11 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         }
 
         directionSwitch.setOnClickListener {
-            switchDirection()
+            switchDirection(false)
+        }
+
+        directionSwitch2.setOnClickListener {
+            switchDirection(true)
         }
 
         rowsCount.minValue = 1
@@ -187,34 +198,15 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         grid.numColumns = columns
     }
 
-    private fun moveToNextStep(withAnimation: Boolean) {
+    private fun moveToNextStep() {
         if (step == 1) return
         step++
-        if (withAnimation) {
-            ViewAnimator
-                .animate(grid)
-                .translationY(-(steppers.height.toFloat() + labels.height.toFloat()))
-                .andAnimate(steppers)
-                .alpha(0F)
-                .andAnimate(labels)
-                .alpha(0F)
-                .andAnimate(submit)
-                .translationY(submit.height.toFloat())
-                .andAnimate(subHeaderList)
-                .alpha(1F)
-                .andAnimate(extend)
-                .alpha(1F)
-                .andAnimate(directionSwitch)
-                .alpha(1F)
-                .start()
-        } else {
-            steppers.visibility = View.GONE
-            labels.visibility = View.GONE
-            submit.visibility = View.GONE
-            subHeaderList.alpha = 1F
-            extend.alpha = 1F
-            directionSwitch.alpha = 1F
-        }
+        steppers.visibility = View.GONE
+        labels.visibility = View.GONE
+        submit.visibility = View.GONE
+        subHeaderList.alpha = 1F
+        actions_layout.visibility = View.VISIBLE
+        directionSwitch.alpha = 1F
         subHeader.text = "برای تغییر وضعیت هر یک از سلول ها روی آن کلیک کنید:"
         header.text = String.format(
             getString(R.string.cabinet_format),

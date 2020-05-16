@@ -28,7 +28,7 @@ class LoginActivity : BaseActivity() {
             MaterialDialog(this).show {
                 title(text = "شماره امانت‌داری را وارد کنید")
                 input(hint = "مثلا: 14", prefill = "10") { _, text ->
-                    if (text == "10") {
+                    if (text.toString() == "10") {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
                         connectToNetworkWPA("192.168.0.$text", "100+salavat")
