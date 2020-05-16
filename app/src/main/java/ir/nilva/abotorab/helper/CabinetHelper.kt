@@ -5,18 +5,22 @@ import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 
 fun CabinetResponse.getCell(index: Int, dir: Int): Cell {
-    var rowIndex = index / getColumnsNumber()
-    var columnIndex = index % getColumnsNumber()
-//    if (dir == 1) {
-//         rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
-//         columnIndex = index % getColumnsNumber()
-//    } else if (dir == 2) {
-//         rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
-//         columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
-//    } else if (dir == 3) {
-//         rowIndex = index / getColumnsNumber()
-//         columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
-//    }
+    var rowIndex = getRowsNumber() -  index / getColumnsNumber() - 1
+    var columnIndex =index % getColumnsNumber()
+    when (dir) {
+        1 -> {
+            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
+            columnIndex = index % getColumnsNumber()
+        }
+        2 -> {
+            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
+            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
+        }
+        3 -> {
+            rowIndex = index / getColumnsNumber()
+            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
+        }
+    }
     return rows[rowIndex].cells[columnIndex]
 }
 
