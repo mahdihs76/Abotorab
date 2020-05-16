@@ -35,7 +35,15 @@ fun CabinetResponse.getRowsNumber() = rows.size
 
 fun CabinetResponse.getColumnsNumber() = rows[0].cells.size
 
-fun Cell.getImageResource() = when {
+fun Cell.getImageResource(longCell: Boolean) = if (longCell) when {
+    !isHealthy -> R.mipmap.broken_long
+    age == -1 && !isFavorite -> R.mipmap.cabinet_empty_long
+    age == -1 && isFavorite -> R.mipmap.cabinet_empty_fav_long
+    age == 0 && !isFavorite -> R.mipmap.cabinet_fill_1_long
+    age == 0 && isFavorite -> R.mipmap.cabinet_fill_1_fav_long
+    !isFavorite -> R.mipmap.cabinet_fill_3_long
+    else -> R.mipmap.cabinet_fill_3_fav
+} else when {
     !isHealthy -> R.mipmap.broken
     age == -1 && !isFavorite -> R.mipmap.cabinet_empty
     age == -1 && isFavorite -> R.mipmap.cabinet_empty_fav

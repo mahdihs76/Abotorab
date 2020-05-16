@@ -11,4 +11,4 @@ class CabinetResponse(
     @PrimaryKey
     @SerializedName("code") val code: String,
     @SerializedName("rows") val rows: ArrayList<Row>
-    ) : BaseResponse    (), Serializable
+    ) : BaseResponse(), Serializable

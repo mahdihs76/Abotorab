@@ -25,7 +25,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        // For Singleton instantiation
         @Volatile private var instance: AppDatabase? = null
 
         fun getInstance(): AppDatabase {
@@ -34,8 +33,6 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // Create and pre-populate the database. See this article for more details:
-        // https://medium.com/google-developers/7-pro-tips-for-room-fbadea4bfbd1#4785
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, "app")
 //                .addCallback(object : RoomDatabase.Callback() {

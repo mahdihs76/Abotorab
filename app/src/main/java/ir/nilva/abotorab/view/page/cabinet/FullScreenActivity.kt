@@ -55,7 +55,7 @@ class FullScreenActivity : BaseActivity() {
 
             it.cells.forEach {
                 val imageView = ImageView(this).apply {
-                    imageResource = it.getImageResource()
+                    imageResource = it.getImageResource(false)
 
                     layoutParams = LinearLayout.LayoutParams(
                         eachWidth - 2 * DEFAULT_CABINET_MARGIN,
