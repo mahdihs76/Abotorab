@@ -52,9 +52,10 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
     private fun give(barcode: String) {
         if (barcode.isNotEmpty()) {
             try {
+                val encodedString = barcode.substringAfter("http://gbaghiyatallah.ir/?data=");
                 val text = String(
                     Base64.decode(
-                        barcode,
+                        encodedString,
                         Base64.DEFAULT
                     ),
                     Charsets.UTF_8
