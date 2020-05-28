@@ -159,7 +159,7 @@ fun Activity.logout() {
                 AppDatabase.getInstance().cabinetDao().clear()
                 AppDatabase.getInstance().offlineDeliveryDao().clear()
                 defaultCache()["token"] = null
-                finish()
+                gotoLoginPage()
             }
         }
         negativeButton(text = "خیر")
