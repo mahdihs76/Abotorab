@@ -71,7 +71,7 @@ class MainActivity : BaseActivity() {
             }?.run {
                 val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
                 if (token.isNotEmpty()) {
-                    if(lastBlinkId != token) {
+                    if (lastBlinkId != token) {
                         MicroblinkSDK.setLicenseKey(token, ApplicationContext.context)
                         defaultCache()["BLINK_ID"] = token
                     }
@@ -83,6 +83,8 @@ class MainActivity : BaseActivity() {
         logout.setOnClickListener { logout() }
         sendCachedHashes2Server()
         fillHeader()
+        val depositoryName = defaultCache()["depository"] ?: "امانت داری";
+        labelTextView.text = depositoryName
     }
 
     private fun fillHeader() {

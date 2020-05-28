@@ -30,12 +30,11 @@
 
 
         <TextView
-                android:id="@+id/rish"
+                android:id="@+id/labelTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:padding="8dp"
-                android:text="کاربر سیستم"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

@@ -33,6 +33,9 @@ class TakeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take)
 
+        val depoName = defaultCache()["depository"] ?: "امانت داری"
+        depositoryName.setText(depoName)
+
         bagCount.minValue = 0
         bagCount.sideTapEnabled = true
         suitcaseCount.minValue = 0

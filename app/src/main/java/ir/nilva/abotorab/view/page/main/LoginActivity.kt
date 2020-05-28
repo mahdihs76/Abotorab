@@ -28,6 +28,7 @@ class LoginActivity : BaseActivity() {
             MaterialDialog(this).show {
                 title(text = "شماره امانت‌داری را وارد کنید")
                 input(hint = "مثلا: 14", prefill = "10") { _, text ->
+                    defaultCache()["depository_code"] = text.toString()
                     if (text.toString() == "10") {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
@@ -59,10 +60,12 @@ class LoginActivity : BaseActivity() {
                 callWebservice {
                     getServices().login(
                         username.text.toString(),
-                        password.text.toString()
+                        password.text.toString(),
+                        defaultCache()["depository_code"] ?: "10"
                     )
                 }?.run {
                     defaultCache()["token"] = token
+                    defaultCache()["depository"] = depository
                     MyRetrofit.newInstance()
                     gotoMainPage()
                 }
