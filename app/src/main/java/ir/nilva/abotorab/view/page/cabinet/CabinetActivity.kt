@@ -228,7 +228,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     fun updateGrid(value: Int) {
         if (value > 6) {
             val params = linearLayout_gridtableLayout.layoutParams
-            params.width = (getScreenWidth() / 6) * value + 20 * value
+            params.width = (getScreenWidth() / 6) * value + 10 * value
             linearLayout_gridtableLayout.layoutParams = params
         }
         else {

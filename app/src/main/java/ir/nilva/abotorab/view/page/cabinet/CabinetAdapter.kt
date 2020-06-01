@@ -36,7 +36,7 @@ class CabinetAdapter(
         LayoutInflater.from(activity).inflate(R.layout.cabinet, null).apply {
             if (columns > 6) {
                 image.requestLayout()
-                image.layoutParams.width = activity.getScreenWidth() / 6
+                image.layoutParams.width = activity.getScreenWidth() / 7
             }
 
             if (carriageEnabled && p0 / columns == rows - 1) {
