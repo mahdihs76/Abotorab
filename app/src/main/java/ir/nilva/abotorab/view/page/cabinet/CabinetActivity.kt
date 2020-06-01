@@ -1,5 +1,6 @@
 package ir.nilva.abotorab.view.page.cabinet
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.callWebserviceWithFailure
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet.*
+import kotlinx.android.synthetic.main.activity_cabinet.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,13 +90,13 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             rowsStepper.apply {
                 count = rows
                 minValue = rows
-                maxValue = 10
+//                maxValue = 10
                 sideTapEnabled = true
             }
             columnsStepper.apply {
                 count = columns
                 minValue = columns
-                maxValue = 10
+//                maxValue = 10
                 sideTapEnabled = true
             }
             val dialog = MaterialDialog(this).customView(view = view).cornerRadius(20.0f)
@@ -137,6 +139,9 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     }
 
     private fun initGrid() {
+        val params = linearLayout_gridtableLayout.layoutParams
+        params.width = getScreenWidth() - 10
+        linearLayout_gridtableLayout.layoutParams = params
         grid.adapter = adapter
         grid.setOnItemClickListener { _, view, index, _ ->
             if (step == 0) return@setOnItemClickListener
@@ -151,7 +156,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
     }
 
     private fun switchDirection(reverse: Boolean) {
-        dir = if(!reverse) (dir + 1) % 4 else (dir - 1) % 4
+        dir = if (!reverse) (dir + 1) % 4 else (dir - 1) % 4
         adapter.dir = dir
         currentCabinet.rotate(dir)
         adapter.notifyDataSetChanged()
@@ -183,8 +188,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
         rowsCount.minValue = 1
         columnsCount.minValue = 1
-        rowsCount.maxValue = 10
-        columnsCount.maxValue = 10
+//        rowsCount.maxValue = 10
+//        columnsCount.maxValue = 10
         rowsCount.sideTapEnabled = true
         columnsCount.sideTapEnabled = true
 
@@ -220,7 +225,21 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         adapter.notifyDataSetChanged()
     }
 
+    fun updateGrid(value: Int) {
+        if (value > 6) {
+            val params = linearLayout_gridtableLayout.layoutParams
+            params.width = (getScreenWidth() / 6) * value + 20 * value
+            linearLayout_gridtableLayout.layoutParams = params
+        }
+        else {
+            val params = linearLayout_gridtableLayout.layoutParams
+            params.width = getScreenWidth() - 10
+            linearLayout_gridtableLayout.layoutParams = params
+        }
+    }
+
     fun updateColumns(value: Int) {
+        updateGrid(value)
         columns = value
         grid.numColumns = columns
         adapter.columns = columns

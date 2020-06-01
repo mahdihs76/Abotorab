@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import com.google.android.material.tabs.TabLayout;
 
 import ir.nilva.abotorab.R;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 /**
  * Simple helper class which extends a TabLayout to allow us to customize the font of the tab.
@@ -62,7 +61,7 @@ public final class FontAwareTabLayout extends TabLayout {
     for (int i = 0; i < tabChildCount; i++) {
       View tabViewChild = tabView.getChildAt(i);
       if (tabViewChild instanceof TextView) {
-        CalligraphyUtils.applyFontToTextView(getContext(), (TextView) tabViewChild, fontPath);
+//        CalligraphyUtils.applyFontToTextView(getContext(), (TextView) tabViewChild, fontPath);
       }
     }
   }
