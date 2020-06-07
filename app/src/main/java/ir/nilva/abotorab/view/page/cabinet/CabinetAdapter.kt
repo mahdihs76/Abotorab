@@ -27,7 +27,8 @@ class CabinetAdapter(
     var rows: Int,
     var columns: Int,
     var carriageEnabled: Boolean,
-    var dir: Int,
+    var rowDir: Boolean,
+    var colDir: Boolean,
     val mapping: String
 ) : BaseAdapter() {
 
@@ -48,7 +49,7 @@ class CabinetAdapter(
                 image.visibility = View.GONE
             }
             cabinet ?: return@apply
-            val cell = cabinet?.getCell(p0, dir)
+            val cell = cabinet?.getCell(p0, rowDir, colDir)
             cell ?: return@apply
             if (cell.size > 0) {
                 long_image.visibility = View.VISIBLE

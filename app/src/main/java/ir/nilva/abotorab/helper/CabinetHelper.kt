@@ -4,25 +4,39 @@ import ir.nilva.abotorab.R
 import ir.nilva.abotorab.model.CabinetResponse
 import ir.nilva.abotorab.model.Cell
 
-fun CabinetResponse.getCell(index: Int, dir: Int): Cell {
-    var rowIndex = getRowsNumber() -  index / getColumnsNumber() - 1
-    var columnIndex =index % getColumnsNumber()
-    when (dir) {
-        1 -> {
-            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
-            columnIndex = index % getColumnsNumber()
-        }
-        2 -> {
-            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
-            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
-        }
-        3 -> {
-            rowIndex = index / getColumnsNumber()
-            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
-        }
-    }
+fun CabinetResponse.getCell(index: Int, rowDir: Boolean = false, colDir: Boolean = false): Cell {
+    var rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
+    var columnIndex = index % getColumnsNumber()
+    if (rowDir)
+        rowIndex = index / getColumnsNumber()
+    if (colDir)
+        columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
+//    when (dir) {
+//        1 -> {
+//            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
+//            columnIndex = index % getColumnsNumber()
+//        }
+//        2 -> {
+//            rowIndex = getRowsNumber() - index / getColumnsNumber() - 1
+//            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
+//        }
+//        3 -> {
+//            rowIndex = index / getColumnsNumber()
+//            columnIndex = getColumnsNumber() - index % getColumnsNumber() - 1
+//        }
+//    }
     return rows[rowIndex].cells[columnIndex]
 }
+
+fun CabinetResponse.rotateRow() {
+    for (row in rows)
+        row.cells.reverse()
+}
+
+fun CabinetResponse.rotateCol() {
+    rows.reverse()
+}
+
 
 fun CabinetResponse.rotate(dir: Int = 0) {
     if (dir % 2 == 0)

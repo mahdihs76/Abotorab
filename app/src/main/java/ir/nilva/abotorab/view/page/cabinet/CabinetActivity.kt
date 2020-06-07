@@ -41,7 +41,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private var rows = 3
     private var columns = 4
-    private var dir = 0
+    private var rowDir = false
+    private var colDir = false
     private var carriageEnabled = false
     private var adapter = CabinetAdapter(
         this,
@@ -49,7 +50,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         rows,
         columns,
         carriageEnabled,
-        dir,
+        rowDir, colDir,
         defaultCache()["ROW_MAPPING"] ?: ""
     )
     private var step = 0
@@ -155,10 +156,15 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         adapter.notifyDataSetChanged()
     }
 
-    private fun switchDirection(reverse: Boolean) {
-        dir = if (!reverse) (dir + 1) % 4 else (dir - 1) % 4
-        adapter.dir = dir
-        currentCabinet.rotate(dir)
+    private fun switchDirection(reverse: Boolean, rowRotate: Boolean = true) {
+//        rowDir = rowRotate
+//        colDir = !rowRotate
+//        adapter.rowDir = rowDir
+//        adapter.colDir = colDir
+        if (rowRotate)
+            currentCabinet.rotateRow()
+        else
+            currentCabinet.rotateCol()
         adapter.notifyDataSetChanged()
         CoroutineScope(Dispatchers.Main).launch {
             AppDatabase.getInstance().cabinetDao().insert(currentCabinet)
@@ -183,7 +189,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         }
 
         directionSwitch2.setOnClickListener {
-            switchDirection(true)
+            switchDirection(false, rowRotate = false)
         }
 
         rowsCount.minValue = 1
@@ -230,8 +236,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             val params = linearLayout_gridtableLayout.layoutParams
             params.width = (getScreenWidth() / 6) * value + 10 * value
             linearLayout_gridtableLayout.layoutParams = params
-        }
-        else {
+        } else {
             val params = linearLayout_gridtableLayout.layoutParams
             params.width = getScreenWidth() - 10
             linearLayout_gridtableLayout.layoutParams = params
@@ -310,7 +315,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun showPopup(index: Int) {
 
-        val cell = currentCabinet.getCell(index, dir)
+        val cell = currentCabinet.getCell(index, rowDir, colDir)
 
         val modalBuilder =
             ModalBottomSheetDialogFragment.Builder()
@@ -362,7 +367,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     override fun onModalOptionSelected(tag: String?, option: Option) {
         val cellIndex = option.id / 10
-        val cell = currentCabinet.getCell(cellIndex, dir)
+        val cell = currentCabinet.getCell(cellIndex, rowDir, colDir)
         when (option.id % 10) {
             USER_OPTION_ID -> showPilgrimProfileDialog(cell)
             UNUSABLE_OPTION_ID -> changeStatus(cellIndex, false)
@@ -372,7 +377,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
                     getServices().free(
                         currentCabinet.getCell(
                             cellIndex,
-                            dir
+                            rowDir, colDir
                         ).code.toInt()
                     )
                 }?.run {
@@ -412,7 +417,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
 
     private fun changeStatus(index: Int, isHealthy: Boolean) =
         CoroutineScope(Dispatchers.Main).launch {
-            val cell = currentCabinet.getCell(index, dir)
+            val cell = currentCabinet.getCell(index, rowDir, colDir)
             callWebservice {
                 getServices().changeStatus(cell.code, isHealthy)
             }?.run {
