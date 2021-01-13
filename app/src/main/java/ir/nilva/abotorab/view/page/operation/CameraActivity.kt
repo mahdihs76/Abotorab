@@ -44,9 +44,14 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
         isQR = intent?.extras?.getBoolean("isQR") ?: false
     }
 
+    var isBarcodeFound = false
+
     override fun onQRCodeRead(text: String?, points: Array<out PointF>?) {
-        val result = text ?: ""
-        give(result)
+        if (!isBarcodeFound) {
+            isBarcodeFound = true
+            val result = text ?: ""
+            give(result)
+        }
     }
 
     private fun give(barcode: String) {
@@ -70,7 +75,7 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
 
                 confirmToGive(view, hashId)
             } catch (e: Exception) {
-                toastError("بارکد اسکن شده معتبر نمیباشد")
+                toastError("بارکد اسکن شده معتبر نمی‌باشد")
             }
         }
     }
@@ -81,11 +86,15 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
             MaterialDialog(this).show {
                 customView(view = view)
                 title(text = "تایید")
-                positiveButton(text = "بله") { callGiveWS(hashId) }
+                positiveButton(text = "بله") {
+                    callGiveWS(hashId)
+                    isBarcodeFound = false
+                }
                 negativeButton(text = "خیر")
             }
         } else {
             callGiveWS(hashId)
+            isBarcodeFound = false
         }
     }
 

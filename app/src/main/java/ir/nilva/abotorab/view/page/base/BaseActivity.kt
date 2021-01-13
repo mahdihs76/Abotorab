@@ -6,11 +6,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import io.github.inflationx.calligraphy3.CalligraphyConfig
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor
+import io.github.inflationx.viewpump.ViewPump
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import ir.nilva.abotorab.R
-
-//import uk.co.chrisjenx.calligraphy.CalligraphyConfig
-//import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
-
 
 /**
  * Created by mahdihs76 on 9/10/18.
@@ -20,19 +20,26 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        initCalligraphy()
+        initCalligraphy()
     }
 
-//    private fun initCalligraphy() =
-//        CalligraphyConfig.initDefault(
-//            CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/yekan.ttf")
-//                .setFontAttrId(R.attr.fontPath)
-//                .build()
-//        )
+    private fun initCalligraphy() =
+        ViewPump.init(
+            ViewPump.builder()
+                .addInterceptor(
+                    CalligraphyInterceptor(
+                        CalligraphyConfig.Builder()
+                            .setDefaultFontPath("fonts/yekan.ttf")
+                            .setFontAttrId(R.attr.fontPath)
+                            .build()
+                    )
+                )
+                .build()
+        )
 
-//    override fun attachBaseContext(newBase: Context) =
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase!!))
+    }
 
     fun setStatusBarColor(color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

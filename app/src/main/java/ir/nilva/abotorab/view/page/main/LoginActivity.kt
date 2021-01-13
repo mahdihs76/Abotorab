@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity() {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
                         connectToNetworkWPA("192.168.0.$text", "100+salavat")
-                        connect2Server("192.168.0.$text")
+                        connect2Server("https://192.168.0.$text")
                     }
                 }
                 positiveButton(text = "اتصال")
@@ -85,18 +85,18 @@ class LoginActivity : BaseActivity() {
     }
 
     private suspend fun connectAutomatic() {
-        val validIps = arrayOf(
-            "https://192.168.0.11/",
-            "http://depository.ceshora.ir/",
-            "https://192.168.0.12/",
-            "https://192.168.0.13/",
-            "https://192.168.0.14/",
-            "https://192.168.0.15/",
-            "https://192.168.0.16/"
-        )
+        val validIps = ArrayList<Pair<String, String>>()
+        validIps.add(Pair("http://depository.ceshora.ir/", "10"))
+        validIps.add(Pair("https://192.168.0.11/", "11"))
+        validIps.add(Pair("https://192.168.0.12/", "12"))
+        validIps.add(Pair("https://192.168.0.13/", "13"))
+        validIps.add(Pair("https://192.168.0.14/", "14"))
+        validIps.add(Pair("https://192.168.0.15/", "15"))
+        validIps.add(Pair("https://192.168.0.16/", "16"))
 
         for (ip in validIps) {
-            connect2Server(ip)
+            connect2Server(ip.first)
+            defaultCache()["depository_code"] = ip.second
             try {
                 getServices().test()
                 break
