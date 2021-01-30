@@ -2,6 +2,7 @@ package ir.nilva.abotorab.view.page.main
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -32,8 +33,8 @@ class LoginActivity : BaseActivity() {
                     if (text.toString() == "10") {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
-                        connectToNetworkWPA("192.168.0.$text", "100+salavat")
-                        connect2Server("192.168.0.$text")
+                        connectToNetworkWPA("amanatdari$text", "110+salavat")
+                        connect2Server("http://192.168.0.$text")
                     }
                 }
                 positiveButton(text = "اتصال")
@@ -55,6 +56,7 @@ class LoginActivity : BaseActivity() {
             }
         }
         submit.setOnClickListener {
+            Log.d("button","clicked")
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
                 callWebservice {
@@ -70,6 +72,7 @@ class LoginActivity : BaseActivity() {
                     gotoMainPage()
                 }
                 hideLoading()
+                Log.d("button","clicked4")
             }
 
         }
@@ -85,19 +88,14 @@ class LoginActivity : BaseActivity() {
     }
 
     private suspend fun connectAutomatic() {
-        val validIps = arrayOf(
-            "https://192.168.0.11/",
-            "http://depository.ceshora.ir/",
-            "https://192.168.0.12/",
-            "https://192.168.0.13/",
-            "https://192.168.0.14/",
-            "https://192.168.0.15/",
-            "https://192.168.0.16/"
+        val depositories = arrayOf(
+            11, 14, 16
         )
 
-        for (ip in validIps) {
-            connect2Server(ip)
+        for (text in depositories) {
             try {
+                connectToNetworkWPA("amanatdari$text", "110+salavat")
+                connect2Server("http://192.168.0.$text")
                 getServices().test()
                 break
             } catch (e: Exception) {

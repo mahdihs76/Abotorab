@@ -122,6 +122,6 @@ interface WebserviceUrls {
     @POST("cell/{id}/free/")
     suspend fun free(@Path("id") id: Int): Response<BaseResponse>
 
-    @GET("admin")
-    suspend fun test(): Response<BaseResponse>
+    @GET("admin/")
+    suspend fun test(): Response<Void>
 }
