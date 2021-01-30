@@ -88,14 +88,21 @@ class LoginActivity : BaseActivity() {
     }
 
     private suspend fun connectAutomatic() {
-        val depositories = arrayOf(
-            11, 14, 16
-        )
+        val validIps = ArrayList<Pair<String, String>>()
+        validIps.add(Pair("http://depository.ceshora.ir/", "10"))
+        validIps.add(Pair("https://192.168.0.11/", "11"))
+        validIps.add(Pair("https://192.168.0.12/", "12"))
+        validIps.add(Pair("https://192.168.0.13/", "13"))
+        validIps.add(Pair("http://192.168.0.14/", "14"))
+        validIps.add(Pair("https://192.168.0.15/", "15"))
+        validIps.add(Pair("https://192.168.0.16/", "16"))
 
-        for (text in depositories) {
+        for (ip in validIps) {
+            if(ip.second != "10")
+                connectToNetworkWPA("amanatdari$ip.second", "110+salavat")
+            connect2Server(ip.first)
+            defaultCache()["depository_code"] = ip.second
             try {
-                connectToNetworkWPA("amanatdari$text", "110+salavat")
-                connect2Server("http://192.168.0.$text")
                 getServices().test()
                 break
             } catch (e: Exception) {
