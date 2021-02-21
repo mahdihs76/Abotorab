@@ -14,10 +14,7 @@ import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
 import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
-import ir.nilva.abotorab.helper.getCountries
-import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.showResult
-import ir.nilva.abotorab.helper.toastSuccess
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.callWebserviceWithFailure
@@ -101,8 +98,10 @@ class GiveSearchActivity : BaseActivity() {
 
 fun Context.callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
     callWebserviceWithFailure({ getServices().give(hashId) }) {
-        toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
-        cacheHashId(hashId)
+        toastError(it)
+//        toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
+//        TODO: If there is no internet connection then insert into cacheHashId.
+//        cacheHashId(hashId)
     }?.run {
         toastSuccess("محموله با موفقیت تحویل داده شد")
         AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
