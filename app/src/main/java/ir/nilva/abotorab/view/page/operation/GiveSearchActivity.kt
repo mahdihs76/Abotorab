@@ -123,11 +123,3 @@ private fun cacheHashId(hashId: String) = CoroutineScope(Dispatchers.IO).launch 
     AppDatabase.getInstance().offlineDeliveryDao().insert(OfflineDeliveryEntity(hashId))
 }
 
-private fun checkLastHashId(hashId: String): Boolean {
-//    val recentCache = defaultCache()["recentHashId"] ?: ""
-//    if (recentCache == hashId)
-//        return true
-//    defaultCache()["recentHashId"] = hashId
-    return false
-}
-

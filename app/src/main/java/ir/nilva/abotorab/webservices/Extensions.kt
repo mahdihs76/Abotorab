@@ -2,7 +2,6 @@ package ir.nilva.abotorab.webservices
 
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.helper.toastError
-import ir.nilva.abotorab.model.Failure
 import okhttp3.ResponseBody
 import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
