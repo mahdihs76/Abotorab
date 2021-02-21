@@ -7,4 +7,5 @@ class GiveResponse (
     @SerializedName("pilgrim") val pilgrim: Pilgrim,
     @SerializedName("hash_id") val hashId: String,
     @SerializedName("exited_at") val exitAt: String
+//    @SerializedName("container") val container: String
 ): BaseResponse()

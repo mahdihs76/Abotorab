@@ -18,7 +18,7 @@ class DeliveryWorker(
         if (offlineDeliveries.isEmpty()) {
             Result.success()
         } else {
-            callWebserviceWithFailure({ getServices().give(offlineDeliveries.map { it.hashId }) }) {
+            callWebserviceWithFailure({ getServices().give(offlineDeliveries.map { it.hashId }) }) { response, code ->
                 Result.retry()
             }?.run {
                 this.forEach {

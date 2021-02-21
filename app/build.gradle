@@ -106,7 +106,7 @@ dependencies {
     implementation 'com.github.Commit451:ModalBottomSheetDialogFragment:1.1.0'
 
 
-    implementation('com.microblink:blinkid:4.11.0@aar') {
+    implementation('com.microblink:blinkid:5.10.0@aar') {
         transitive = true
     }
 

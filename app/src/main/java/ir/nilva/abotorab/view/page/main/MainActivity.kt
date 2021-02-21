@@ -4,10 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.microblink.MicroblinkSDK
 import com.ramotion.circlemenu.CircleMenuView
@@ -25,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 import permissions.dispatcher.*
+import java.util.concurrent.TimeUnit
 
 @RuntimePermissions
 class MainActivity : BaseActivity() {
@@ -65,20 +63,26 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        CoroutineScope(Dispatchers.Main).launch {
-            callWebservice {
-                getServices().config()
-            }?.run {
-                val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
-                if (token.isNotEmpty()) {
-                    if (lastBlinkId != token) {
-                        MicroblinkSDK.setLicenseKey(token, ApplicationContext.context)
-                        defaultCache()["BLINK_ID"] = token
-                    }
-                }
-                defaultCache()["ROW_MAPPING"] = row_code_mapping.toString()
-            }
-        }
+        MicroblinkSDK.setLicenseKey(
+            "sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g=",
+            this
+        );
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            callWebservice {
+//                getServices().config()
+//            }?.run {
+//                val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
+////                if (token.isNotEmpty()) {
+////                if (lastBlinkId != token) {
+//                MicroblinkSDK.setLicenseKey("sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g=", ApplicationContext.context);
+//                defaultCache()["BLINK_ID"] =
+//                    "sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g="
+////                }
+////                }
+//                defaultCache()["ROW_MAPPING"] = row_code_mapping.toString()
+//            }
+//        }
         initCircularMenu()
         logout.setOnClickListener { logout() }
         sendCachedHashes2Server()
@@ -105,12 +109,7 @@ class MainActivity : BaseActivity() {
                 AppDatabase.getInstance().offlineDeliveryDao().getAll()
             if (!offlineDeliveries.isNullOrEmpty()) {
                 WorkManager.getInstance(this@MainActivity).enqueue(
-                    OneTimeWorkRequestBuilder<DeliveryWorker>()
-                        .setConstraints(
-                            Constraints.Builder()
-                                .setRequiredNetworkType(NetworkType.CONNECTED)
-                                .build()
-                        )
+                    PeriodicWorkRequestBuilder<DeliveryWorker>(30, TimeUnit.MINUTES)
                         .build()
                 )
             }

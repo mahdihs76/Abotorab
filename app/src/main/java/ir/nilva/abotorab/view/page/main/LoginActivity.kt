@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.accounting_main.*
 import kotlinx.android.synthetic.main.progress_dialog_material.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity() {
@@ -33,7 +34,7 @@ class LoginActivity : BaseActivity() {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
                         connectToNetworkWPA("192.168.0.$text", "100+salavat")
-                        connect2Server("https://192.168.0.$text")
+                        connect2Server("http://192.168.0.$text")
                     }
                 }
                 positiveButton(text = "اتصال")
@@ -87,14 +88,16 @@ class LoginActivity : BaseActivity() {
     private suspend fun connectAutomatic() {
         val validIps = ArrayList<Pair<String, String>>()
         validIps.add(Pair("http://depository.ceshora.ir/", "10"))
-        validIps.add(Pair("https://192.168.0.11/", "11"))
-        validIps.add(Pair("https://192.168.0.12/", "12"))
-        validIps.add(Pair("https://192.168.0.13/", "13"))
-        validIps.add(Pair("https://192.168.0.14/", "14"))
-        validIps.add(Pair("https://192.168.0.15/", "15"))
-        validIps.add(Pair("https://192.168.0.16/", "16"))
+        validIps.add(Pair("http://192.168.0.11/", "11"))
+        validIps.add(Pair("http://192.168.0.12/", "12"))
+        validIps.add(Pair("http://192.168.0.13/", "13"))
+        validIps.add(Pair("http://192.168.0.14/", "14"))
+        validIps.add(Pair("http://192.168.0.15/", "15"))
+        validIps.add(Pair("http://192.168.0.16/", "16"))
 
         for (ip in validIps) {
+            connectToNetworkWPA("192.168.0.${ip.second}", "100+salavat")
+            delay(2000)
             connect2Server(ip.first)
             defaultCache()["depository_code"] = ip.second
             try {

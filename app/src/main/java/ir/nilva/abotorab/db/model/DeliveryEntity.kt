@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class DeliveryEntity(
     val nickname: String,
     val country: String,
+    val cellCode: String,
     val phone: String,
     val hashId: String,
     val exitedAt: String

@@ -86,8 +86,8 @@ class TakeActivity : BaseActivity() {
                         country.text.toString(), passportId.text.toString(),
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
-                }) {
-                    if (it == "[\"فضای خالی وجود ندارد\"]") {
+                }) { response, code ->
+                    if (response == "[\"فضای خالی وجود ندارد\"]") {
                         tryToFindEmptyCell()
                     } else {
                         toastError("درخواست شما با خطا روبه‌رو شد. مجدد تلاش کنید")
@@ -128,8 +128,8 @@ class TakeActivity : BaseActivity() {
                         country.text.toString(), passportId.text.toString(),
                         bagCount.count, suitcaseCount.count, pramCount.count
                     )
-                }) {
-                    if (it == "[\"فضای خالی وجود ندارد\"]") {
+                }) { response, code ->
+                    if (response == "[\"فضای خالی وجود ندارد\"]") {
                         if (findEmptyCellEnabled) callApiAfter10Seconds()
                     } else {
                         findEmptyCellEnabled = false

@@ -10,14 +10,12 @@ import com.microblink.entities.recognizers.RecognizerBundle
 import com.microblink.entities.recognizers.blinkid.passport.PassportRecognizer
 import com.microblink.uisettings.ActivityRunner
 import com.microblink.uisettings.DocumentUISettings
+import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.db.model.DeliveryEntity
 import ir.nilva.abotorab.db.model.OfflineDeliveryEntity
-import ir.nilva.abotorab.helper.getCountries
-import ir.nilva.abotorab.helper.getCountryName
-import ir.nilva.abotorab.helper.showResult
-import ir.nilva.abotorab.helper.toastSuccess
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.callWebserviceWithFailure
@@ -98,26 +96,38 @@ class GiveSearchActivity : BaseActivity() {
 }
 
 
-
-fun Context.callGiveWS(hashId: String) = CoroutineScope(Dispatchers.Main).launch {
-    callWebserviceWithFailure({ getServices().give(hashId) }) {
-        toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
-        cacheHashId(hashId)
-    }?.run {
-        toastSuccess("محموله با موفقیت تحویل داده شد")
-        AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
-            DeliveryEntity(
-                nickname = pilgrim.name,
-                country = pilgrim.country,
-                phone = pilgrim.phone,
-                exitedAt = exitAt,
-                hashId = hashId
+fun Context.callGiveWS(hashId: String, cellCode: String = "") =
+    CoroutineScope(Dispatchers.Main).launch {
+//    if (checkLastHashId(hashId))
+        callWebserviceWithFailure({ getServices().give(hashId) }) { response, code ->
+            if (code != 400) {
+                toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
+                cacheHashId(hashId)
+            }
+        }?.run {
+            toastSuccess("محموله با موفقیت تحویل داده شد")
+            AppDatabase.getInstance().deliveryDao().insertAndDeleteOther(
+                DeliveryEntity(
+                    nickname = pilgrim.name,
+                    country = pilgrim.country,
+                    cellCode = cellCode,
+                    phone = pilgrim.phone,
+                    exitedAt = exitAt,
+                    hashId = hashId
+                )
             )
-        )
+        }
     }
-}
 
 private fun cacheHashId(hashId: String) = CoroutineScope(Dispatchers.IO).launch {
     AppDatabase.getInstance().offlineDeliveryDao().insert(OfflineDeliveryEntity(hashId))
+}
+
+private fun checkLastHashId(hashId: String): Boolean {
+//    val recentCache = defaultCache()["recentHashId"] ?: ""
+//    if (recentCache == hashId)
+//        return true
+//    defaultCache()["recentHashId"] = hashId
+    return false
 }
 

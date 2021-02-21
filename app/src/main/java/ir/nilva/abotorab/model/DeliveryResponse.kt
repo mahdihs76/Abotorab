@@ -27,3 +27,8 @@ data class Pack(
     @SerializedName("delivery") val delivery: Int,
     @SerializedName("cell") val cell: String
 )
+
+
+data class Failure(
+    @SerializedName("non_field_errors") val errors: List<String>
+)

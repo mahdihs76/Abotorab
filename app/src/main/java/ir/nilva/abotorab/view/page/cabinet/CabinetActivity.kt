@@ -126,8 +126,8 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
             submit.isClickable = false
             callWebserviceWithFailure({
                 getServices().cabinet("", rows, columns, 1, if (carriageEnabled) 1 else 0)
-            }) {
-                toastError(it)
+            }) { response, code ->
+                toastError(response)
                 submit.isClickable = true
             }?.run {
                 currentCabinet = this

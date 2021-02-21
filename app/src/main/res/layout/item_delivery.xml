@@ -74,6 +74,14 @@
             android:singleLine="true"
             android:textColor="@color/white"
             tools:text="Second Line" />
+    <TextView
+            android:id="@+id/cellCode"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            tools:text="Second Line" />
 
     </LinearLayout>
 

@@ -24,6 +24,7 @@ class RecentGivesAdapter(val listener: RecentGivesListener) :
             title.text = item.nickname
             phone.text = item.phone
             country.text = item.country
+            cellCode.text = "شماره قفسه: ${item.cellCode}"
             subTitle.text = item.exitedAt
             setOnClickListener { listener.undoClicked(item) }
         }

@@ -18,6 +18,7 @@ import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
 
     private var isQR = false
+    private var mostRecentHashId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,27 +74,36 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
                 view.phoneNumber.text = "شماره تلفن‌ : ${text[3]}" + "********"
                 view.cellCode.text = "شماره قفسه : ${text[4]}"
 
-                confirmToGive(view, hashId)
+                confirmToGive(view, hashId, text[4])
             } catch (e: Exception) {
                 toastError("بارکد اسکن شده معتبر نمی‌باشد")
             }
         }
     }
 
-    private fun confirmToGive(view: View?, hashId: String) {
+    private fun confirmToGive(view: View?, hashId: String, cellCode: String) {
+        if (mostRecentHashId == hashId) {
+            isBarcodeFound = false
+            return
+        }
         val need = defaultCache()["need_to_confirmation"] ?: true
         if (need) {
             MaterialDialog(this).show {
                 customView(view = view)
                 title(text = "تایید")
                 positiveButton(text = "بله") {
-                    callGiveWS(hashId)
+                    callGiveWS(hashId, cellCode)
+                    mostRecentHashId = hashId
                     isBarcodeFound = false
                 }
-                negativeButton(text = "خیر")
+                negativeButton(text = "خیر") {
+                    isBarcodeFound = false
+                    mostRecentHashId = null
+                }
             }
         } else {
-            callGiveWS(hashId)
+            callGiveWS(hashId, cellCode)
+            mostRecentHashId = hashId
             isBarcodeFound = false
         }
     }
@@ -105,6 +115,8 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
 
     override fun onPause() {
         super.onPause()
+        isBarcodeFound = false
+        mostRecentHashId = null
         qrView.stopCamera()
     }
 
