@@ -26,6 +26,16 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounting_main)
+
+        val baseUrl = MyRetrofit.getBaseUrl()
+        if (baseUrl == "") {
+            connectedServerId.text = "با یکی از دو روش زیر متصل شوید"
+        } else {
+            val s = baseUrl.split(".")[3]
+            connectToNetworkWPA(s.substring(0, s.length - 1))
+            showDialog()
+            connectedServerId.text = "متصل به سرور : $baseUrl"
+        }
         ip.setOnClickListener {
             MaterialDialog(this).show {
                 title(text = "شماره امانت‌داری را وارد کنید")
@@ -34,7 +44,7 @@ class LoginActivity : BaseActivity() {
                     if (text.toString() == "10") {
                         connect2Server("http://depository.ceshora.ir/")
                     } else {
-                        connectToNetworkWPA("192.168.0.$text", "100+salavat")
+                        connectToNetworkWPA(text.toString())
                         connect2Server("http://192.168.0.$text")
                     }
                 }
@@ -82,9 +92,22 @@ class LoginActivity : BaseActivity() {
 
     }
 
+
+    fun showDialog(){
+        val dialog = MaterialDialog(this).show {
+            customView(R.layout.progress_dialog_material)
+        }
+        dialog.show()
+        Handler().postDelayed({
+            dialog.dismiss()
+        }, 5000)
+    }
+
     private fun connect2Server(ip: String) {
         MyRetrofit.setBaseUrl(ip)
     }
+
+    var numOfServerChecked = 0
 
     private suspend fun connectAutomatic() {
         val validIps = ArrayList<Pair<String, String>>()
@@ -97,8 +120,9 @@ class LoginActivity : BaseActivity() {
         validIps.add(Pair("http://192.168.0.16/", "16"))
 
         for (ip in validIps) {
-            connectToNetworkWPA("192.168.0.${ip.second}", "100+salavat")
-            delay(2000)
+            numOfServerChecked ++
+            connectToNetworkWPA(ip.second)
+            delay(5000)
             connect2Server(ip.first)
             defaultCache()["depository_code"] = ip.second
             try {

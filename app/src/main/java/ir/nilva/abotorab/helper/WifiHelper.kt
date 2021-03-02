@@ -7,6 +7,9 @@ import android.util.Log
 import ir.nilva.abotorab.ApplicationContext
 import java.util.*
 
+fun connectToNetworkWPA(text: String){
+     connectToNetworkWPA("amanatdari$text", "110+salavat");
+}
 
 fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {
     return try {
@@ -18,6 +21,7 @@ fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {
         conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
         conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
+        conf.hiddenSSID = true; // Put this line to hidden SSID
         conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
         conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
         Log.d("connecting", conf.SSID + " " + conf.preSharedKey)
