@@ -2,13 +2,14 @@ package ir.nilva.abotorab.view.page.main
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.input.input
+import com.gc.materialdesign.views.ProgressBarDeterminate
 import ir.nilva.abotorab.R
+import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.webservices.MyRetrofit
@@ -23,9 +24,16 @@ import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity() {
 
+    companion object {
+        val validIps = ArrayList<Pair<String, String>>()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounting_main)
+        initValues()
+
+        val currentToken: String? = defaultCache()["token"]
 
         val baseUrl = MyRetrofit.getBaseUrl()
         if (baseUrl == "") {
@@ -33,20 +41,20 @@ class LoginActivity : BaseActivity() {
         } else {
             val s = baseUrl.split(".")[3]
             connectToNetworkWPA(s.substring(0, s.length - 1))
-            showDialog()
+            if (currentToken.isNullOrEmpty()) {
+                showDialog()
+            }
             connectedServerId.text = "متصل به سرور : $baseUrl"
         }
+
+
         ip.setOnClickListener {
             MaterialDialog(this).show {
                 title(text = "شماره امانت‌داری را وارد کنید")
                 input(hint = "مثلا: 14", prefill = "10") { _, text ->
                     defaultCache()["depository_code"] = text.toString()
-                    if (text.toString() == "10") {
-                        connect2Server("http://depository.ceshora.ir/")
-                    } else {
-                        connectToNetworkWPA(text.toString())
-                        connect2Server("http://192.168.0.$text")
-                    }
+                    connectToNetworkWPA(text.toString())
+                    connect2Server("http://192.168.0.$text")
                 }
                 positiveButton(text = "اتصال")
             }
@@ -57,10 +65,14 @@ class LoginActivity : BaseActivity() {
                 customView(R.layout.progress_dialog_material)
             }
             CoroutineScope(Dispatchers.Main).launch {
-                connectAutomatic()
                 val customView = dialog.getCustomView()
+                val res = connectAutomatic(customView.progress)
                 customView.progress.visibility = View.GONE
-                customView.message.text = "اتصال به سرور با موفقیت انجام شد"
+                if (res) {
+                    customView.message.text = "اتصال به سرور با موفقیت انجام شد"
+                } else {
+                    customView.message.text = "اتصال به سرور با خطا مواجه شد"
+                }
                 Handler().postDelayed({
                     dialog.dismiss()
                 }, 1000)
@@ -86,14 +98,21 @@ class LoginActivity : BaseActivity() {
 
         }
 
-
-        val token: String? = defaultCache()["token"]
-        if (token != null) gotoMainPage()
+        if (currentToken.isNullOrEmpty().not()) gotoMainPage()
 
     }
 
+    private fun initValues() {
+        validIps.add(Pair("http://192.168.0.11/", "11"))
+        validIps.add(Pair("http://192.168.0.12/", "12"))
+        validIps.add(Pair("http://192.168.0.13/", "13"))
+        validIps.add(Pair("http://192.168.0.14/", "14"))
+        validIps.add(Pair("http://192.168.0.15/", "15"))
+        validIps.add(Pair("http://192.168.0.16/", "16"))
+    }
 
-    fun showDialog(){
+
+    private fun showDialog() {
         val dialog = MaterialDialog(this).show {
             customView(R.layout.progress_dialog_material)
         }
@@ -107,30 +126,33 @@ class LoginActivity : BaseActivity() {
         MyRetrofit.setBaseUrl(ip)
     }
 
-    var numOfServerChecked = 0
+    private var numOfServerChecked = 0
 
-    private suspend fun connectAutomatic() {
-        val validIps = ArrayList<Pair<String, String>>()
-        validIps.add(Pair("http://depository.ceshora.ir/", "10"))
-        validIps.add(Pair("http://192.168.0.11/", "11"))
-        validIps.add(Pair("http://192.168.0.12/", "12"))
-        validIps.add(Pair("http://192.168.0.13/", "13"))
-        validIps.add(Pair("http://192.168.0.14/", "14"))
-        validIps.add(Pair("http://192.168.0.15/", "15"))
-        validIps.add(Pair("http://192.168.0.16/", "16"))
-
+    private suspend fun connectAutomatic(progress: ProgressBarDeterminate): Boolean {
+        numOfServerChecked = 0
+        var result = false
         for (ip in validIps) {
-            numOfServerChecked ++
+            numOfServerChecked += 1
+            notifyDialog(progress)
             connectToNetworkWPA(ip.second)
             delay(5000)
             connect2Server(ip.first)
             defaultCache()["depository_code"] = ip.second
             try {
                 getServices().test()
+                result = true
                 break
             } catch (e: Exception) {
+                result = false
             }
         }
+        return result
+    }
+
+    private fun notifyDialog(
+        progress: ProgressBarDeterminate
+    ) {
+        progress.progress = numOfServerChecked * 100 / validIps.size
     }
 
     private fun showLoading() {

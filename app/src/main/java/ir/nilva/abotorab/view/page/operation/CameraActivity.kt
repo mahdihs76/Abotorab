@@ -1,6 +1,7 @@
 package ir.nilva.abotorab.view.page.operation
 
 import android.graphics.PointF
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
@@ -58,21 +59,26 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
     private fun give(barcode: String) {
         if (barcode.isNotEmpty()) {
             try {
-                val encodedString = barcode.substringAfter("http://gbaghiyatallah.ir/?data=");
                 val text = String(
                     Base64.decode(
-                        encodedString,
+                        barcode,
                         Base64.DEFAULT
                     ),
                     Charsets.UTF_8
-                ).split("#")
+                ).substringAfter("http://gbaghiyatallah.ir/?data=")
+                    .split("#")
 
                 val hashId = text[2]
                 val view = layoutInflater.inflate(R.layout.give_verification, null)
                 view.nickName.text = text[0]
                 view.county.text = "از کشور ${text[1]}"
-                view.phoneNumber.text = "شماره تلفن‌ : ${text[3]}" + "********"
-                view.cellCode.text = "شماره قفسه : ${text[4]}"
+                val phoneNumber4Digit = text[3]
+                if (phoneNumber4Digit.isEmpty()) {
+                    view.phoneNumber.visibility = View.GONE
+                } else {
+                    view.phoneNumber.text = "شماره تلفن‌ : $phoneNumber4Digit********"
+                }
+                view.cellCode.text = "شماره قفسه : ${mapCabinetLabelWithCab(text[4])}"
 
                 confirmToGive(view, hashId, text[4])
             } catch (e: Exception) {
@@ -86,7 +92,7 @@ class CameraActivity : BaseActivity(), QRCodeReaderView.OnQRCodeReadListener {
             isBarcodeFound = false
             return
         }
-        val need = defaultCache()["need_to_confirmation"] ?: true
+        val need = /*defaultCache()["need_to_confirmation"] ?:*/ true
         if (need) {
             MaterialDialog(this).show {
                 customView(view = view)

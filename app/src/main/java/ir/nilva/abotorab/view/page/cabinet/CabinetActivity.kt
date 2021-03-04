@@ -50,8 +50,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         rows,
         columns,
         carriageEnabled,
-        rowDir, colDir,
-        defaultCache()["ROW_MAPPING"] ?: ""
+        rowDir, colDir
     )
     private var step = 0
     private lateinit var currentCabinet: CabinetResponse
@@ -343,7 +342,7 @@ class CabinetActivity : BaseActivity(), ModalBottomSheetDialogFragment.Listener 
         pack: Pack
     ): ArrayList<String> {
         val data = ArrayList<String>()
-        data.add("شماره سلول : $code")
+        data.add("شماره سلول : ${mapCabinetLabelWithCab(code)}")
         if (pilgrim.name.isNotEmpty()) {
             data.add("نام زائر : ${pilgrim.name}")
         }

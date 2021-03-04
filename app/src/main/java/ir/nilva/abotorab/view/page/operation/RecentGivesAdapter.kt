@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.model.DeliveryEntity
+import ir.nilva.abotorab.helper.mapCabinetLabelWithCab
 import kotlinx.android.synthetic.main.item_delivery.view.*
 
 class RecentGivesAdapter(val listener: RecentGivesListener) :
@@ -24,7 +25,7 @@ class RecentGivesAdapter(val listener: RecentGivesListener) :
             title.text = item.nickname
             phone.text = item.phone
             country.text = item.country
-            cellCode.text = "شماره قفسه: ${item.cellCode}"
+            cellCode.text = "شماره قفسه: ${mapCabinetLabelWithCab(item.cellCode)}"
             subTitle.text = item.exitedAt
             setOnClickListener { listener.undoClicked(item) }
         }

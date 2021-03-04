@@ -30,7 +30,7 @@ fun Context.showResult(actionLabel: String, list: List<DeliveryResponse>?, click
             if (packs.isNotEmpty()) cabinetCode = packs[0].cell
             title.text = item.pilgrim.country + " از " + item.pilgrim.name
             phoneNumber.text = "شماره تلفن:" + item.pilgrim.phone
-            cabinet.text = " شماره قفسه:$cabinetCode"
+            cabinet.text = " شماره قفسه:${mapCabinetLabelWithCab(cabinetCode)}"
             subTitle.text = "زمان تحویل:" + item.enteredAt
             button.text = actionLabel
             button.setOnClickListener {

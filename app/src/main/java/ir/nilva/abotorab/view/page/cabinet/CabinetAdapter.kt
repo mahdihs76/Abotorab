@@ -10,10 +10,7 @@ import android.widget.BaseAdapter
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import ir.nilva.abotorab.R
-import ir.nilva.abotorab.helper.FormatHelper
-import ir.nilva.abotorab.helper.getCell
-import ir.nilva.abotorab.helper.getImageResource
-import ir.nilva.abotorab.helper.getScreenWidth
+import ir.nilva.abotorab.helper.*
 import ir.nilva.abotorab.model.CabinetResponse
 import kotlinx.android.synthetic.main.activity_cabinet.*
 import kotlinx.android.synthetic.main.activity_cabinet.view.*
@@ -28,8 +25,7 @@ class CabinetAdapter(
     var columns: Int,
     var carriageEnabled: Boolean,
     var rowDir: Boolean,
-    var colDir: Boolean,
-    val mapping: String
+    var colDir: Boolean
 ) : BaseAdapter() {
 
     @SuppressLint("ViewHolder")
@@ -66,14 +62,7 @@ class CabinetAdapter(
                 image.setImageResource(cell.getImageResource(false))
             }
             codeTextView.visibility = View.VISIBLE
-            val row = ((cell.code.toInt() % 100) / 10)
-            val column = cell.code.toInt() % 10
-            if(mapping.isNotEmpty()){
-                val mappedRow = JSONObject(mapping).get(row.toString())
-                codeTextView.text = FormatHelper.toPersianNumber("$column$mappedRow")
-            } else {
-                codeTextView.text = FormatHelper.toPersianNumber((cell.code.toInt() % 100).toString())
-            }
+            codeTextView.text = mapCabinetLabel(cell.code)
         }
 
     override fun getItem(p0: Int) = null

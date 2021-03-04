@@ -1,14 +1,43 @@
 package ir.nilva.abotorab.helper
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import ir.nilva.abotorab.ApplicationContext
 import java.util.*
 
+
 fun connectToNetworkWPA(text: String){
-     connectToNetworkWPA("amanatdari$text", "110+salavat");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        connectToNetworkWPAOnNewDevice("amanatdari$text", "110+salavat")
+    } else {
+        connectToNetworkWPA("amanatdari$text", "110+salavat")
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.Q)
+fun connectToNetworkWPAOnNewDevice(networkSSID: String, password: String){
+    val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder()
+        .setSsid(networkSSID)
+        .setWpa2Passphrase(password)
+        .setIsHiddenSsid(true)
+        .build()
+    val networkRequest = NetworkRequest.Builder()
+        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+        .setNetworkSpecifier(wifiNetworkSpecifier)
+        .build()
+
+    val connectivityManager : ConnectivityManager = ApplicationContext.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    connectivityManager.requestNetwork(networkRequest, NetworkCallback())
+
 }
 
 fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {

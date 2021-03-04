@@ -7,7 +7,7 @@ import ir.nilva.abotorab.db.model.DeliveryEntity
 @Dao
 interface DeliveryDao {
 
-    @Query("SELECT * FROM delivery")
+    @Query("SELECT * FROM delivery ORDER BY id DESC")
     fun getAll(): LiveData<List<DeliveryEntity>>
 
     @Query("SELECT * FROM delivery")
