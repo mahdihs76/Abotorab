@@ -1,8 +1,10 @@
 package ir.nilva.abotorab.helper
 
 import android.content.Context
+import android.hardware.camera2.params.Capability
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
@@ -15,8 +17,8 @@ import ir.nilva.abotorab.ApplicationContext
 import java.util.*
 
 
-fun connectToNetworkWPA(text: String){
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+fun Context.connectToNetworkWPA(text: String): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         connectToNetworkWPAOnNewDevice("amanatdari$text", "110+salavat")
     } else {
         connectToNetworkWPA("amanatdari$text", "110+salavat")
@@ -24,23 +26,31 @@ fun connectToNetworkWPA(text: String){
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-fun connectToNetworkWPAOnNewDevice(networkSSID: String, password: String){
-    val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder()
-        .setSsid(networkSSID)
-        .setWpa2Passphrase(password)
-        .setIsHiddenSsid(true)
-        .build()
-    val networkRequest = NetworkRequest.Builder()
-        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-        .setNetworkSpecifier(wifiNetworkSpecifier)
-        .build()
+fun Context.connectToNetworkWPAOnNewDevice(networkSSID: String, password: String): Boolean {
+    return try {
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) // Internet not required
+            .setNetworkSpecifier(
+                WifiNetworkSpecifier.Builder()
+                    .setSsid(networkSSID)
+                    .setWpa2Passphrase(password)
+                    .setIsHiddenSsid(true)
+                    .build()
+            )
+            .build()
 
-    val connectivityManager : ConnectivityManager = ApplicationContext.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    connectivityManager.requestNetwork(networkRequest, NetworkCallback())
 
+        val connectivityManager: ConnectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, NetworkCallback())
+        true
+    } catch (e: Exception) {
+        false
+    }
 }
 
-fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {
+fun Context.connectToNetworkWPA(networkSSID: String, password: String): Boolean {
     return try {
         val conf = WifiConfiguration()
         conf.SSID =
@@ -55,7 +65,7 @@ fun connectToNetworkWPA(networkSSID: String, password: String): Boolean {
         conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
         Log.d("connecting", conf.SSID + " " + conf.preSharedKey)
         val wifiManager =
-            ApplicationContext.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         wifiManager.addNetwork(conf)
         Log.d("after connecting", conf.SSID + " " + conf.preSharedKey)
         val list = wifiManager.configuredNetworks

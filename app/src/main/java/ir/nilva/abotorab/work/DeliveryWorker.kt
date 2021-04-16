@@ -9,7 +9,7 @@ import ir.nilva.abotorab.webservices.getServices
 import kotlinx.coroutines.coroutineScope
 
 class DeliveryWorker(
-    context: Context,
+    val context: Context,
     workParams: WorkerParameters
 ) : CoroutineWorker(context, workParams) {
 
@@ -18,7 +18,7 @@ class DeliveryWorker(
         if (offlineDeliveries.isEmpty()) {
             Result.success()
         } else {
-            callWebserviceWithFailure({ getServices().give(offlineDeliveries.map { it.hashId }) }) { response, code ->
+            context.callWebserviceWithFailure({ getServices().give(offlineDeliveries.map { it.hashId }) }) { response, code ->
                 Result.retry()
             }?.run {
                 this.forEach {

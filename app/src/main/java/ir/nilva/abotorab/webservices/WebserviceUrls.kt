@@ -124,4 +124,7 @@ interface WebserviceUrls {
 
     @GET("admin/")
     suspend fun test(): Response<Void>
+
+    @GET("administration/export/")
+    suspend fun export(): Response<ExportResponse>
 }

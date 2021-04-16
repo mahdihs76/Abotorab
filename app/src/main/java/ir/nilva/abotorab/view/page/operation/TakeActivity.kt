@@ -29,6 +29,8 @@ class TakeActivity : BaseActivity() {
     private lateinit var recognizer: PassportRecognizer
     private lateinit var recognizerBundle: RecognizerBundle
 
+    private var _blinkIdEnabled = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take)
@@ -44,7 +46,11 @@ class TakeActivity : BaseActivity() {
         pramCount.sideTapEnabled = true
 
         fab.setOnClickListener {
-            startScanning()
+            if(_blinkIdEnabled) {
+                startScanning()
+            } else {
+                toastError("اعتبار ماهانه استفاده از سرویس اسکن پاسپورت به اتمام رسیده است. با پشتیبانی سیستم تماس بگیرید")
+            }
         }
 
         bottom_app_bar.setNavigationOnClickListener {
@@ -73,10 +79,19 @@ class TakeActivity : BaseActivity() {
             }
         }
 
-        recognizer = PassportRecognizer()
-        recognizerBundle = RecognizerBundle(recognizer)
+        try {
+            recognizer = PassportRecognizer()
+            recognizerBundle = RecognizerBundle(recognizer)
+        } catch (e: Exception) {
+            _blinkIdEnabled = false
+//            finish()
+        }
 
         submit.setOnClickListener {
+            if(phone.text.isNullOrEmpty()) {
+                toastError("شماره تماس الزامی است")
+                return@setOnClickListener
+            }
             CoroutineScope(Dispatchers.Main).launch {
                 showLoading()
                 callWebserviceWithFailure({
@@ -89,8 +104,6 @@ class TakeActivity : BaseActivity() {
                 }) { response, code ->
                     if (response == "[\"فضای خالی وجود ندارد\"]") {
                         tryToFindEmptyCell()
-                    } else {
-                        toastError("درخواست شما با خطا روبه‌رو شد. مجدد تلاش کنید")
                     }
                 }?.run {
                     resetUi()

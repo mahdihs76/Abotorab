@@ -1,5 +1,6 @@
 package ir.nilva.abotorab.webservices
 
+import android.content.Context
 import ir.nilva.abotorab.ApplicationContext
 import ir.nilva.abotorab.helper.toastError
 import okhttp3.ResponseBody
@@ -10,7 +11,7 @@ import java.net.UnknownHostException
 
 fun getServices(): WebserviceUrls = MyRetrofit.getInstance().webserviceUrls
 
-suspend fun <T> callWebserviceWithFailure(
+suspend fun <T> Context.callWebserviceWithFailure(
     caller: suspend () -> Response<T>,
     failure: (response: String, code: Int?) -> Unit
 ): T? {
@@ -19,16 +20,12 @@ suspend fun <T> callWebserviceWithFailure(
         if (response.isSuccessful) {
             response.body()
         } else {
-//            var errorResponse: Failure? = gson.fromJson(response.errorBody()!!.charStream(), type)
             val jsonErr = response.errorBody()?.string()
             val errorMessage =
                 JSONObject(jsonErr!!).getJSONArray("non_field_errors").get(0)?.toString()
                     ?: "مشکلی پیش آمده است"
-
             if (response.code() == 400) {
-                ApplicationContext.context.toastError(
-                    errorMessage
-                )
+                toastError(errorMessage)
             }
             failure(errorMessage, response.code())
             null

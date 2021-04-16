@@ -105,7 +105,7 @@
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
-            <TextView
+           <!-- <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="|"
@@ -121,7 +121,7 @@
                     android:padding="12dp"
                     android:text="اتصال خودکار"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp" />-->
 
         </LinearLayout>
 

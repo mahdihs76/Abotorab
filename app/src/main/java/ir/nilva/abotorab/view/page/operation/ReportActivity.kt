@@ -1,5 +1,7 @@
 package ir.nilva.abotorab.view.page.operation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -18,6 +20,7 @@ import ir.nilva.abotorab.model.Distribution
 import ir.nilva.abotorab.model.House
 import ir.nilva.abotorab.model.ReportResponse
 import ir.nilva.abotorab.view.page.base.BaseActivity
+import ir.nilva.abotorab.webservices.MyRetrofit
 import ir.nilva.abotorab.webservices.callWebservice
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_report.*
@@ -59,6 +62,19 @@ class ReportActivity : BaseActivity() {
             callWebservice { getServices().report() }?.run {
                 data = this
                 triggerChart()
+            }
+        }
+
+        exportButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebservice { getServices().export() }?.run {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(MyRetrofit.getBaseUrl() + this.url)
+                        )
+                    )
+                }
             }
         }
     }

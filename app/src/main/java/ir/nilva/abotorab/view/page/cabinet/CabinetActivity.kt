@@ -1,6 +1,5 @@
 package ir.nilva.abotorab.view.page.cabinet
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer

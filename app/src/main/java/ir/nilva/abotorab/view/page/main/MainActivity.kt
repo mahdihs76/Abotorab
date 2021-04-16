@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 import permissions.dispatcher.*
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 @RuntimePermissions
@@ -63,23 +64,22 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        MicroblinkSDK.setLicenseKey(
-            "sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g=",
-            this
-        );
 
         CoroutineScope(Dispatchers.Main).launch {
             callWebservice {
                 getServices().config()
             }?.run {
-//                val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
-////                if (token.isNotEmpty()) {
-////                if (lastBlinkId != token) {
-//                MicroblinkSDK.setLicenseKey("sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g=", ApplicationContext.context);
-//                defaultCache()["BLINK_ID"] =
-//                    "sRwAAAARaXIubmlsdmEuYWJvdG9yYWL8E5lL5HoRkcC3kG/p6hqSYHdue5GI/E3hkFV/JteCArXnC8patymryNX8CRObRrS7YO9o7vdrKbons6mUu4MAa0E1Wzdr2wZQbEz8SM+siMOk8WcLB2irqUONEO/+b4URAp6PiSGN5bl/mxYg3BMvVE0DyBTNNfbjjb6HoQUGQolNVBELrsdt4UoA0uoAFB1fDFy2/thZKDD+vjfAXjFGmzYphKr0nP6uOZUwBaLAa3Y/6hQVEaIDvQmdxK+meeT5e0MxZOpUxNMtQeYGqJ55w6wGtQYLCNVej0oNkvrTCN93kUxUrZ/8qk6F7DGJy7EtwMI7Q5g="
-////                }
-////                }
+                val lastBlinkId = defaultCache()["BLINK_ID"] ?: ""
+                if (token.isNotEmpty()) {
+                    if (lastBlinkId != token) {
+                        try {
+                            setBlinkIdLicenceKey(token)
+                        } catch (e: Exception) {
+                            toastError("اعتبار ماهانه استفاده از سرویس اسکن پاسپورت به اتمام رسیده است. با پشتیبانی سیستم تماس بگیرید")
+                        }
+                        defaultCache()["BLINK_ID"] = token
+                    }
+                }
                 defaultCache()["ROW_MAPPING"] = row_code_mapping.toString()
             }
         }

@@ -23,12 +23,12 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initCalligraphy()
-        if (isWifiConnected().not()) {
-            MaterialDialog(this).show {
-                title( text = "وای فای موبایل شما خاموش است")
-                message(text = "لطفا وای فای خود را روشن کرده و سپس ادامه دهید")
-            }
-        }
+//        if (isWifiConnected().not()) {
+//            MaterialDialog(this).show {
+//                title( text = "وای فای موبایل شما خاموش است")
+//                message(text = "لطفا وای فای خود را روشن کرده و سپس ادامه دهید")
+//            }
+//        }
     }
 
     private fun initCalligraphy() =
