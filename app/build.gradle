@@ -12,12 +12,12 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 28
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "ir.nilva.abotorab"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 28
         versionCode 3
         versionName "1.2"
         multiDexEnabled true
