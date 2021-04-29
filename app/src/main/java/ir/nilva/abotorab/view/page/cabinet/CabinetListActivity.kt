@@ -9,15 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import ir.nilva.abotorab.R
 import ir.nilva.abotorab.db.AppDatabase
 import ir.nilva.abotorab.helper.gotoCabinetPage
+import ir.nilva.abotorab.helper.toastError
 import ir.nilva.abotorab.helper.toastSuccess
 import ir.nilva.abotorab.view.page.base.BaseActivity
 import ir.nilva.abotorab.view.widget.MarginItemDecoration
 import ir.nilva.abotorab.webservices.callWebservice
+import ir.nilva.abotorab.webservices.callWebserviceWithFailure
 import ir.nilva.abotorab.webservices.getServices
 import kotlinx.android.synthetic.main.activity_cabinet_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetListener {
 
@@ -81,10 +84,15 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
 
     override fun deleteCabinet(code: String, callback: () -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {
-            callWebservice {
-                getServices().deleteCabinet(code)
-            }?.run {
+            val response = getServices().deleteCabinet(code)
+            if (response.isSuccessful) {
                 AppDatabase.getInstance().cabinetDao().delete(code)
+                toastSuccess("قفسه مورد نظر با موفقیت حذف شد")
+            } else {
+                val jsonErr = response.errorBody()?.string()
+                if (response.code() == 400) {
+                    toastError(jsonErr ?: "")
+                }
             }
             callback()
         }

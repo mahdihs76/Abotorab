@@ -39,8 +39,8 @@ class CabinetListAdapter(
             )
             subTitle.text = String.format(
                 resources.getString(R.string.row_and_column_format),
-                item.getRowsNumber(),
-                item.getColumnsNumber()
+                item.getColumnsNumber(),
+                item.getRowsNumber()
             )
             setOnClickListener { listener.cabinetClicked(item.code) }
             show.setOnClickListener { listener.cabinetClicked(item.code) }
