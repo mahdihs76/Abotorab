@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.microblink.activity.DocumentScanActivity
 import com.microblink.entities.recognizers.Recognizer
 import com.microblink.entities.recognizers.RecognizerBundle
@@ -24,18 +25,25 @@ import kotlinx.android.synthetic.main.activity_give.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class GiveSearchActivity : BaseActivity() {
 
     private lateinit var recognizer: PassportRecognizer
     private lateinit var recognizerBundle: RecognizerBundle
+    private var _blinkIdEnabled = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_give)
 
-        recognizer = PassportRecognizer()
-        recognizerBundle = RecognizerBundle(recognizer)
+        try {
+            recognizer = PassportRecognizer()
+            recognizerBundle = RecognizerBundle(recognizer)
+        } catch (e: Exception){
+            _blinkIdEnabled = false
+
+        }
 
         search.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
@@ -51,8 +59,15 @@ class GiveSearchActivity : BaseActivity() {
                         true
                     )
                 }?.run {
-                    showResult("تحویل", this) {
-                        callGiveWS(it)
+                    showResult("تحویل", this) { hashId ->
+                        MaterialDialog(this@GiveSearchActivity).show {
+                            title(text = "در صورتی که زائر رسید خود را تحویل نداده است، فرم تعهدنامه کتبی به همراه امضا از ایشان دریافت کنید")
+                            positiveButton(text = "انجام شد") {
+                                callGiveWS(hashId)
+                            }
+                            negativeButton(text = "بعدا") {
+                            }
+                        }
                     }
                 }
                 search.visibility = View.VISIBLE
@@ -63,8 +78,12 @@ class GiveSearchActivity : BaseActivity() {
         country.threshold = 1
         country.setAdapter(CountryAdapter(this, R.layout.item_country, ArrayList(getCountries())))
 
-        fab.setOnClickListener {
-            startScanning()
+        fab.setOnClickListener{
+            if(_blinkIdEnabled) {
+                startScanning()
+            } else {
+                toastError("اعتبار ماهانه استفاده از سرویس اسکن پاسپورت به اتمام رسیده است. با پشتیبانی سیستم تماس بگیرید")
+            }
         }
 
 
@@ -98,7 +117,6 @@ class GiveSearchActivity : BaseActivity() {
 
 fun Context.callGiveWS(hashId: String, cellCode: String = "") =
     CoroutineScope(Dispatchers.Main).launch {
-//    if (checkLastHashId(hashId))
         callWebserviceWithFailure({ getServices().give(hashId) }) { response, code ->
             if (code != 400) {
                 toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")

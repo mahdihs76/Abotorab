@@ -77,6 +77,19 @@ class ReportActivity : BaseActivity() {
                 }
             }
         }
+
+        exportStoreButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                callWebservice { getServices().exportStore() }?.run {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(MyRetrofit.getBaseUrl() + this.url)
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private fun triggerChart() {

@@ -127,4 +127,7 @@ interface WebserviceUrls {
 
     @GET("administration/export/")
     suspend fun export(): Response<ExportResponse>
+
+    @GET("administration/export_store/")
+    suspend fun exportStore(): Response<ExportResponse>
 }

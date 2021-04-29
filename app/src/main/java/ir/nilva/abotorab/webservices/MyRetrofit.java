@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MyRetrofit {
 
     private static String BASE_URL = CacheHelperKt.defaultCache().getString("base_url",
-            "");
+            "https://depository.ceshora.ir/");
     private static MyRetrofit instance;
 
     public static MyRetrofit getInstance() {

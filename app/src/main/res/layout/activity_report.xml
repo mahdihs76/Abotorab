@@ -66,4 +66,16 @@
             android:text="دانلود گزارش کامل (اکسل)"
             android:padding="12dp"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/exportStoreButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/exportButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="72dp"
+            android:layout_marginLeft="72dp"
+            android:text=" دانلود گزارش انبار (اکسل)"
+            android:padding="12dp"/>
+
 </RelativeLayout>
