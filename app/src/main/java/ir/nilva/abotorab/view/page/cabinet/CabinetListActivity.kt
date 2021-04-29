@@ -90,8 +90,11 @@ class CabinetListActivity : BaseActivity(), CabinetListAdapter.OnClickCabinetLis
                 toastSuccess("قفسه مورد نظر با موفقیت حذف شد")
             } else {
                 val jsonErr = response.errorBody()?.string()
+                val errorMessage =
+                    JSONObject(jsonErr!!).getJSONArray("non_field_errors").get(0)?.toString()
+                        ?: "مشکلی پیش آمده است"
                 if (response.code() == 400) {
-                    toastError(jsonErr ?: "")
+                    toastError(errorMessage)
                 }
             }
             callback()
