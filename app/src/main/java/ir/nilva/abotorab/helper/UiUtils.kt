@@ -25,6 +25,7 @@ fun mapCabinetLabel(code: String): String? {
 
 
 fun mapCabinetLabelWithCab(code: String): String? {
+    if(code.isEmpty()) return ""
     val mapping = defaultCache()["ROW_MAPPING"] ?: ""
     val cabCode = code.substring(0, 2).toInt()
     val rowCode = code.substring(2, 3).toInt()

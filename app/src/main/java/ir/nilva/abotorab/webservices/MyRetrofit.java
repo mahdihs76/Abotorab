@@ -3,6 +3,8 @@ package ir.nilva.abotorab.webservices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Objects;
+
 import ir.nilva.abotorab.helper.CacheHelperKt;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -68,6 +70,7 @@ public class MyRetrofit {
             Request original = chain.request();
             Request request = original.newBuilder()
                     .addHeader("Authorization", "JWT " + token)
+                    .addHeader("DEPOSITORY-ID", Objects.requireNonNull(CacheHelperKt.defaultCache().getString("depository_code", "")))
                     .build();
 
             return chain.proceed(request);

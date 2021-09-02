@@ -104,6 +104,8 @@ class TakeActivity : BaseActivity() {
                 }) { response, code ->
                     if (response == "[\"فضای خالی وجود ندارد\"]") {
                         tryToFindEmptyCell()
+                    } else {
+                        toastError(response)
                     }
                 }?.run {
                     resetUi()

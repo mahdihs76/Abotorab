@@ -121,6 +121,8 @@ fun Context.callGiveWS(hashId: String, cellCode: String = "") =
             if (code != 400) {
                 toastSuccess("پس از برقراری ارتباط با سرور گزارش میشود")
                 cacheHashId(hashId)
+            } else {
+                toastError(response)
             }
         }?.run {
             toastSuccess("محموله با موفقیت تحویل داده شد")
@@ -128,7 +130,7 @@ fun Context.callGiveWS(hashId: String, cellCode: String = "") =
                 DeliveryEntity(
                     nickname = pilgrim.name,
                     country = pilgrim.country,
-                    cellCode = cellCode,
+                    cellCode = this.cellCode,
                     phone = pilgrim.phone,
                     exitedAt = exitAt,
                     hashId = hashId

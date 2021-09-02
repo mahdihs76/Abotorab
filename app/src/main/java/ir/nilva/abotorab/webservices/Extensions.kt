@@ -2,6 +2,7 @@ package ir.nilva.abotorab.webservices
 
 import android.content.Context
 import ir.nilva.abotorab.ApplicationContext
+import ir.nilva.abotorab.helper.isConnectedWifiValid
 import ir.nilva.abotorab.helper.toastError
 import okhttp3.ResponseBody
 import org.jetbrains.anko.runOnUiThread
@@ -31,12 +32,19 @@ suspend fun <T> Context.callWebserviceWithFailure(
             null
         }
     } catch (e: Exception) {
-        failure("متاسفانه ارتباط برقرار نشد", -1)
+        if (this.isConnectedWifiValid()) {
+            failure("متاسفانه ارتباط برقرار نشد", -1)
+        } else {
+            failure(
+                "امانت داری شما تغییر کرده است، از قسمت تنظیم دستی اقدام به راه اندازی مجدد کنید.",
+                -1
+            )
+        }
         null
     }
 }
 
-suspend fun <T> callWebservice(
+suspend fun <T> Context.callWebservice(
     caller: suspend () -> Response<T>
 ): T? {
     return try {
@@ -53,37 +61,42 @@ suspend fun <T> callWebservice(
     }
 }
 
-private fun handleError(
+private fun Context.handleError(
     code: Int,
     errorBody: ResponseBody?
 ) {
     onFailed(WebServiceError(), errorBody?.string() ?: "", code)
 }
 
-private fun handleFailure(t: Throwable) {
-    if (t is UnknownHostException) {
-        onFailed(t, "اتصال خود را بررسی کنید")
+private fun Context.handleFailure(t: Throwable) {
+    if(this.isConnectedWifiValid()){
+        if (t is UnknownHostException) {
+            onFailed(t, "اتصال خود را بررسی کنید")
+        } else {
+            onFailed(t, t.message.toString())
+        }
     } else {
-        onFailed(t, t.message.toString())
+        onFailed(t, "امانت داری شما تغییر کرده است، از قسمت تنظیم دستی اقدام به راه اندازی مجدد کنید.")
     }
+
 }
 
-private fun handleException(e: java.lang.Exception) {
+private fun Context.handleException(e: java.lang.Exception) {
     onFailed(e, e.message.toString())
 }
 
-fun onFailed(throwable: Throwable, errorBody: String, errorCode: Int = -1) {
-    val context = ApplicationContext.context
+fun Context.onFailed(throwable: Throwable, errorBody: String, errorCode: Int = -1) {
     when (throwable) {
-        is UnknownHostException -> context.runOnUiThread {
-            context.toastError("لطفا اتصال خود را بررسی کنید")
+        is UnknownHostException -> runOnUiThread {
+            toastError("لطفا اتصال خود را بررسی کنید")
         }
         is WebServiceError -> {
             if (errorCode == 403) {
-                context.toastError("شما دسترسی لازم را ندارید")
+                toastError("شما دسترسی لازم را ندارید")
             } else {
-                context.toastError(errorBody)
+                toastError(errorBody)
             }
         }
+        else-> toastError(errorBody)
     }
 }
